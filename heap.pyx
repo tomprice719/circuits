@@ -2,6 +2,7 @@ cdef:
   struct HeapEm:
     float priority
     int location
+    void * data
   struct Heap:
     HeapEm** inv_location
     int size
