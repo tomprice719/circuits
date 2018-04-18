@@ -368,18 +368,7 @@ body.cython { font-family: courier; font-size: 12; }
 </p>
 <p>Raw output: <a href="heap.c">heap.c</a></p>
 <div class="cython"><pre class="cython line score-0">&#xA0;<span class="">01</span>: <span class="k">cdef</span><span class="p">:</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">02</span>:   <span class="k">struct</span> <span class="nc">HeapEm</span><span class="p">:</span></pre>
-<pre class='cython code score-0 '>struct __pyx_t_4heap_HeapEm {
-  float priority;
-  int location;
-};
-</pre><pre class="cython line score-0">&#xA0;<span class="">03</span>:     <span class="nb">float</span> <span class="n">priority</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">04</span>:     <span class="nb">int</span> <span class="n">location</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">05</span>:   <span class="k">struct</span> <span class="nc">Heap</span><span class="p">:</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">06</span>:     <span class="n">HeapEm</span><span class="o">**</span> <span class="n">inv_location</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">07</span>:     <span class="nb">int</span> <span class="n">size</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">08</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">09</span>:   <span class="n">inline</span> <span class="n">void</span> <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">orig_parent</span><span class="p">,</span> <span class="n">HeapEm</span><span class="o">*</span> <span class="n">orig_child</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">02</span>:   <span class="n">inline</span> <span class="n">void</span> <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">orig_parent</span><span class="p">,</span> <span class="n">HeapEm</span><span class="o">*</span> <span class="n">orig_child</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>static CYTHON_INLINE void __pyx_f_4heap_swap_heap_elements(struct __pyx_t_4heap_HeapEm *__pyx_v_orig_parent, struct __pyx_t_4heap_HeapEm *__pyx_v_orig_child, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("swap_heap_elements", 0);
@@ -387,17 +376,17 @@ body.cython { font-family: courier; font-size: 12; }
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">10</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">orig_parent</span><span class="o">.</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_child</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">03</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">orig_parent</span><span class="o">.</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_child</span></pre>
 <pre class='cython code score-0 '>  (__pyx_v_heap-&gt;inv_location[__pyx_v_orig_parent-&gt;location]) = __pyx_v_orig_child;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">11</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">orig_child</span><span class="o">.</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_parent</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">04</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">orig_child</span><span class="o">.</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_parent</span></pre>
 <pre class='cython code score-0 '>  (__pyx_v_heap-&gt;inv_location[__pyx_v_orig_child-&gt;location]) = __pyx_v_orig_parent;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">12</span>:     <span class="n">orig_parent</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">orig_child</span><span class="o">.</span><span class="n">location</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">05</span>:     <span class="n">orig_parent</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">orig_child</span><span class="o">.</span><span class="n">location</span></pre>
 <pre class='cython code score-0 '>  __pyx_t_1 = __pyx_v_orig_child-&gt;location;
   __pyx_v_orig_parent-&gt;location = __pyx_t_1;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">13</span>:     <span class="n">orig_child</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">orig_child</span><span class="o">.</span><span class="n">location</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">06</span>:     <span class="n">orig_child</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">orig_child</span><span class="o">.</span><span class="n">location</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_orig_child-&gt;location = __Pyx_div_long((__pyx_v_orig_child-&gt;location - 1), 2);
-</pre><pre class="cython line score-0">&#xA0;<span class="">14</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">15</span>:   <span class="n">void</span> <span class="n">bubble_up</span><span class="p">(</span><span class="n">HeapEm</span> <span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">07</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">08</span>:   <span class="n">void</span> <span class="n">bubble_up</span><span class="p">(</span><span class="n">HeapEm</span> <span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>static void __pyx_f_4heap_bubble_up(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   struct __pyx_t_4heap_HeapEm *__pyx_v_parent;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
@@ -406,31 +395,31 @@ body.cython { font-family: courier; font-size: 12; }
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
-</pre><pre class="cython line score-0">&#xA0;<span class="">16</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">parent</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">17</span>:     <span class="k">while</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">09</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">parent</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">10</span>:     <span class="k">while</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>  while (1) {
     __pyx_t_1 = ((__pyx_v_em-&gt;location &gt; 0) != 0);
     if (!__pyx_t_1) break;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">18</span>:       <span class="n">parent</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[(</span><span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2</span><span class="p">]</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">11</span>:       <span class="n">parent</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[(</span><span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2</span><span class="p">]</span></pre>
 <pre class='cython code score-0 '>    __pyx_v_parent = (__pyx_v_heap-&gt;inv_location[__Pyx_div_long((__pyx_v_em-&gt;location - 1), 2)]);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">19</span>:       <span class="k">if</span> <span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">parent</span><span class="o">.</span><span class="n">priority</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">12</span>:       <span class="k">if</span> <span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">parent</span><span class="o">.</span><span class="n">priority</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>    __pyx_t_1 = ((__pyx_v_em-&gt;priority &gt; __pyx_v_parent-&gt;priority) != 0);
     if (__pyx_t_1) {
 /* … */
       goto __pyx_L5;
     }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">20</span>:         <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">em</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">13</span>:         <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">em</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>      __pyx_f_4heap_swap_heap_elements(__pyx_v_parent, __pyx_v_em, __pyx_v_heap);
-</pre><pre class="cython line score-0">&#xA0;<span class="">21</span>:       <span class="k">else</span><span class="p">:</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">22</span>:         <span class="k">break</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">14</span>:       <span class="k">else</span><span class="p">:</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">15</span>:         <span class="k">break</span></pre>
 <pre class='cython code score-0 '>    /*else*/ {
       goto __pyx_L4_break;
     }
     __pyx_L5:;
   }
   __pyx_L4_break:;
-</pre><pre class="cython line score-0">&#xA0;<span class="">23</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">24</span>:   <span class="n">void</span> <span class="n">bubble_down</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">16</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">17</span>:   <span class="n">void</span> <span class="n">bubble_down</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>static void __pyx_f_4heap_bubble_down(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   struct __pyx_t_4heap_HeapEm *__pyx_v_max_child;
   struct __pyx_t_4heap_HeapEm *__pyx_v_left_child;
@@ -441,93 +430,93 @@ body.cython { font-family: courier; font-size: 12; }
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
-</pre><pre class="cython line score-0">&#xA0;<span class="">25</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">max_child</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">26</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">left_child</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">27</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">right_child</span></pre>
-<pre class="cython line score-0">&#xA0;<span class="">28</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">29</span>:     <span class="k">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">18</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">max_child</span></pre>
+<pre class="cython line score-0">&#xA0;<span class="">19</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">left_child</span></pre>
+<pre class="cython line score-0">&#xA0;<span class="">20</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">right_child</span></pre>
+<pre class="cython line score-0">&#xA0;<span class="">21</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">22</span>:     <span class="k">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>  while (1) {
-</pre><pre class="cython line score-0">&#xA0;<span class="">30</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">31</span>:       <span class="k">if</span> <span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">1</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">23</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">24</span>:       <span class="k">if</span> <span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">1</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>    __pyx_t_1 = ((((2 * __pyx_v_em-&gt;location) + 1) &lt; __pyx_v_heap-&gt;size) != 0);
     if (__pyx_t_1) {
 /* … */
       goto __pyx_L5;
     }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">32</span>:         <span class="n">left_child</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">1</span><span class="p">]</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">25</span>:         <span class="n">left_child</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">1</span><span class="p">]</span></pre>
 <pre class='cython code score-0 '>      __pyx_v_left_child = (__pyx_v_heap-&gt;inv_location[((2 * __pyx_v_em-&gt;location) + 1)]);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">33</span>:         <span class="n">max_child</span> <span class="o">=</span> <span class="bp">NULL</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">26</span>:         <span class="n">max_child</span> <span class="o">=</span> <span class="bp">NULL</span></pre>
 <pre class='cython code score-0 '>      __pyx_v_max_child = NULL;
-</pre><pre class="cython line score-0">&#xA0;<span class="">34</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">35</span>:         <span class="k">if</span> <span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">2</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">27</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">28</span>:         <span class="k">if</span> <span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">2</span> <span class="o">&lt;</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>      __pyx_t_1 = ((((2 * __pyx_v_em-&gt;location) + 2) &lt; __pyx_v_heap-&gt;size) != 0);
       if (__pyx_t_1) {
 /* … */
         goto __pyx_L6;
       }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">36</span>:           <span class="n">right_child</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">2</span><span class="p">]</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">29</span>:           <span class="n">right_child</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">2</span> <span class="o">*</span> <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">+</span> <span class="mf">2</span><span class="p">]</span></pre>
 <pre class='cython code score-0 '>        __pyx_v_right_child = (__pyx_v_heap-&gt;inv_location[((2 * __pyx_v_em-&gt;location) + 2)]);
-</pre><pre class="cython line score-0">&#xA0;<span class="">37</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">38</span>:           <span class="k">if</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">30</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">31</span>:           <span class="k">if</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>        __pyx_t_1 = ((__pyx_v_left_child-&gt;priority &gt; __pyx_v_em-&gt;priority) != 0);
         if (__pyx_t_1) {
 /* … */
           goto __pyx_L7;
         }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">39</span>:             <span class="k">if</span> <span class="n">right_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">32</span>:             <span class="k">if</span> <span class="n">right_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>          __pyx_t_1 = ((__pyx_v_right_child-&gt;priority &gt; __pyx_v_left_child-&gt;priority) != 0);
           if (__pyx_t_1) {
 /* … */
             goto __pyx_L8;
           }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">40</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">right_child</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">33</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">right_child</span></pre>
 <pre class='cython code score-0 '>            __pyx_v_max_child = __pyx_v_right_child;
-</pre><pre class="cython line score-0">&#xA0;<span class="">41</span>:             <span class="k">else</span><span class="p">:</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">42</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">left_child</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">34</span>:             <span class="k">else</span><span class="p">:</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">35</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">left_child</span></pre>
 <pre class='cython code score-0 '>          /*else*/ {
             __pyx_v_max_child = __pyx_v_left_child;
           }
           __pyx_L8:;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">43</span>:           <span class="k">elif</span> <span class="n">right_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">36</span>:           <span class="k">elif</span> <span class="n">right_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>        __pyx_t_1 = ((__pyx_v_right_child-&gt;priority &gt; __pyx_v_em-&gt;priority) != 0);
         if (__pyx_t_1) {
 /* … */
         }
         __pyx_L7:;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">44</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">right_child</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">37</span>:               <span class="n">max_child</span> <span class="o">=</span> <span class="n">right_child</span></pre>
 <pre class='cython code score-0 '>          __pyx_v_max_child = __pyx_v_right_child;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">45</span>:         <span class="k">elif</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">38</span>:         <span class="k">elif</span> <span class="n">left_child</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">priority</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>      __pyx_t_1 = ((__pyx_v_left_child-&gt;priority &gt; __pyx_v_em-&gt;priority) != 0);
       if (__pyx_t_1) {
 /* … */
       }
       __pyx_L6:;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">46</span>:           <span class="n">max_child</span> <span class="o">=</span> <span class="n">left_child</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">39</span>:           <span class="n">max_child</span> <span class="o">=</span> <span class="n">left_child</span></pre>
 <pre class='cython code score-0 '>        __pyx_v_max_child = __pyx_v_left_child;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">47</span>:         <span class="k">if</span> <span class="n">max_child</span> <span class="o">!=</span> <span class="bp">NULL</span><span class="p">:</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">40</span>:         <span class="k">if</span> <span class="n">max_child</span> <span class="o">!=</span> <span class="bp">NULL</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>      __pyx_t_1 = ((__pyx_v_max_child != NULL) != 0);
       if (__pyx_t_1) {
 /* … */
         goto __pyx_L9;
       }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">48</span>:           <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">em</span><span class="p">,</span> <span class="n">max_child</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">41</span>:           <span class="n">swap_heap_elements</span><span class="p">(</span><span class="n">em</span><span class="p">,</span> <span class="n">max_child</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>        __pyx_f_4heap_swap_heap_elements(__pyx_v_em, __pyx_v_max_child, __pyx_v_heap);
-</pre><pre class="cython line score-0">&#xA0;<span class="">49</span>:         <span class="k">else</span><span class="p">:</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">50</span>:           <span class="k">break</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">42</span>:         <span class="k">else</span><span class="p">:</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">43</span>:           <span class="k">break</span></pre>
 <pre class='cython code score-0 '>      /*else*/ {
         goto __pyx_L4_break;
       }
       __pyx_L9:;
-</pre><pre class="cython line score-0">&#xA0;<span class="">51</span>:       <span class="k">else</span><span class="p">:</span></pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">52</span>:         <span class="k">break</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">44</span>:       <span class="k">else</span><span class="p">:</span></pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">45</span>:         <span class="k">break</span></pre>
 <pre class='cython code score-0 '>    /*else*/ {
       goto __pyx_L4_break;
     }
     __pyx_L5:;
   }
   __pyx_L4_break:;
-</pre><pre class="cython line score-0">&#xA0;<span class="">53</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">54</span>:   <span class="n">void</span> <span class="n">heap_push</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">46</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">47</span>:   <span class="n">void</span> <span class="n">heap_push</span><span class="p">(</span><span class="n">HeapEm</span><span class="o">*</span> <span class="n">em</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>static void __pyx_f_4heap_heap_push(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("heap_push", 0);
@@ -535,17 +524,17 @@ body.cython { font-family: courier; font-size: 12; }
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">55</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">em</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">48</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">em</span></pre>
 <pre class='cython code score-0 '>  (__pyx_v_heap-&gt;inv_location[__pyx_v_heap-&gt;size]) = __pyx_v_em;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">56</span>:     <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">49</span>:     <span class="n">em</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">size</span></pre>
 <pre class='cython code score-0 '>  __pyx_t_1 = __pyx_v_heap-&gt;size;
   __pyx_v_em-&gt;location = __pyx_t_1;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">57</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mf">1</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">50</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="mf">1</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_heap-&gt;size = (__pyx_v_heap-&gt;size + 1);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">58</span>:     <span class="n">bubble_up</span><span class="p">(</span><span class="n">em</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">51</span>:     <span class="n">bubble_up</span><span class="p">(</span><span class="n">em</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>  __pyx_f_4heap_bubble_up(__pyx_v_em, __pyx_v_heap);
-</pre><pre class="cython line score-0">&#xA0;<span class="">59</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">60</span>:   <span class="n">HeapEm</span><span class="o">*</span> <span class="n">heap_pop</span><span class="p">(</span><span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">52</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">53</span>:   <span class="n">HeapEm</span><span class="o">*</span> <span class="n">heap_pop</span><span class="p">(</span><span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>static struct __pyx_t_4heap_HeapEm *__pyx_f_4heap_heap_pop(struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   struct __pyx_t_4heap_HeapEm *__pyx_v_orig_top;
   struct __pyx_t_4heap_HeapEm *__pyx_v_orig_bottom;
@@ -558,27 +547,27 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">61</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">orig_top</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">54</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">orig_top</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_orig_top = (__pyx_v_heap-&gt;inv_location[0]);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">62</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">-=</span> <span class="mf">1</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">55</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">-=</span> <span class="mf">1</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_heap-&gt;size = (__pyx_v_heap-&gt;size - 1);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">63</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">orig_bottom</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">]</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">56</span>:     <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="nf">orig_bottom</span> <span class="o">=</span> <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="n">heap</span><span class="o">.</span><span class="n">size</span><span class="p">]</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_orig_bottom = (__pyx_v_heap-&gt;inv_location[__pyx_v_heap-&gt;size]);
-</pre><pre class="cython line score-0">&#xA0;<span class="">64</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">65</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_bottom</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">57</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">58</span>:     <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">orig_bottom</span></pre>
 <pre class='cython code score-0 '>  (__pyx_v_heap-&gt;inv_location[0]) = __pyx_v_orig_bottom;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">66</span>:     <span class="n">orig_top</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">59</span>:     <span class="n">orig_top</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_orig_top-&gt;location = -1;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">67</span>:     <span class="n">orig_bottom</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="mf">0</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">60</span>:     <span class="n">orig_bottom</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="mf">0</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_orig_bottom-&gt;location = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">68</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">69</span>:     <span class="n">bubble_down</span><span class="p">(</span><span class="n">orig_bottom</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">61</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">62</span>:     <span class="n">bubble_down</span><span class="p">(</span><span class="n">orig_bottom</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>  __pyx_f_4heap_bubble_down(__pyx_v_orig_bottom, __pyx_v_heap);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">70</span>:     <span class="k">return</span> <span class="n">orig_top</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">63</span>:     <span class="k">return</span> <span class="n">orig_top</span></pre>
 <pre class='cython code score-0 '>  __pyx_r = __pyx_v_orig_top;
   goto __pyx_L0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">71</span>: </pre>
-<pre class="cython line score-16" onclick='toggleDiv(this)'>+<span class="">72</span>: <span class="k">def</span> <span class="nf">heap_test</span><span class="p">():</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">64</span>: </pre>
+<pre class="cython line score-16" onclick='toggleDiv(this)'>+<span class="">65</span>: <span class="k">def</span> <span class="nf">heap_test</span><span class="p">():</span></pre>
 <pre class='cython code score-16 '>/* Python wrapper */
 static PyObject *__pyx_pw_4heap_1heap_test(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
 static PyMethodDef __pyx_mdef_4heap_1heap_test = {"heap_test", (PyCFunction)__pyx_pw_4heap_1heap_test, METH_NOARGS, 0};
@@ -617,25 +606,25 @@ static PyObject *__pyx_pf_4heap_heap_test(CYTHON_UNUSED PyObject *__pyx_self) {
   return __pyx_r;
 }
 /* … */
-  __pyx_tuple_ = <span class='py_c_api'>PyTuple_Pack</span>(5, __pyx_n_s_heap, __pyx_n_s_inv_location, __pyx_n_s_ems, __pyx_n_s_nums, __pyx_n_s_i); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_tuple_ = <span class='py_c_api'>PyTuple_Pack</span>(5, __pyx_n_s_heap, __pyx_n_s_inv_location, __pyx_n_s_ems, __pyx_n_s_nums, __pyx_n_s_i); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 65, __pyx_L1_error)
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_tuple_);
   <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_tuple_);
 /* … */
-  __pyx_t_1 = PyCFunction_NewEx(&amp;__pyx_mdef_4heap_1heap_test, NULL, __pyx_n_s_heap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&amp;__pyx_mdef_4heap_1heap_test, NULL, __pyx_n_s_heap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_heap_test, __pyx_t_1) &lt; 0) __PYX_ERR(0, 72, __pyx_L1_error)
+  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_heap_test, __pyx_t_1) &lt; 0) __PYX_ERR(0, 65, __pyx_L1_error)
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">73</span>:   <span class="k">cdef</span> <span class="kt">Heap</span> <span class="kt">heap</span>;</pre>
-<pre class="cython line score-0">&#xA0;<span class="">74</span>:   <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="kt">inv_location</span>[20]</pre>
-<pre class="cython line score-0">&#xA0;<span class="">75</span>:   <span class="k">cdef</span> <span class="kt">HeapEm</span> <span class="kt">ems</span>[20]</pre>
-<pre class="cython line score-0">&#xA0;<span class="">76</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">77</span>:   <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mf">0</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">66</span>:   <span class="k">cdef</span> <span class="kt">Heap</span> <span class="kt">heap</span>;</pre>
+<pre class="cython line score-0">&#xA0;<span class="">67</span>:   <span class="k">cdef</span> <span class="kt">HeapEm</span>* <span class="kt">inv_location</span>[20]</pre>
+<pre class="cython line score-0">&#xA0;<span class="">68</span>:   <span class="k">cdef</span> <span class="kt">HeapEm</span> <span class="kt">ems</span>[20]</pre>
+<pre class="cython line score-0">&#xA0;<span class="">69</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">70</span>:   <span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mf">0</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_heap.size = 0;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">78</span>:   <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span> <span class="o">=</span> <span class="n">inv_location</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">71</span>:   <span class="n">heap</span><span class="o">.</span><span class="n">inv_location</span> <span class="o">=</span> <span class="n">inv_location</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_heap.inv_location = __pyx_v_inv_location;
-</pre><pre class="cython line score-0">&#xA0;<span class="">79</span>: </pre>
-<pre class="cython line score-45" onclick='toggleDiv(this)'>+<span class="">80</span>:   <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">12</span><span class="p">,</span> <span class="mf">7</span><span class="p">,</span> <span class="mf">14</span><span class="p">,</span> <span class="mf">19</span><span class="p">,</span> <span class="mf">5</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">16</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">6</span><span class="p">,</span> <span class="mf">10</span><span class="p">,</span> <span class="mf">17</span><span class="p">,</span> <span class="mf">9</span><span class="p">,</span> <span class="mf">13</span><span class="p">,</span> <span class="mf">15</span><span class="p">,</span> <span class="mf">11</span><span class="p">,</span> <span class="mf">3</span><span class="p">,</span> <span class="mf">18</span><span class="p">,</span> <span class="mf">8</span><span class="p">,</span> <span class="mf">4</span><span class="p">]</span></pre>
-<pre class='cython code score-45 '>  __pyx_t_1 = <span class='py_c_api'>PyList_New</span>(20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 80, __pyx_L1_error)
+</pre><pre class="cython line score-0">&#xA0;<span class="">72</span>: </pre>
+<pre class="cython line score-45" onclick='toggleDiv(this)'>+<span class="">73</span>:   <span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">12</span><span class="p">,</span> <span class="mf">7</span><span class="p">,</span> <span class="mf">14</span><span class="p">,</span> <span class="mf">19</span><span class="p">,</span> <span class="mf">5</span><span class="p">,</span> <span class="mf">1</span><span class="p">,</span> <span class="mf">16</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">6</span><span class="p">,</span> <span class="mf">10</span><span class="p">,</span> <span class="mf">17</span><span class="p">,</span> <span class="mf">9</span><span class="p">,</span> <span class="mf">13</span><span class="p">,</span> <span class="mf">15</span><span class="p">,</span> <span class="mf">11</span><span class="p">,</span> <span class="mf">3</span><span class="p">,</span> <span class="mf">18</span><span class="p">,</span> <span class="mf">8</span><span class="p">,</span> <span class="mf">4</span><span class="p">]</span></pre>
+<pre class='cython code score-45 '>  __pyx_t_1 = <span class='py_c_api'>PyList_New</span>(20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_int_2);
   <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_int_2);
@@ -699,29 +688,29 @@ static PyObject *__pyx_pf_4heap_heap_test(CYTHON_UNUSED PyObject *__pyx_self) {
   <span class='py_macro_api'>PyList_SET_ITEM</span>(__pyx_t_1, 19, __pyx_int_4);
   __pyx_v_nums = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">81</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">82</span>:   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mf">20</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">74</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">75</span>:   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mf">20</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>  for (__pyx_t_2 = 0; __pyx_t_2 &lt; 20; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
-</pre><pre class="cython line score-13" onclick='toggleDiv(this)'>+<span class="">83</span>:     <span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></pre>
-<pre class='cython code score-13 '>    __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt_List</span>(__pyx_v_nums, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 83, __pyx_L1_error)
+</pre><pre class="cython line score-13" onclick='toggleDiv(this)'>+<span class="">76</span>:     <span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></pre>
+<pre class='cython code score-13 '>    __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt_List</span>(__pyx_v_nums, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-    __pyx_t_3 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 83, __pyx_L1_error)
+    __pyx_t_3 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 76, __pyx_L1_error)
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
     (__pyx_v_ems[__pyx_v_i]).priority = __pyx_t_3;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">84</span>:     <span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">77</span>:     <span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span></pre>
 <pre class='cython code score-0 '>    (__pyx_v_ems[__pyx_v_i]).location = -1;
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">85</span>:     <span class="n">heap_push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">heap</span><span class="p">)</span></pre>
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">78</span>:     <span class="n">heap_push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ems</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>    __pyx_f_4heap_heap_push((&amp;(__pyx_v_ems[__pyx_v_i])), (&amp;__pyx_v_heap));
   }
-</pre><pre class="cython line score-0">&#xA0;<span class="">86</span>: </pre>
-<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">87</span>:   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mf">20</span><span class="p">):</span></pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">79</span>: </pre>
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">80</span>:   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mf">20</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>  for (__pyx_t_2 = 0; __pyx_t_2 &lt; 20; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
-</pre><pre class="cython line score-8" onclick='toggleDiv(this)'>+<span class="">88</span>:     <span class="k">print</span> <span class="n">heap_pop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">heap</span><span class="p">)</span><span class="o">.</span><span class="n">priority</span></pre>
-<pre class='cython code score-8 '>    __pyx_t_1 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_f_4heap_heap_pop((&amp;__pyx_v_heap))-&gt;priority); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 88, __pyx_L1_error)
+</pre><pre class="cython line score-8" onclick='toggleDiv(this)'>+<span class="">81</span>:     <span class="k">print</span> <span class="n">heap_pop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">heap</span><span class="p">)</span><span class="o">.</span><span class="n">priority</span></pre>
+<pre class='cython code score-8 '>    __pyx_t_1 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_f_4heap_heap_pop((&amp;__pyx_v_heap))-&gt;priority); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-    if (<span class='pyx_c_api'>__Pyx_PrintOne</span>(0, __pyx_t_1) &lt; 0) __PYX_ERR(0, 88, __pyx_L1_error)
+    if (<span class='pyx_c_api'>__Pyx_PrintOne</span>(0, __pyx_t_1) &lt; 0) __PYX_ERR(0, 81, __pyx_L1_error)
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
   }
 </pre></div></body></html>

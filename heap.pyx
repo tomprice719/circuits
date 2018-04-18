@@ -1,12 +1,4 @@
 cdef:
-  struct HeapEm:
-    float priority
-    int location
-    void * data
-  struct Heap:
-    HeapEm** inv_location
-    int size
-
   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):
     heap.inv_location[orig_parent.location] = orig_child
     heap.inv_location[orig_child.location] = orig_parent

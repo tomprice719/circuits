@@ -3,7 +3,7 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {}, 
-    "module_name": "heap"
+    "module_name": "dijkstra"
 }
 END: Cython Metadata */
 
@@ -434,8 +434,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__heap
-#define __PYX_HAVE_API__heap
+#define __PYX_HAVE__dijkstra
+#define __PYX_HAVE_API__dijkstra
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -631,7 +631,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "heap.pyx",
+  "dijkstra.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -660,6 +660,35 @@ struct __pyx_t_4heap_HeapEm {
 struct __pyx_t_4heap_Heap {
   struct __pyx_t_4heap_HeapEm **inv_location;
   int size;
+};
+struct __pyx_t_8dijkstra_Node;
+struct __pyx_t_8dijkstra_Edge;
+
+/* "dijkstra.pyx":6
+ *   INFINITY = float("inf")
+ * 
+ *   struct Node:             # <<<<<<<<<<<<<<
+ *     bint terminal
+ *     float dist
+ */
+struct __pyx_t_8dijkstra_Node {
+  int terminal;
+  float dist;
+  struct __pyx_t_8dijkstra_Edge *edges;
+  int num_edges;
+  struct __pyx_t_4heap_HeapEm *hem;
+};
+
+/* "dijkstra.pyx":12
+ *     int num_edges
+ *     HeapEm * hem
+ *   struct Edge:             # <<<<<<<<<<<<<<
+ *     Node * end
+ *     float length
+ */
+struct __pyx_t_8dijkstra_Edge {
+  struct __pyx_t_8dijkstra_Node *end;
+  float length;
 };
 
 /* --- Runtime support code (head) --- */
@@ -745,30 +774,34 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
-/* None.proto */
-static CYTHON_INLINE long __Pyx_div_long(long, long);
+/* PyThreadStateGet.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
+#define __Pyx_PyThreadState_assign  __pyx_tstate = PyThreadState_GET();
+#else
+#define __Pyx_PyThreadState_declare
+#define __Pyx_PyThreadState_assign
+#endif
 
-/* GetItemInt.proto */
-#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
-    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
-               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
-#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
-                                                     int is_list, int wraparound, int boundscheck);
+/* PyErrFetchRestore.proto */
+#if CYTHON_FAST_THREAD_STATE
+#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
+#else
+#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
+#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
+#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
+#endif
+
+/* WriteUnraisableException.proto */
+static void __Pyx_WriteUnraisable(const char *name, int clineno,
+                                  int lineno, const char *filename,
+                                  int full_traceback, int nogil);
 
 /* CodeObjectCache.proto */
 typedef struct {
@@ -790,891 +823,433 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
 /* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
-
-/* Print.proto */
-static int __Pyx_Print(PyObject*, PyObject *, int);
-#if CYTHON_COMPILING_IN_PYPY || PY_MAJOR_VERSION >= 3
-static PyObject* __pyx_print = 0;
-static PyObject* __pyx_print_kwargs = 0;
-#endif
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
-
-/* PrintOne.proto */
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o);
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
-/* FunctionExport.proto */
-static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
+/* PyIdentifierFromString.proto */
+#if !defined(__Pyx_PyIdentifier_FromString)
+#if PY_MAJOR_VERSION < 3
+  #define __Pyx_PyIdentifier_FromString(s) PyString_FromString(s)
+#else
+  #define __Pyx_PyIdentifier_FromString(s) PyUnicode_FromString(s)
+#endif
+#endif
+
+/* ModuleImport.proto */
+static PyObject *__Pyx_ImportModule(const char *name);
+
+/* FunctionImport.proto */
+static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig);
 
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
 /* Module declarations from 'heap' */
-static void __pyx_f_4heap_bubble_up(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
-static void __pyx_f_4heap_bubble_down(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
-static void __pyx_f_4heap_heap_push(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
-static struct __pyx_t_4heap_HeapEm *__pyx_f_4heap_heap_pop(struct __pyx_t_4heap_Heap *); /*proto*/
-static CYTHON_INLINE void __pyx_f_4heap_swap_heap_elements(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
-#define __Pyx_MODULE_NAME "heap"
-int __pyx_module_is_main_heap = 0;
+static void (*__pyx_f_4heap_bubble_up)(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
+static void (*__pyx_f_4heap_heap_push)(struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *); /*proto*/
+static struct __pyx_t_4heap_HeapEm *(*__pyx_f_4heap_heap_pop)(struct __pyx_t_4heap_Heap *); /*proto*/
 
-/* Implementation of 'heap' */
+/* Module declarations from 'dijkstra' */
+static PyObject *__pyx_v_8dijkstra_INFINITY = 0;
+#define __Pyx_MODULE_NAME "dijkstra"
+int __pyx_module_is_main_dijkstra = 0;
+
+/* Implementation of 'dijkstra' */
 static PyObject *__pyx_builtin_range;
-static const char __pyx_k_i[] = "i";
-static const char __pyx_k_ems[] = "ems";
-static const char __pyx_k_end[] = "end";
-static const char __pyx_k_file[] = "file";
-static const char __pyx_k_heap[] = "heap";
+static const char __pyx_k_inf[] = "inf";
 static const char __pyx_k_main[] = "__main__";
-static const char __pyx_k_nums[] = "nums";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_heap_test[] = "heap_test";
-static const char __pyx_k_inv_location[] = "inv_location";
-static const char __pyx_k_home_tom_electric_heap_pyx[] = "/home/tom/electric/heap.pyx";
-static PyObject *__pyx_n_s_ems;
-static PyObject *__pyx_n_s_end;
-static PyObject *__pyx_n_s_file;
-static PyObject *__pyx_n_s_heap;
-static PyObject *__pyx_n_s_heap_test;
-static PyObject *__pyx_kp_s_home_tom_electric_heap_pyx;
-static PyObject *__pyx_n_s_i;
-static PyObject *__pyx_n_s_inv_location;
+static PyObject *__pyx_n_s_inf;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_nums;
-static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_4heap_heap_test(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
-static PyObject *__pyx_int_0;
-static PyObject *__pyx_int_1;
-static PyObject *__pyx_int_2;
-static PyObject *__pyx_int_3;
-static PyObject *__pyx_int_4;
-static PyObject *__pyx_int_5;
-static PyObject *__pyx_int_6;
-static PyObject *__pyx_int_7;
-static PyObject *__pyx_int_8;
-static PyObject *__pyx_int_9;
-static PyObject *__pyx_int_10;
-static PyObject *__pyx_int_11;
-static PyObject *__pyx_int_12;
-static PyObject *__pyx_int_13;
-static PyObject *__pyx_int_14;
-static PyObject *__pyx_int_15;
-static PyObject *__pyx_int_16;
-static PyObject *__pyx_int_17;
-static PyObject *__pyx_int_18;
-static PyObject *__pyx_int_19;
-static PyObject *__pyx_tuple_;
-static PyObject *__pyx_codeobj__2;
 
-/* "heap.pyx":2
- * cdef:
- *   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):             # <<<<<<<<<<<<<<
- *     heap.inv_location[orig_parent.location] = orig_child
- *     heap.inv_location[orig_child.location] = orig_parent
+/* "dijkstra.pyx":16
+ *     float length
+ * 
+ *   float shortest_distance(Node* initial_nodes, int num_initial_nodes, Heap* heap):             # <<<<<<<<<<<<<<
+ *     cdef Edge * edge
+ *     cdef Node * node
  */
 
-static CYTHON_INLINE void __pyx_f_4heap_swap_heap_elements(struct __pyx_t_4heap_HeapEm *__pyx_v_orig_parent, struct __pyx_t_4heap_HeapEm *__pyx_v_orig_child, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
+static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *__pyx_v_initial_nodes, int __pyx_v_num_initial_nodes, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
+  struct __pyx_t_8dijkstra_Edge *__pyx_v_edge;
+  struct __pyx_t_8dijkstra_Node *__pyx_v_node;
+  struct __pyx_t_8dijkstra_Node *__pyx_v_end_node;
+  int __pyx_v_i;
+  int __pyx_v_j;
+  float __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  __Pyx_RefNannySetupContext("swap_heap_elements", 0);
+  int __pyx_t_2;
+  int __pyx_t_3;
+  int __pyx_t_4;
+  struct __pyx_t_8dijkstra_Node *__pyx_t_5;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  int __pyx_t_8;
+  float __pyx_t_9;
+  __Pyx_RefNannySetupContext("shortest_distance", 0);
 
-  /* "heap.pyx":3
- * cdef:
- *   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):
- *     heap.inv_location[orig_parent.location] = orig_child             # <<<<<<<<<<<<<<
- *     heap.inv_location[orig_child.location] = orig_parent
- *     orig_parent.location = orig_child.location
- */
-  (__pyx_v_heap->inv_location[__pyx_v_orig_parent->location]) = __pyx_v_orig_child;
-
-  /* "heap.pyx":4
- *   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):
- *     heap.inv_location[orig_parent.location] = orig_child
- *     heap.inv_location[orig_child.location] = orig_parent             # <<<<<<<<<<<<<<
- *     orig_parent.location = orig_child.location
- *     orig_child.location = (orig_child.location - 1) / 2
- */
-  (__pyx_v_heap->inv_location[__pyx_v_orig_child->location]) = __pyx_v_orig_parent;
-
-  /* "heap.pyx":5
- *     heap.inv_location[orig_parent.location] = orig_child
- *     heap.inv_location[orig_child.location] = orig_parent
- *     orig_parent.location = orig_child.location             # <<<<<<<<<<<<<<
- *     orig_child.location = (orig_child.location - 1) / 2
+  /* "dijkstra.pyx":21
+ *     cdef Node * end_node
  * 
+ *     for i in range(num_initial_nodes):             # <<<<<<<<<<<<<<
+ *       for j in range(initial_nodes[i].num_edges):
+ *         edge = &(initial_nodes[i].edges[j])
  */
-  __pyx_t_1 = __pyx_v_orig_child->location;
-  __pyx_v_orig_parent->location = __pyx_t_1;
-
-  /* "heap.pyx":6
- *     heap.inv_location[orig_child.location] = orig_parent
- *     orig_parent.location = orig_child.location
- *     orig_child.location = (orig_child.location - 1) / 2             # <<<<<<<<<<<<<<
- * 
- *   void bubble_up(HeapEm * em, Heap* heap):
- */
-  __pyx_v_orig_child->location = __Pyx_div_long((__pyx_v_orig_child->location - 1), 2);
-
-  /* "heap.pyx":2
- * cdef:
- *   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):             # <<<<<<<<<<<<<<
- *     heap.inv_location[orig_parent.location] = orig_child
- *     heap.inv_location[orig_child.location] = orig_parent
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "heap.pyx":8
- *     orig_child.location = (orig_child.location - 1) / 2
- * 
- *   void bubble_up(HeapEm * em, Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* parent
- *     while(em.location > 0):
- */
-
-static void __pyx_f_4heap_bubble_up(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
-  struct __pyx_t_4heap_HeapEm *__pyx_v_parent;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("bubble_up", 0);
-
-  /* "heap.pyx":10
- *   void bubble_up(HeapEm * em, Heap* heap):
- *     cdef HeapEm* parent
- *     while(em.location > 0):             # <<<<<<<<<<<<<<
- *       parent = heap.inv_location[(em.location - 1) / 2]
- *       if (em.priority > parent.priority):
- */
-  while (1) {
-    __pyx_t_1 = ((__pyx_v_em->location > 0) != 0);
-    if (!__pyx_t_1) break;
-
-    /* "heap.pyx":11
- *     cdef HeapEm* parent
- *     while(em.location > 0):
- *       parent = heap.inv_location[(em.location - 1) / 2]             # <<<<<<<<<<<<<<
- *       if (em.priority > parent.priority):
- *         swap_heap_elements(parent, em, heap)
- */
-    __pyx_v_parent = (__pyx_v_heap->inv_location[__Pyx_div_long((__pyx_v_em->location - 1), 2)]);
-
-    /* "heap.pyx":12
- *     while(em.location > 0):
- *       parent = heap.inv_location[(em.location - 1) / 2]
- *       if (em.priority > parent.priority):             # <<<<<<<<<<<<<<
- *         swap_heap_elements(parent, em, heap)
- *       else:
- */
-    __pyx_t_1 = ((__pyx_v_em->priority > __pyx_v_parent->priority) != 0);
-    if (__pyx_t_1) {
-
-      /* "heap.pyx":13
- *       parent = heap.inv_location[(em.location - 1) / 2]
- *       if (em.priority > parent.priority):
- *         swap_heap_elements(parent, em, heap)             # <<<<<<<<<<<<<<
- *       else:
- *         break
- */
-      __pyx_f_4heap_swap_heap_elements(__pyx_v_parent, __pyx_v_em, __pyx_v_heap);
-
-      /* "heap.pyx":12
- *     while(em.location > 0):
- *       parent = heap.inv_location[(em.location - 1) / 2]
- *       if (em.priority > parent.priority):             # <<<<<<<<<<<<<<
- *         swap_heap_elements(parent, em, heap)
- *       else:
- */
-      goto __pyx_L5;
-    }
-
-    /* "heap.pyx":15
- *         swap_heap_elements(parent, em, heap)
- *       else:
- *         break             # <<<<<<<<<<<<<<
- * 
- *   void bubble_down(HeapEm* em, Heap* heap):
- */
-    /*else*/ {
-      goto __pyx_L4_break;
-    }
-    __pyx_L5:;
-  }
-  __pyx_L4_break:;
-
-  /* "heap.pyx":8
- *     orig_child.location = (orig_child.location - 1) / 2
- * 
- *   void bubble_up(HeapEm * em, Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* parent
- *     while(em.location > 0):
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "heap.pyx":17
- *         break
- * 
- *   void bubble_down(HeapEm* em, Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* max_child
- *     cdef HeapEm* left_child
- */
-
-static void __pyx_f_4heap_bubble_down(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
-  struct __pyx_t_4heap_HeapEm *__pyx_v_max_child;
-  struct __pyx_t_4heap_HeapEm *__pyx_v_left_child;
-  struct __pyx_t_4heap_HeapEm *__pyx_v_right_child;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("bubble_down", 0);
-
-  /* "heap.pyx":22
- *     cdef HeapEm* right_child
- * 
- *     while(True):             # <<<<<<<<<<<<<<
- * 
- *       if 2 * em.location + 1 < heap.size:
- */
-  while (1) {
-
-    /* "heap.pyx":24
- *     while(True):
- * 
- *       if 2 * em.location + 1 < heap.size:             # <<<<<<<<<<<<<<
- *         left_child = heap.inv_location[2 * em.location + 1]
- *         max_child = NULL
- */
-    __pyx_t_1 = ((((2 * __pyx_v_em->location) + 1) < __pyx_v_heap->size) != 0);
-    if (__pyx_t_1) {
-
-      /* "heap.pyx":25
- * 
- *       if 2 * em.location + 1 < heap.size:
- *         left_child = heap.inv_location[2 * em.location + 1]             # <<<<<<<<<<<<<<
- *         max_child = NULL
- * 
- */
-      __pyx_v_left_child = (__pyx_v_heap->inv_location[((2 * __pyx_v_em->location) + 1)]);
-
-      /* "heap.pyx":26
- *       if 2 * em.location + 1 < heap.size:
- *         left_child = heap.inv_location[2 * em.location + 1]
- *         max_child = NULL             # <<<<<<<<<<<<<<
- * 
- *         if 2 * em.location + 2 < heap.size:
- */
-      __pyx_v_max_child = NULL;
-
-      /* "heap.pyx":28
- *         max_child = NULL
- * 
- *         if 2 * em.location + 2 < heap.size:             # <<<<<<<<<<<<<<
- *           right_child = heap.inv_location[2 * em.location + 2]
- * 
- */
-      __pyx_t_1 = ((((2 * __pyx_v_em->location) + 2) < __pyx_v_heap->size) != 0);
-      if (__pyx_t_1) {
-
-        /* "heap.pyx":29
- * 
- *         if 2 * em.location + 2 < heap.size:
- *           right_child = heap.inv_location[2 * em.location + 2]             # <<<<<<<<<<<<<<
- * 
- *           if left_child.priority > em.priority:
- */
-        __pyx_v_right_child = (__pyx_v_heap->inv_location[((2 * __pyx_v_em->location) + 2)]);
-
-        /* "heap.pyx":31
- *           right_child = heap.inv_location[2 * em.location + 2]
- * 
- *           if left_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *             if right_child.priority > left_child.priority:
- *               max_child = right_child
- */
-        __pyx_t_1 = ((__pyx_v_left_child->priority > __pyx_v_em->priority) != 0);
-        if (__pyx_t_1) {
-
-          /* "heap.pyx":32
- * 
- *           if left_child.priority > em.priority:
- *             if right_child.priority > left_child.priority:             # <<<<<<<<<<<<<<
- *               max_child = right_child
- *             else:
- */
-          __pyx_t_1 = ((__pyx_v_right_child->priority > __pyx_v_left_child->priority) != 0);
-          if (__pyx_t_1) {
-
-            /* "heap.pyx":33
- *           if left_child.priority > em.priority:
- *             if right_child.priority > left_child.priority:
- *               max_child = right_child             # <<<<<<<<<<<<<<
- *             else:
- *               max_child = left_child
- */
-            __pyx_v_max_child = __pyx_v_right_child;
-
-            /* "heap.pyx":32
- * 
- *           if left_child.priority > em.priority:
- *             if right_child.priority > left_child.priority:             # <<<<<<<<<<<<<<
- *               max_child = right_child
- *             else:
- */
-            goto __pyx_L8;
-          }
-
-          /* "heap.pyx":35
- *               max_child = right_child
- *             else:
- *               max_child = left_child             # <<<<<<<<<<<<<<
- *           elif right_child.priority > em.priority:
- *               max_child = right_child
- */
-          /*else*/ {
-            __pyx_v_max_child = __pyx_v_left_child;
-          }
-          __pyx_L8:;
-
-          /* "heap.pyx":31
- *           right_child = heap.inv_location[2 * em.location + 2]
- * 
- *           if left_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *             if right_child.priority > left_child.priority:
- *               max_child = right_child
- */
-          goto __pyx_L7;
-        }
-
-        /* "heap.pyx":36
- *             else:
- *               max_child = left_child
- *           elif right_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *               max_child = right_child
- *         elif left_child.priority > em.priority:
- */
-        __pyx_t_1 = ((__pyx_v_right_child->priority > __pyx_v_em->priority) != 0);
-        if (__pyx_t_1) {
-
-          /* "heap.pyx":37
- *               max_child = left_child
- *           elif right_child.priority > em.priority:
- *               max_child = right_child             # <<<<<<<<<<<<<<
- *         elif left_child.priority > em.priority:
- *           max_child = left_child
- */
-          __pyx_v_max_child = __pyx_v_right_child;
-
-          /* "heap.pyx":36
- *             else:
- *               max_child = left_child
- *           elif right_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *               max_child = right_child
- *         elif left_child.priority > em.priority:
- */
-        }
-        __pyx_L7:;
-
-        /* "heap.pyx":28
- *         max_child = NULL
- * 
- *         if 2 * em.location + 2 < heap.size:             # <<<<<<<<<<<<<<
- *           right_child = heap.inv_location[2 * em.location + 2]
- * 
- */
-        goto __pyx_L6;
-      }
-
-      /* "heap.pyx":38
- *           elif right_child.priority > em.priority:
- *               max_child = right_child
- *         elif left_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *           max_child = left_child
- *         if max_child != NULL:
- */
-      __pyx_t_1 = ((__pyx_v_left_child->priority > __pyx_v_em->priority) != 0);
-      if (__pyx_t_1) {
-
-        /* "heap.pyx":39
- *               max_child = right_child
- *         elif left_child.priority > em.priority:
- *           max_child = left_child             # <<<<<<<<<<<<<<
- *         if max_child != NULL:
- *           swap_heap_elements(em, max_child, heap)
- */
-        __pyx_v_max_child = __pyx_v_left_child;
-
-        /* "heap.pyx":38
- *           elif right_child.priority > em.priority:
- *               max_child = right_child
- *         elif left_child.priority > em.priority:             # <<<<<<<<<<<<<<
- *           max_child = left_child
- *         if max_child != NULL:
- */
-      }
-      __pyx_L6:;
-
-      /* "heap.pyx":40
- *         elif left_child.priority > em.priority:
- *           max_child = left_child
- *         if max_child != NULL:             # <<<<<<<<<<<<<<
- *           swap_heap_elements(em, max_child, heap)
- *         else:
- */
-      __pyx_t_1 = ((__pyx_v_max_child != NULL) != 0);
-      if (__pyx_t_1) {
-
-        /* "heap.pyx":41
- *           max_child = left_child
- *         if max_child != NULL:
- *           swap_heap_elements(em, max_child, heap)             # <<<<<<<<<<<<<<
- *         else:
- *           break
- */
-        __pyx_f_4heap_swap_heap_elements(__pyx_v_em, __pyx_v_max_child, __pyx_v_heap);
-
-        /* "heap.pyx":40
- *         elif left_child.priority > em.priority:
- *           max_child = left_child
- *         if max_child != NULL:             # <<<<<<<<<<<<<<
- *           swap_heap_elements(em, max_child, heap)
- *         else:
- */
-        goto __pyx_L9;
-      }
-
-      /* "heap.pyx":43
- *           swap_heap_elements(em, max_child, heap)
- *         else:
- *           break             # <<<<<<<<<<<<<<
- *       else:
- *         break
- */
-      /*else*/ {
-        goto __pyx_L4_break;
-      }
-      __pyx_L9:;
-
-      /* "heap.pyx":24
- *     while(True):
- * 
- *       if 2 * em.location + 1 < heap.size:             # <<<<<<<<<<<<<<
- *         left_child = heap.inv_location[2 * em.location + 1]
- *         max_child = NULL
- */
-      goto __pyx_L5;
-    }
-
-    /* "heap.pyx":45
- *           break
- *       else:
- *         break             # <<<<<<<<<<<<<<
- * 
- *   void heap_push(HeapEm* em, Heap* heap):
- */
-    /*else*/ {
-      goto __pyx_L4_break;
-    }
-    __pyx_L5:;
-  }
-  __pyx_L4_break:;
-
-  /* "heap.pyx":17
- *         break
- * 
- *   void bubble_down(HeapEm* em, Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* max_child
- *     cdef HeapEm* left_child
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "heap.pyx":47
- *         break
- * 
- *   void heap_push(HeapEm* em, Heap* heap):             # <<<<<<<<<<<<<<
- *     heap.inv_location[heap.size] = em
- *     em.location = heap.size
- */
-
-static void __pyx_f_4heap_heap_push(struct __pyx_t_4heap_HeapEm *__pyx_v_em, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("heap_push", 0);
-
-  /* "heap.pyx":48
- * 
- *   void heap_push(HeapEm* em, Heap* heap):
- *     heap.inv_location[heap.size] = em             # <<<<<<<<<<<<<<
- *     em.location = heap.size
- *     heap.size += 1
- */
-  (__pyx_v_heap->inv_location[__pyx_v_heap->size]) = __pyx_v_em;
-
-  /* "heap.pyx":49
- *   void heap_push(HeapEm* em, Heap* heap):
- *     heap.inv_location[heap.size] = em
- *     em.location = heap.size             # <<<<<<<<<<<<<<
- *     heap.size += 1
- *     bubble_up(em, heap)
- */
-  __pyx_t_1 = __pyx_v_heap->size;
-  __pyx_v_em->location = __pyx_t_1;
-
-  /* "heap.pyx":50
- *     heap.inv_location[heap.size] = em
- *     em.location = heap.size
- *     heap.size += 1             # <<<<<<<<<<<<<<
- *     bubble_up(em, heap)
- * 
- */
-  __pyx_v_heap->size = (__pyx_v_heap->size + 1);
-
-  /* "heap.pyx":51
- *     em.location = heap.size
- *     heap.size += 1
- *     bubble_up(em, heap)             # <<<<<<<<<<<<<<
- * 
- *   HeapEm* heap_pop(Heap* heap):
- */
-  __pyx_f_4heap_bubble_up(__pyx_v_em, __pyx_v_heap);
-
-  /* "heap.pyx":47
- *         break
- * 
- *   void heap_push(HeapEm* em, Heap* heap):             # <<<<<<<<<<<<<<
- *     heap.inv_location[heap.size] = em
- *     em.location = heap.size
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "heap.pyx":53
- *     bubble_up(em, heap)
- * 
- *   HeapEm* heap_pop(Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* orig_top = heap.inv_location[0]
- *     heap.size -= 1
- */
-
-static struct __pyx_t_4heap_HeapEm *__pyx_f_4heap_heap_pop(struct __pyx_t_4heap_Heap *__pyx_v_heap) {
-  struct __pyx_t_4heap_HeapEm *__pyx_v_orig_top;
-  struct __pyx_t_4heap_HeapEm *__pyx_v_orig_bottom;
-  struct __pyx_t_4heap_HeapEm *__pyx_r;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("heap_pop", 0);
-
-  /* "heap.pyx":54
- * 
- *   HeapEm* heap_pop(Heap* heap):
- *     cdef HeapEm* orig_top = heap.inv_location[0]             # <<<<<<<<<<<<<<
- *     heap.size -= 1
- *     cdef HeapEm* orig_bottom = heap.inv_location[heap.size]
- */
-  __pyx_v_orig_top = (__pyx_v_heap->inv_location[0]);
-
-  /* "heap.pyx":55
- *   HeapEm* heap_pop(Heap* heap):
- *     cdef HeapEm* orig_top = heap.inv_location[0]
- *     heap.size -= 1             # <<<<<<<<<<<<<<
- *     cdef HeapEm* orig_bottom = heap.inv_location[heap.size]
- * 
- */
-  __pyx_v_heap->size = (__pyx_v_heap->size - 1);
-
-  /* "heap.pyx":56
- *     cdef HeapEm* orig_top = heap.inv_location[0]
- *     heap.size -= 1
- *     cdef HeapEm* orig_bottom = heap.inv_location[heap.size]             # <<<<<<<<<<<<<<
- * 
- *     heap.inv_location[0] = orig_bottom
- */
-  __pyx_v_orig_bottom = (__pyx_v_heap->inv_location[__pyx_v_heap->size]);
-
-  /* "heap.pyx":58
- *     cdef HeapEm* orig_bottom = heap.inv_location[heap.size]
- * 
- *     heap.inv_location[0] = orig_bottom             # <<<<<<<<<<<<<<
- *     orig_top.location = -1
- *     orig_bottom.location = 0
- */
-  (__pyx_v_heap->inv_location[0]) = __pyx_v_orig_bottom;
-
-  /* "heap.pyx":59
- * 
- *     heap.inv_location[0] = orig_bottom
- *     orig_top.location = -1             # <<<<<<<<<<<<<<
- *     orig_bottom.location = 0
- * 
- */
-  __pyx_v_orig_top->location = -1;
-
-  /* "heap.pyx":60
- *     heap.inv_location[0] = orig_bottom
- *     orig_top.location = -1
- *     orig_bottom.location = 0             # <<<<<<<<<<<<<<
- * 
- *     bubble_down(orig_bottom, heap)
- */
-  __pyx_v_orig_bottom->location = 0;
-
-  /* "heap.pyx":62
- *     orig_bottom.location = 0
- * 
- *     bubble_down(orig_bottom, heap)             # <<<<<<<<<<<<<<
- *     return orig_top
- * 
- */
-  __pyx_f_4heap_bubble_down(__pyx_v_orig_bottom, __pyx_v_heap);
-
-  /* "heap.pyx":63
- * 
- *     bubble_down(orig_bottom, heap)
- *     return orig_top             # <<<<<<<<<<<<<<
- * 
- * def heap_test():
- */
-  __pyx_r = __pyx_v_orig_top;
-  goto __pyx_L0;
-
-  /* "heap.pyx":53
- *     bubble_up(em, heap)
- * 
- *   HeapEm* heap_pop(Heap* heap):             # <<<<<<<<<<<<<<
- *     cdef HeapEm* orig_top = heap.inv_location[0]
- *     heap.size -= 1
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "heap.pyx":65
- *     return orig_top
- * 
- * def heap_test():             # <<<<<<<<<<<<<<
- *   cdef Heap heap;
- *   cdef HeapEm* inv_location[20]
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_4heap_1heap_test(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyMethodDef __pyx_mdef_4heap_1heap_test = {"heap_test", (PyCFunction)__pyx_pw_4heap_1heap_test, METH_NOARGS, 0};
-static PyObject *__pyx_pw_4heap_1heap_test(PyObject *__pyx_self, CYTHON_UNUSED PyObject *unused) {
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("heap_test (wrapper)", 0);
-  __pyx_r = __pyx_pf_4heap_heap_test(__pyx_self);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_4heap_heap_test(CYTHON_UNUSED PyObject *__pyx_self) {
-  struct __pyx_t_4heap_Heap __pyx_v_heap;
-  struct __pyx_t_4heap_HeapEm *__pyx_v_inv_location[20];
-  struct __pyx_t_4heap_HeapEm __pyx_v_ems[20];
-  PyObject *__pyx_v_nums = NULL;
-  long __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  long __pyx_t_2;
-  float __pyx_t_3;
-  __Pyx_RefNannySetupContext("heap_test", 0);
-
-  /* "heap.pyx":70
- *   cdef HeapEm ems[20]
- * 
- *   heap.size = 0             # <<<<<<<<<<<<<<
- *   heap.inv_location = inv_location
- * 
- */
-  __pyx_v_heap.size = 0;
-
-  /* "heap.pyx":71
- * 
- *   heap.size = 0
- *   heap.inv_location = inv_location             # <<<<<<<<<<<<<<
- * 
- *   nums = [2, 12, 7, 14, 19, 5, 1, 16, 0, 6, 10, 17, 9, 13, 15, 11, 3, 18, 8, 4]
- */
-  __pyx_v_heap.inv_location = __pyx_v_inv_location;
-
-  /* "heap.pyx":73
- *   heap.inv_location = inv_location
- * 
- *   nums = [2, 12, 7, 14, 19, 5, 1, 16, 0, 6, 10, 17, 9, 13, 15, 11, 3, 18, 8, 4]             # <<<<<<<<<<<<<<
- * 
- *   for i in range(20):
- */
-  __pyx_t_1 = PyList_New(20); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_int_2);
-  __Pyx_GIVEREF(__pyx_int_2);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_int_2);
-  __Pyx_INCREF(__pyx_int_12);
-  __Pyx_GIVEREF(__pyx_int_12);
-  PyList_SET_ITEM(__pyx_t_1, 1, __pyx_int_12);
-  __Pyx_INCREF(__pyx_int_7);
-  __Pyx_GIVEREF(__pyx_int_7);
-  PyList_SET_ITEM(__pyx_t_1, 2, __pyx_int_7);
-  __Pyx_INCREF(__pyx_int_14);
-  __Pyx_GIVEREF(__pyx_int_14);
-  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_int_14);
-  __Pyx_INCREF(__pyx_int_19);
-  __Pyx_GIVEREF(__pyx_int_19);
-  PyList_SET_ITEM(__pyx_t_1, 4, __pyx_int_19);
-  __Pyx_INCREF(__pyx_int_5);
-  __Pyx_GIVEREF(__pyx_int_5);
-  PyList_SET_ITEM(__pyx_t_1, 5, __pyx_int_5);
-  __Pyx_INCREF(__pyx_int_1);
-  __Pyx_GIVEREF(__pyx_int_1);
-  PyList_SET_ITEM(__pyx_t_1, 6, __pyx_int_1);
-  __Pyx_INCREF(__pyx_int_16);
-  __Pyx_GIVEREF(__pyx_int_16);
-  PyList_SET_ITEM(__pyx_t_1, 7, __pyx_int_16);
-  __Pyx_INCREF(__pyx_int_0);
-  __Pyx_GIVEREF(__pyx_int_0);
-  PyList_SET_ITEM(__pyx_t_1, 8, __pyx_int_0);
-  __Pyx_INCREF(__pyx_int_6);
-  __Pyx_GIVEREF(__pyx_int_6);
-  PyList_SET_ITEM(__pyx_t_1, 9, __pyx_int_6);
-  __Pyx_INCREF(__pyx_int_10);
-  __Pyx_GIVEREF(__pyx_int_10);
-  PyList_SET_ITEM(__pyx_t_1, 10, __pyx_int_10);
-  __Pyx_INCREF(__pyx_int_17);
-  __Pyx_GIVEREF(__pyx_int_17);
-  PyList_SET_ITEM(__pyx_t_1, 11, __pyx_int_17);
-  __Pyx_INCREF(__pyx_int_9);
-  __Pyx_GIVEREF(__pyx_int_9);
-  PyList_SET_ITEM(__pyx_t_1, 12, __pyx_int_9);
-  __Pyx_INCREF(__pyx_int_13);
-  __Pyx_GIVEREF(__pyx_int_13);
-  PyList_SET_ITEM(__pyx_t_1, 13, __pyx_int_13);
-  __Pyx_INCREF(__pyx_int_15);
-  __Pyx_GIVEREF(__pyx_int_15);
-  PyList_SET_ITEM(__pyx_t_1, 14, __pyx_int_15);
-  __Pyx_INCREF(__pyx_int_11);
-  __Pyx_GIVEREF(__pyx_int_11);
-  PyList_SET_ITEM(__pyx_t_1, 15, __pyx_int_11);
-  __Pyx_INCREF(__pyx_int_3);
-  __Pyx_GIVEREF(__pyx_int_3);
-  PyList_SET_ITEM(__pyx_t_1, 16, __pyx_int_3);
-  __Pyx_INCREF(__pyx_int_18);
-  __Pyx_GIVEREF(__pyx_int_18);
-  PyList_SET_ITEM(__pyx_t_1, 17, __pyx_int_18);
-  __Pyx_INCREF(__pyx_int_8);
-  __Pyx_GIVEREF(__pyx_int_8);
-  PyList_SET_ITEM(__pyx_t_1, 18, __pyx_int_8);
-  __Pyx_INCREF(__pyx_int_4);
-  __Pyx_GIVEREF(__pyx_int_4);
-  PyList_SET_ITEM(__pyx_t_1, 19, __pyx_int_4);
-  __pyx_v_nums = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "heap.pyx":75
- *   nums = [2, 12, 7, 14, 19, 5, 1, 16, 0, 6, 10, 17, 9, 13, 15, 11, 3, 18, 8, 4]
- * 
- *   for i in range(20):             # <<<<<<<<<<<<<<
- *     ems[i].priority = nums[i]
- *     ems[i].location = -1
- */
-  for (__pyx_t_2 = 0; __pyx_t_2 < 20; __pyx_t_2+=1) {
+  __pyx_t_1 = __pyx_v_num_initial_nodes;
+  for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "heap.pyx":76
+    /* "dijkstra.pyx":22
  * 
- *   for i in range(20):
- *     ems[i].priority = nums[i]             # <<<<<<<<<<<<<<
- *     ems[i].location = -1
- *     heap_push(&ems[i], &heap)
+ *     for i in range(num_initial_nodes):
+ *       for j in range(initial_nodes[i].num_edges):             # <<<<<<<<<<<<<<
+ *         edge = &(initial_nodes[i].edges[j])
+ *         end_node = edge.end
  */
-    __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_nums, __pyx_v_i, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    (__pyx_v_ems[__pyx_v_i]).priority = __pyx_t_3;
+    __pyx_t_3 = (__pyx_v_initial_nodes[__pyx_v_i]).num_edges;
+    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+      __pyx_v_j = __pyx_t_4;
 
-    /* "heap.pyx":77
- *   for i in range(20):
- *     ems[i].priority = nums[i]
- *     ems[i].location = -1             # <<<<<<<<<<<<<<
- *     heap_push(&ems[i], &heap)
- * 
+      /* "dijkstra.pyx":23
+ *     for i in range(num_initial_nodes):
+ *       for j in range(initial_nodes[i].num_edges):
+ *         edge = &(initial_nodes[i].edges[j])             # <<<<<<<<<<<<<<
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:
  */
-    (__pyx_v_ems[__pyx_v_i]).location = -1;
+      __pyx_v_edge = (&((__pyx_v_initial_nodes[__pyx_v_i]).edges[__pyx_v_j]));
 
-    /* "heap.pyx":78
- *     ems[i].priority = nums[i]
- *     ems[i].location = -1
- *     heap_push(&ems[i], &heap)             # <<<<<<<<<<<<<<
- * 
- *   for i in range(20):
+      /* "dijkstra.pyx":24
+ *       for j in range(initial_nodes[i].num_edges):
+ *         edge = &(initial_nodes[i].edges[j])
+ *         end_node = edge.end             # <<<<<<<<<<<<<<
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = edge.length
  */
-    __pyx_f_4heap_heap_push((&(__pyx_v_ems[__pyx_v_i])), (&__pyx_v_heap));
+      __pyx_t_5 = __pyx_v_edge->end;
+      __pyx_v_end_node = __pyx_t_5;
+
+      /* "dijkstra.pyx":25
+ *         edge = &(initial_nodes[i].edges[j])
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 25, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_7 = PyObject_RichCompare(__pyx_t_6, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 25, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 25, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (__pyx_t_8) {
+
+        /* "dijkstra.pyx":26
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = edge.length             # <<<<<<<<<<<<<<
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ */
+        __pyx_t_9 = __pyx_v_edge->length;
+        __pyx_v_end_node->dist = __pyx_t_9;
+
+        /* "dijkstra.pyx":27
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *           heap_push(end_node.hem, heap)
+ *         elif edge.length < end_node.dist:
+ */
+        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
+
+        /* "dijkstra.pyx":28
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
+ *         elif edge.length < end_node.dist:
+ *           end_node.dist = edge.length
+ */
+        __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
+
+        /* "dijkstra.pyx":25
+ *         edge = &(initial_nodes[i].edges[j])
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+        goto __pyx_L7;
+      }
+
+      /* "dijkstra.pyx":29
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      __pyx_t_8 = ((__pyx_v_edge->length < __pyx_v_end_node->dist) != 0);
+      if (__pyx_t_8) {
+
+        /* "dijkstra.pyx":30
+ *           heap_push(end_node.hem, heap)
+ *         elif edge.length < end_node.dist:
+ *           end_node.dist = edge.length             # <<<<<<<<<<<<<<
+ *           end_node.hem.priority = -end_node.dist
+ *           bubble_up(end_node.hem, heap)
+ */
+        __pyx_t_9 = __pyx_v_edge->length;
+        __pyx_v_end_node->dist = __pyx_t_9;
+
+        /* "dijkstra.pyx":31
+ *         elif edge.length < end_node.dist:
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *           bubble_up(end_node.hem, heap)
+ * 
+ */
+        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
+
+        /* "dijkstra.pyx":32
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
+ * 
+ *     while(heap.size > 0):
+ */
+        __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
+
+        /* "dijkstra.pyx":29
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *           end_node.dist = edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      }
+      __pyx_L7:;
+    }
   }
 
-  /* "heap.pyx":80
- *     heap_push(&ems[i], &heap)
+  /* "dijkstra.pyx":34
+ *           bubble_up(end_node.hem, heap)
  * 
- *   for i in range(20):             # <<<<<<<<<<<<<<
- *     print heap_pop(&heap).priority
+ *     while(heap.size > 0):             # <<<<<<<<<<<<<<
+ *       node = <Node*>heap_pop(heap).data
+ *       if node.terminal == True:
  */
-  for (__pyx_t_2 = 0; __pyx_t_2 < 20; __pyx_t_2+=1) {
-    __pyx_v_i = __pyx_t_2;
+  while (1) {
+    __pyx_t_8 = ((__pyx_v_heap->size > 0) != 0);
+    if (!__pyx_t_8) break;
 
-    /* "heap.pyx":81
+    /* "dijkstra.pyx":35
  * 
- *   for i in range(20):
- *     print heap_pop(&heap).priority             # <<<<<<<<<<<<<<
+ *     while(heap.size > 0):
+ *       node = <Node*>heap_pop(heap).data             # <<<<<<<<<<<<<<
+ *       if node.terminal == True:
+ *         return node.dist
  */
-    __pyx_t_1 = PyFloat_FromDouble(__pyx_f_4heap_heap_pop((&__pyx_v_heap))->priority); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (__Pyx_PrintOne(0, __pyx_t_1) < 0) __PYX_ERR(0, 81, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_node = ((struct __pyx_t_8dijkstra_Node *)__pyx_f_4heap_heap_pop(__pyx_v_heap)->data);
+
+    /* "dijkstra.pyx":36
+ *     while(heap.size > 0):
+ *       node = <Node*>heap_pop(heap).data
+ *       if node.terminal == True:             # <<<<<<<<<<<<<<
+ *         return node.dist
+ *       for i in range(node.num_edges):
+ */
+    __pyx_t_8 = ((__pyx_v_node->terminal == 1) != 0);
+    if (__pyx_t_8) {
+
+      /* "dijkstra.pyx":37
+ *       node = <Node*>heap_pop(heap).data
+ *       if node.terminal == True:
+ *         return node.dist             # <<<<<<<<<<<<<<
+ *       for i in range(node.num_edges):
+ *         edge = &(node.edges[i])
+ */
+      __pyx_r = __pyx_v_node->dist;
+      goto __pyx_L0;
+
+      /* "dijkstra.pyx":36
+ *     while(heap.size > 0):
+ *       node = <Node*>heap_pop(heap).data
+ *       if node.terminal == True:             # <<<<<<<<<<<<<<
+ *         return node.dist
+ *       for i in range(node.num_edges):
+ */
+    }
+
+    /* "dijkstra.pyx":38
+ *       if node.terminal == True:
+ *         return node.dist
+ *       for i in range(node.num_edges):             # <<<<<<<<<<<<<<
+ *         edge = &(node.edges[i])
+ *         end_node = edge.end
+ */
+    __pyx_t_1 = __pyx_v_node->num_edges;
+    for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
+      __pyx_v_i = __pyx_t_2;
+
+      /* "dijkstra.pyx":39
+ *         return node.dist
+ *       for i in range(node.num_edges):
+ *         edge = &(node.edges[i])             # <<<<<<<<<<<<<<
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:
+ */
+      __pyx_v_edge = (&(__pyx_v_node->edges[__pyx_v_i]));
+
+      /* "dijkstra.pyx":40
+ *       for i in range(node.num_edges):
+ *         edge = &(node.edges[i])
+ *         end_node = edge.end             # <<<<<<<<<<<<<<
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = node.dist + edge.length
+ */
+      __pyx_t_5 = __pyx_v_edge->end;
+      __pyx_v_end_node = __pyx_t_5;
+
+      /* "dijkstra.pyx":41
+ *         edge = &(node.edges[i])
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 41, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_6 = PyObject_RichCompare(__pyx_t_7, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 41, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 41, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (__pyx_t_8) {
+
+        /* "dijkstra.pyx":42
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = node.dist + edge.length             # <<<<<<<<<<<<<<
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ */
+        __pyx_v_end_node->dist = (__pyx_v_node->dist + __pyx_v_edge->length);
+
+        /* "dijkstra.pyx":43
+ *         if end_node.dist == INFINITY:
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *           heap_push(end_node.hem, heap)
+ *         elif node.dist + edge.length < end_node.dist:
+ */
+        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
+
+        /* "dijkstra.pyx":44
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
+ *         elif node.dist + edge.length < end_node.dist:
+ *           end_node.dist = node.dist + edge.length
+ */
+        __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
+
+        /* "dijkstra.pyx":41
+ *         edge = &(node.edges[i])
+ *         end_node = edge.end
+ *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+        goto __pyx_L13;
+      }
+
+      /* "dijkstra.pyx":45
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      __pyx_t_8 = (((__pyx_v_node->dist + __pyx_v_edge->length) < __pyx_v_end_node->dist) != 0);
+      if (__pyx_t_8) {
+
+        /* "dijkstra.pyx":46
+ *           heap_push(end_node.hem, heap)
+ *         elif node.dist + edge.length < end_node.dist:
+ *           end_node.dist = node.dist + edge.length             # <<<<<<<<<<<<<<
+ *           end_node.hem.priority = -end_node.dist
+ *           bubble_up(end_node.hem, heap)
+ */
+        __pyx_v_end_node->dist = (__pyx_v_node->dist + __pyx_v_edge->length);
+
+        /* "dijkstra.pyx":47
+ *         elif node.dist + edge.length < end_node.dist:
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *           bubble_up(end_node.hem, heap)
+ *     return -1.0
+ */
+        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
+
+        /* "dijkstra.pyx":48
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
+ *     return -1.0
+ */
+        __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
+
+        /* "dijkstra.pyx":45
+ *           end_node.hem.priority = -end_node.dist
+ *           heap_push(end_node.hem, heap)
+ *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *           end_node.dist = node.dist + edge.length
+ *           end_node.hem.priority = -end_node.dist
+ */
+      }
+      __pyx_L13:;
+    }
   }
 
-  /* "heap.pyx":65
- *     return orig_top
+  /* "dijkstra.pyx":49
+ *           end_node.hem.priority = -end_node.dist
+ *           bubble_up(end_node.hem, heap)
+ *     return -1.0             # <<<<<<<<<<<<<<
+ */
+  __pyx_r = -1.0;
+  goto __pyx_L0;
+
+  /* "dijkstra.pyx":16
+ *     float length
  * 
- * def heap_test():             # <<<<<<<<<<<<<<
- *   cdef Heap heap;
- *   cdef HeapEm* inv_location[20]
+ *   float shortest_distance(Node* initial_nodes, int num_initial_nodes, Heap* heap):             # <<<<<<<<<<<<<<
+ *     cdef Edge * edge
+ *     cdef Node * node
  */
 
   /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("heap.heap_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_WriteUnraisable("dijkstra.shortest_distance", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_nums);
-  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
@@ -1690,7 +1265,7 @@ static struct PyModuleDef __pyx_moduledef = {
   #else
     PyModuleDef_HEAD_INIT,
   #endif
-    "heap",
+    "dijkstra",
     0, /* m_doc */
     -1, /* m_size */
     __pyx_methods /* m_methods */,
@@ -1702,23 +1277,14 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_ems, __pyx_k_ems, sizeof(__pyx_k_ems), 0, 0, 1, 1},
-  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
-  {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
-  {&__pyx_n_s_heap, __pyx_k_heap, sizeof(__pyx_k_heap), 0, 0, 1, 1},
-  {&__pyx_n_s_heap_test, __pyx_k_heap_test, sizeof(__pyx_k_heap_test), 0, 0, 1, 1},
-  {&__pyx_kp_s_home_tom_electric_heap_pyx, __pyx_k_home_tom_electric_heap_pyx, sizeof(__pyx_k_home_tom_electric_heap_pyx), 0, 0, 1, 0},
-  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
-  {&__pyx_n_s_inv_location, __pyx_k_inv_location, sizeof(__pyx_k_inv_location), 0, 0, 1, 1},
+  {&__pyx_n_s_inf, __pyx_k_inf, sizeof(__pyx_k_inf), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_nums, __pyx_k_nums, sizeof(__pyx_k_nums), 0, 0, 1, 1},
-  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 75, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 21, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1727,61 +1293,27 @@ static int __Pyx_InitCachedBuiltins(void) {
 static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
-
-  /* "heap.pyx":65
- *     return orig_top
- * 
- * def heap_test():             # <<<<<<<<<<<<<<
- *   cdef Heap heap;
- *   cdef HeapEm* inv_location[20]
- */
-  __pyx_tuple_ = PyTuple_Pack(5, __pyx_n_s_heap, __pyx_n_s_inv_location, __pyx_n_s_ems, __pyx_n_s_nums, __pyx_n_s_i); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 65, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(0, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_tom_electric_heap_pyx, __pyx_n_s_heap_test, 65, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_3 = PyInt_FromLong(3); if (unlikely(!__pyx_int_3)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_5 = PyInt_FromLong(5); if (unlikely(!__pyx_int_5)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_6 = PyInt_FromLong(6); if (unlikely(!__pyx_int_6)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_7 = PyInt_FromLong(7); if (unlikely(!__pyx_int_7)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_8 = PyInt_FromLong(8); if (unlikely(!__pyx_int_8)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_9 = PyInt_FromLong(9); if (unlikely(!__pyx_int_9)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_10 = PyInt_FromLong(10); if (unlikely(!__pyx_int_10)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_11 = PyInt_FromLong(11); if (unlikely(!__pyx_int_11)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_12 = PyInt_FromLong(12); if (unlikely(!__pyx_int_12)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_13 = PyInt_FromLong(13); if (unlikely(!__pyx_int_13)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_14 = PyInt_FromLong(14); if (unlikely(!__pyx_int_14)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_15 = PyInt_FromLong(15); if (unlikely(!__pyx_int_15)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_16 = PyInt_FromLong(16); if (unlikely(!__pyx_int_16)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_17 = PyInt_FromLong(17); if (unlikely(!__pyx_int_17)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_18 = PyInt_FromLong(18); if (unlikely(!__pyx_int_18)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_19 = PyInt_FromLong(19); if (unlikely(!__pyx_int_19)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
 }
 
 #if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC initheap(void); /*proto*/
-PyMODINIT_FUNC initheap(void)
+PyMODINIT_FUNC initdijkstra(void); /*proto*/
+PyMODINIT_FUNC initdijkstra(void)
 #else
-PyMODINIT_FUNC PyInit_heap(void); /*proto*/
-PyMODINIT_FUNC PyInit_heap(void)
+PyMODINIT_FUNC PyInit_dijkstra(void); /*proto*/
+PyMODINIT_FUNC PyInit_dijkstra(void)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
   __Pyx_RefNannyDeclarations
   #if CYTHON_REFNANNY
   __Pyx_RefNanny = __Pyx_RefNannyImportAPI("refnanny");
@@ -1792,7 +1324,7 @@ PyMODINIT_FUNC PyInit_heap(void)
           Py_FatalError("failed to import 'refnanny' module");
   }
   #endif
-  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_heap(void)", 0);
+  __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_dijkstra(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -1821,7 +1353,7 @@ PyMODINIT_FUNC PyInit_heap(void)
   #endif
   /*--- Module creation code ---*/
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("heap", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("dijkstra", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -1838,14 +1370,14 @@ PyMODINIT_FUNC PyInit_heap(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_heap) {
+  if (__pyx_module_is_main_dijkstra) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "heap")) {
-      if (unlikely(PyDict_SetItemString(modules, "heap", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "dijkstra")) {
+      if (unlikely(PyDict_SetItemString(modules, "dijkstra", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1854,55 +1386,60 @@ PyMODINIT_FUNC PyInit_heap(void)
   /*--- Constants init code ---*/
   if (__Pyx_InitCachedConstants() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Global init code ---*/
+  __pyx_v_8dijkstra_INFINITY = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("bubble_up", (void (*)(void))__pyx_f_4heap_bubble_up, "void (struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("bubble_down", (void (*)(void))__pyx_f_4heap_bubble_down, "void (struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("heap_push", (void (*)(void))__pyx_f_4heap_heap_push, "void (struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("heap_pop", (void (*)(void))__pyx_f_4heap_heap_pop, "struct __pyx_t_4heap_HeapEm *(struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Type init code ---*/
   /*--- Type import code ---*/
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
+  __pyx_t_1 = __Pyx_ImportModule("heap"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "bubble_up", (void (**)(void))&__pyx_f_4heap_bubble_up, "void (struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "heap_push", (void (**)(void))&__pyx_f_4heap_heap_push, "void (struct __pyx_t_4heap_HeapEm *, struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ImportFunction(__pyx_t_1, "heap_pop", (void (**)(void))&__pyx_f_4heap_heap_pop, "struct __pyx_t_4heap_HeapEm *(struct __pyx_t_4heap_Heap *)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "heap.pyx":65
- *     return orig_top
+  /* "dijkstra.pyx":4
  * 
- * def heap_test():             # <<<<<<<<<<<<<<
- *   cdef Heap heap;
- *   cdef HeapEm* inv_location[20]
+ * cdef:
+ *   INFINITY = float("inf")             # <<<<<<<<<<<<<<
+ * 
+ *   struct Node:
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4heap_1heap_test, NULL, __pyx_n_s_heap); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_heap_test, __pyx_t_1) < 0) __PYX_ERR(0, 65, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyNumber_Float(__pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_XGOTREF(__pyx_v_8dijkstra_INFINITY);
+  __Pyx_DECREF_SET(__pyx_v_8dijkstra_INFINITY, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
-  /* "heap.pyx":1
- * cdef:             # <<<<<<<<<<<<<<
- *   inline void swap_heap_elements(HeapEm* orig_parent, HeapEm* orig_child, Heap* heap):
- *     heap.inv_location[orig_parent.location] = orig_child
+  /* "dijkstra.pyx":1
+ * from heap cimport *             # <<<<<<<<<<<<<<
+ * 
+ * cdef:
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /*--- Wrapped vars code ---*/
 
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init heap", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init heap");
+    PyErr_SetString(PyExc_ImportError, "init dijkstra");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -1945,93 +1482,70 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     return result;
 }
 
-/* None */
-static CYTHON_INLINE long __Pyx_div_long(long a, long b) {
-    long q = a / b;
-    long r = a - q*b;
-    q -= ((r != 0) & ((r ^ b) < 0));
-    return q;
+/* PyErrFetchRestore */
+#if CYTHON_FAST_THREAD_STATE
+static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
+    PyObject *tmp_type, *tmp_value, *tmp_tb;
+    tmp_type = tstate->curexc_type;
+    tmp_value = tstate->curexc_value;
+    tmp_tb = tstate->curexc_traceback;
+    tstate->curexc_type = type;
+    tstate->curexc_value = value;
+    tstate->curexc_traceback = tb;
+    Py_XDECREF(tmp_type);
+    Py_XDECREF(tmp_value);
+    Py_XDECREF(tmp_tb);
 }
+static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
+    *type = tstate->curexc_type;
+    *value = tstate->curexc_value;
+    *tb = tstate->curexc_traceback;
+    tstate->curexc_type = 0;
+    tstate->curexc_value = 0;
+    tstate->curexc_traceback = 0;
+}
+#endif
 
-/* GetItemInt */
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
-    PyObject *r;
-    if (!j) return NULL;
-    r = PyObject_GetItem(o, j);
-    Py_DECREF(j);
-    return r;
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    if (wraparound & unlikely(i < 0)) i += PyList_GET_SIZE(o);
-    if ((!boundscheck) || likely((0 <= i) & (i < PyList_GET_SIZE(o)))) {
-        PyObject *r = PyList_GET_ITEM(o, i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
+/* WriteUnraisableException */
+static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
+                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
+                                  int full_traceback, CYTHON_UNUSED int nogil) {
+    PyObject *old_exc, *old_val, *old_tb;
+    PyObject *ctx;
+    __Pyx_PyThreadState_declare
+#ifdef WITH_THREAD
+    PyGILState_STATE state;
+    if (nogil)
+        state = PyGILState_Ensure();
+#ifdef _MSC_VER
+    else state = (PyGILState_STATE)-1;
 #endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    if (wraparound & unlikely(i < 0)) i += PyTuple_GET_SIZE(o);
-    if ((!boundscheck) || likely((0 <= i) & (i < PyTuple_GET_SIZE(o)))) {
-        PyObject *r = PyTuple_GET_ITEM(o, i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
 #endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
-                                                     CYTHON_NCP_UNUSED int wraparound,
-                                                     CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
-    if (is_list || PyList_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
-        if ((!boundscheck) || (likely((n >= 0) & (n < PyList_GET_SIZE(o))))) {
-            PyObject *r = PyList_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
+    if (full_traceback) {
+        Py_XINCREF(old_exc);
+        Py_XINCREF(old_val);
+        Py_XINCREF(old_tb);
+        __Pyx_ErrRestore(old_exc, old_val, old_tb);
+        PyErr_PrintEx(1);
     }
-    else if (PyTuple_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
-        if ((!boundscheck) || likely((n >= 0) & (n < PyTuple_GET_SIZE(o)))) {
-            PyObject *r = PyTuple_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
+    #if PY_MAJOR_VERSION < 3
+    ctx = PyString_FromString(name);
+    #else
+    ctx = PyUnicode_FromString(name);
+    #endif
+    __Pyx_ErrRestore(old_exc, old_val, old_tb);
+    if (!ctx) {
+        PyErr_WriteUnraisable(Py_None);
     } else {
-        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
-        if (likely(m && m->sq_item)) {
-            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
-                Py_ssize_t l = m->sq_length(o);
-                if (likely(l >= 0)) {
-                    i += l;
-                } else {
-                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
-                        return NULL;
-                    PyErr_Clear();
-                }
-            }
-            return m->sq_item(o, i);
-        }
+        PyErr_WriteUnraisable(ctx);
+        Py_DECREF(ctx);
     }
-#else
-    if (is_list || PySequence_Check(o)) {
-        return PySequence_GetItem(o, i);
-    }
+#ifdef WITH_THREAD
+    if (nogil)
+        PyGILState_Release(state);
 #endif
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
 }
 
 /* CodeObjectCache */
@@ -2195,6 +1709,37 @@ bad:
     Py_XDECREF(py_frame);
 }
 
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) -1, const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
+}
+
 /* CIntFromPyVerify */
 #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
@@ -2216,369 +1761,6 @@ bad:
         }\
         return (target_type) value;\
     }
-
-/* CIntToPy */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
-    const long neg_one = (long) -1, const_zero = (long) 0;
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
-                                     little, !is_unsigned);
-    }
-}
-
-/* Print */
-#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static PyObject *__Pyx_GetStdout(void) {
-    PyObject *f = PySys_GetObject((char *)"stdout");
-    if (!f) {
-        PyErr_SetString(PyExc_RuntimeError, "lost sys.stdout");
-    }
-    return f;
-}
-static int __Pyx_Print(PyObject* f, PyObject *arg_tuple, int newline) {
-    int i;
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    for (i=0; i < PyTuple_GET_SIZE(arg_tuple); i++) {
-        PyObject* v;
-        if (PyFile_SoftSpace(f, 1)) {
-            if (PyFile_WriteString(" ", f) < 0)
-                goto error;
-        }
-        v = PyTuple_GET_ITEM(arg_tuple, i);
-        if (PyFile_WriteObject(v, f, Py_PRINT_RAW) < 0)
-            goto error;
-        if (PyString_Check(v)) {
-            char *s = PyString_AsString(v);
-            Py_ssize_t len = PyString_Size(v);
-            if (len > 0) {
-                switch (s[len-1]) {
-                    case ' ': break;
-                    case '\f': case '\r': case '\n': case '\t': case '\v':
-                        PyFile_SoftSpace(f, 0);
-                        break;
-                    default:  break;
-                }
-            }
-        }
-    }
-    if (newline) {
-        if (PyFile_WriteString("\n", f) < 0)
-            goto error;
-        PyFile_SoftSpace(f, 0);
-    }
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-}
-#else
-static int __Pyx_Print(PyObject* stream, PyObject *arg_tuple, int newline) {
-    PyObject* kwargs = 0;
-    PyObject* result = 0;
-    PyObject* end_string;
-    if (unlikely(!__pyx_print)) {
-        __pyx_print = PyObject_GetAttr(__pyx_b, __pyx_n_s_print);
-        if (!__pyx_print)
-            return -1;
-    }
-    if (stream) {
-        kwargs = PyDict_New();
-        if (unlikely(!kwargs))
-            return -1;
-        if (unlikely(PyDict_SetItem(kwargs, __pyx_n_s_file, stream) < 0))
-            goto bad;
-        if (!newline) {
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                goto bad;
-            if (PyDict_SetItem(kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                goto bad;
-            }
-            Py_DECREF(end_string);
-        }
-    } else if (!newline) {
-        if (unlikely(!__pyx_print_kwargs)) {
-            __pyx_print_kwargs = PyDict_New();
-            if (unlikely(!__pyx_print_kwargs))
-                return -1;
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                return -1;
-            if (PyDict_SetItem(__pyx_print_kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                return -1;
-            }
-            Py_DECREF(end_string);
-        }
-        kwargs = __pyx_print_kwargs;
-    }
-    result = PyObject_Call(__pyx_print, arg_tuple, kwargs);
-    if (unlikely(kwargs) && (kwargs != __pyx_print_kwargs))
-        Py_DECREF(kwargs);
-    if (!result)
-        return -1;
-    Py_DECREF(result);
-    return 0;
-bad:
-    if (kwargs != __pyx_print_kwargs)
-        Py_XDECREF(kwargs);
-    return -1;
-}
-#endif
-
-/* CIntFromPy */
-static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
-    const long neg_one = (long) -1, const_zero = (long) 0;
-    const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(long) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (long) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (long) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(long, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 2 * PyLong_SHIFT) {
-                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 3 * PyLong_SHIFT) {
-                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) >= 4 * PyLong_SHIFT) {
-                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (long) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(long) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
-#endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (long) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(long, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(long,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(long) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(long) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            long val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (long) -1;
-        }
-    } else {
-        long val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (long) -1;
-        val = __Pyx_PyInt_As_long(tmp);
-        Py_DECREF(tmp);
-        return val;
-    }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to long");
-    return (long) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to long");
-    return (long) -1;
-}
-
-/* PrintOne */
-#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static int __Pyx_PrintOne(PyObject* f, PyObject *o) {
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    if (PyFile_SoftSpace(f, 0)) {
-        if (PyFile_WriteString(" ", f) < 0)
-            goto error;
-    }
-    if (PyFile_WriteObject(o, f, Py_PRINT_RAW) < 0)
-        goto error;
-    if (PyFile_WriteString("\n", f) < 0)
-        goto error;
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-    /* the line below is just to avoid C compiler
-     * warnings about unused functions */
-    return __Pyx_Print(f, NULL, 0);
-}
-#else
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o) {
-    int res;
-    PyObject* arg_tuple = PyTuple_Pack(1, o);
-    if (unlikely(!arg_tuple))
-        return -1;
-    res = __Pyx_Print(stream, arg_tuple, 1);
-    Py_DECREF(arg_tuple);
-    return res;
-}
-#endif
 
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
@@ -2769,6 +1951,226 @@ raise_neg_overflow:
     return (int) -1;
 }
 
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+    const long neg_one = (long) -1, const_zero = (long) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntFromPy */
+static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+    const long neg_one = (long) -1, const_zero = (long) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(long) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(long, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (long) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (long) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(long, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 2 * PyLong_SHIFT) {
+                            return (long) (((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 3 * PyLong_SHIFT) {
+                            return (long) (((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) >= 4 * PyLong_SHIFT) {
+                            return (long) (((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (long) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(long) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (long) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(long, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(long,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(long) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(long) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                            return (long) ((((((long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(long) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                            return (long) ((((((((long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                            return (long) (((long)-1)*(((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(long) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(long, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                            return (long) ((((((((((long)digits[3]) << PyLong_SHIFT) | (long)digits[2]) << PyLong_SHIFT) | (long)digits[1]) << PyLong_SHIFT) | (long)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(long) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(long, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            long val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (long) -1;
+        }
+    } else {
+        long val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (long) -1;
+        val = __Pyx_PyInt_As_long(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to long");
+    return (long) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to long");
+    return (long) -1;
+}
+
 /* CheckBinaryVersion */
 static int __Pyx_check_binary_version(void) {
     char ctversion[4], rtversion[4];
@@ -2785,42 +2187,77 @@ static int __Pyx_check_binary_version(void) {
     return 0;
 }
 
-/* FunctionExport */
-static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
+/* ModuleImport */
+#ifndef __PYX_HAVE_RT_ImportModule
+#define __PYX_HAVE_RT_ImportModule
+static PyObject *__Pyx_ImportModule(const char *name) {
+    PyObject *py_name = 0;
+    PyObject *py_module = 0;
+    py_name = __Pyx_PyIdentifier_FromString(name);
+    if (!py_name)
+        goto bad;
+    py_module = PyImport_Import(py_name);
+    Py_DECREF(py_name);
+    return py_module;
+bad:
+    Py_XDECREF(py_name);
+    return 0;
+}
+#endif
+
+/* FunctionImport */
+#ifndef __PYX_HAVE_RT_ImportFunction
+#define __PYX_HAVE_RT_ImportFunction
+static int __Pyx_ImportFunction(PyObject *module, const char *funcname, void (**f)(void), const char *sig) {
     PyObject *d = 0;
     PyObject *cobj = 0;
     union {
         void (*fp)(void);
         void *p;
     } tmp;
-    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
-    if (!d) {
-        PyErr_Clear();
-        d = PyDict_New();
-        if (!d)
-            goto bad;
-        Py_INCREF(d);
-        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
-            goto bad;
+    d = PyObject_GetAttrString(module, (char *)"__pyx_capi__");
+    if (!d)
+        goto bad;
+    cobj = PyDict_GetItemString(d, funcname);
+    if (!cobj) {
+        PyErr_Format(PyExc_ImportError,
+            "%.200s does not export expected C function %.200s",
+                PyModule_GetName(module), funcname);
+        goto bad;
     }
-    tmp.fp = f;
 #if PY_VERSION_HEX >= 0x02070000
-    cobj = PyCapsule_New(tmp.p, sig, 0);
+    if (!PyCapsule_IsValid(cobj, sig)) {
+        PyErr_Format(PyExc_TypeError,
+            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
+             PyModule_GetName(module), funcname, sig, PyCapsule_GetName(cobj));
+        goto bad;
+    }
+    tmp.p = PyCapsule_GetPointer(cobj, sig);
 #else
-    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
+    {const char *desc, *s1, *s2;
+    desc = (const char *)PyCObject_GetDesc(cobj);
+    if (!desc)
+        goto bad;
+    s1 = desc; s2 = sig;
+    while (*s1 != '\0' && *s1 == *s2) { s1++; s2++; }
+    if (*s1 != *s2) {
+        PyErr_Format(PyExc_TypeError,
+            "C function %.200s.%.200s has wrong signature (expected %.500s, got %.500s)",
+             PyModule_GetName(module), funcname, sig, desc);
+        goto bad;
+    }
+    tmp.p = PyCObject_AsVoidPtr(cobj);}
 #endif
-    if (!cobj)
+    *f = tmp.fp;
+    if (!(*f))
         goto bad;
-    if (PyDict_SetItemString(d, name, cobj) < 0)
-        goto bad;
-    Py_DECREF(cobj);
     Py_DECREF(d);
     return 0;
 bad:
-    Py_XDECREF(cobj);
     Py_XDECREF(d);
     return -1;
 }
+#endif
 
 /* InitStrings */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
