@@ -669,7 +669,7 @@ struct __pyx_t_4heap_Heap {
 struct __pyx_t_8circuit1_Node;
 struct __pyx_t_8circuit1_Edge;
 
-/* "circuit1.pyx":8
+/* "circuit1.pyx":10
  *   INFINITY = float("inf")
  * 
  *   struct Node:             # <<<<<<<<<<<<<<
@@ -681,21 +681,21 @@ struct __pyx_t_8circuit1_Node {
   int initial;
   float dist;
   struct __pyx_t_8circuit1_Edge *edges;
-  struct __pyx_t_8circuit1_Edge *best_edge;
-  int last_seen;
   int num_edges;
   struct __pyx_t_4heap_HeapEm *hem;
+  struct __pyx_t_8circuit1_Edge *best_edge;
+  int last_seen;
 };
 
-/* "circuit1.pyx":18
- *     HeapEm * hem
+/* "circuit1.pyx":20
+ *     int last_seen
  *     #int id
  *   struct Edge:             # <<<<<<<<<<<<<<
- *     Node * beginning
+ *     Node * start
  *     Node * end
  */
 struct __pyx_t_8circuit1_Edge {
-  struct __pyx_t_8circuit1_Node *beginning;
+  struct __pyx_t_8circuit1_Node *start;
   struct __pyx_t_8circuit1_Node *end;
   float length;
   int current;
@@ -814,6 +814,51 @@ static void __Pyx_WriteUnraisable(const char *name, int clineno,
                                   int lineno, const char *filename,
                                   int full_traceback, int nogil);
 
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
+
+/* PyIntBinop.proto */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace);
+#else
+#define __Pyx_PyInt_AddObjC(op1, op2, intval, inplace)\
+    (inplace ? PyNumber_InPlaceAdd(op1, op2) : PyNumber_Add(op1, op2))
+#endif
+
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
+#else
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
+#endif
+
+/* PySequenceContains.proto */
+static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
+    int result = PySequence_Contains(seq, item);
+    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
+}
+
+/* RaiseTooManyValuesToUnpack.proto */
+static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
+
+/* RaiseNeedMoreValuesToUnpack.proto */
+static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index);
+
+/* IterFinish.proto */
+static CYTHON_INLINE int __Pyx_IterFinish(void);
+
+/* UnpackItemEndCheck.proto */
+static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
+
 /* CodeObjectCache.proto */
 typedef struct {
     PyCodeObject* code_object;
@@ -836,8 +881,24 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
+/* Print.proto */
+static int __Pyx_Print(PyObject*, PyObject *, int);
+#if CYTHON_COMPILING_IN_PYPY || PY_MAJOR_VERSION >= 3
+static PyObject* __pyx_print = 0;
+static PyObject* __pyx_print_kwargs = 0;
+#endif
+
+/* None.proto */
+static CYTHON_INLINE long __Pyx_pow_long(long, long);
+
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
+
+/* PrintOne.proto */
+static int __Pyx_PrintOne(PyObject* stream, PyObject *o);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -882,21 +943,77 @@ static struct __pyx_t_4heap_HeapEm *(*__pyx_f_4heap_heap_pop)(struct __pyx_t_4he
 static PyObject *__pyx_v_8circuit1_INFINITY = 0;
 static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *, struct __pyx_t_8circuit1_Edge *, float, PyObject *); /*proto*/
 static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node **, int, struct __pyx_t_4heap_Heap *, int); /*proto*/
+static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node **, int, struct __pyx_t_4heap_Heap *, int); /*proto*/
 #define __Pyx_MODULE_NAME "circuit1"
 int __pyx_module_is_main_circuit1 = 0;
 
 /* Implementation of 'circuit1' */
 static PyObject *__pyx_builtin_range;
+static PyObject *__pyx_builtin_enumerate;
+static const char __pyx_k_i[] = "i";
+static const char __pyx_k_j[] = "j";
+static const char __pyx_k_end[] = "end";
 static const char __pyx_k_inf[] = "inf";
+static const char __pyx_k_edge[] = "edge";
+static const char __pyx_k_file[] = "file";
+static const char __pyx_k_heap[] = "heap";
+static const char __pyx_k_hems[] = "hems";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_edges[] = "edges";
+static const char __pyx_k_nodes[] = "nodes";
+static const char __pyx_k_power[] = "power";
+static const char __pyx_k_print[] = "print";
 static const char __pyx_k_range[] = "range";
+static const char __pyx_k_start[] = "start";
+static const char __pyx_k_circuit1[] = "circuit1";
+static const char __pyx_k_enumerate[] = "enumerate";
+static const char __pyx_k_num_nodes[] = "num_nodes";
+static const char __pyx_k_resistance[] = "resistance";
+static const char __pyx_k_circuit_test[] = "circuit_test";
+static const char __pyx_k_initial_nodes[] = "initial_nodes";
+static const char __pyx_k_done_preparing[] = "done preparing";
+static const char __pyx_k_num_iterations[] = "num_iterations";
+static const char __pyx_k_initial_node_index[] = "initial_node_index";
+static const char __pyx_k_initial_node_indices[] = "initial_node_indices";
+static const char __pyx_k_terminal_node_indices[] = "terminal_node_indices";
+static const char __pyx_k_home_tom_electric_circuit1_pyx[] = "/home/tom/electric/circuit1.pyx";
+static PyObject *__pyx_n_s_circuit1;
+static PyObject *__pyx_n_s_circuit_test;
+static PyObject *__pyx_kp_s_done_preparing;
+static PyObject *__pyx_n_s_edge;
+static PyObject *__pyx_n_s_edges;
+static PyObject *__pyx_n_s_end;
+static PyObject *__pyx_n_s_enumerate;
+static PyObject *__pyx_n_s_file;
+static PyObject *__pyx_n_s_heap;
+static PyObject *__pyx_n_s_hems;
+static PyObject *__pyx_kp_s_home_tom_electric_circuit1_pyx;
+static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_inf;
+static PyObject *__pyx_n_s_initial_node_index;
+static PyObject *__pyx_n_s_initial_node_indices;
+static PyObject *__pyx_n_s_initial_nodes;
+static PyObject *__pyx_n_s_j;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_nodes;
+static PyObject *__pyx_n_s_num_iterations;
+static PyObject *__pyx_n_s_num_nodes;
+static PyObject *__pyx_n_s_power;
+static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_range;
+static PyObject *__pyx_n_s_resistance;
+static PyObject *__pyx_n_s_start;
+static PyObject *__pyx_n_s_terminal_node_indices;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_pf_8circuit1_circuit_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_indices, PyObject *__pyx_v_terminal_node_indices, PyObject *__pyx_v_edges, PyObject *__pyx_v_num_iterations); /* proto */
+static PyObject *__pyx_int_0;
+static PyObject *__pyx_int_1;
+static PyObject *__pyx_int_2;
+static PyObject *__pyx_tuple_;
+static PyObject *__pyx_codeobj__2;
 
-/* "circuit1.pyx":25
+/* "circuit1.pyx":27
  *     float resistance
  * 
  *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):             # <<<<<<<<<<<<<<
@@ -909,7 +1026,7 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("update_node", 0);
 
-  /* "circuit1.pyx":26
+  /* "circuit1.pyx":28
  * 
  *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):
  *     node.dist = distance             # <<<<<<<<<<<<<<
@@ -918,7 +1035,7 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
  */
   __pyx_v_node->dist = __pyx_v_distance;
 
-  /* "circuit1.pyx":27
+  /* "circuit1.pyx":29
  *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):
  *     node.dist = distance
  *     node.hem.priority = -distance             # <<<<<<<<<<<<<<
@@ -927,7 +1044,7 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
  */
   __pyx_v_node->hem->priority = (-__pyx_v_distance);
 
-  /* "circuit1.pyx":28
+  /* "circuit1.pyx":30
  *     node.dist = distance
  *     node.hem.priority = -distance
  *     node.best_edge = edge             # <<<<<<<<<<<<<<
@@ -936,17 +1053,17 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
  */
   __pyx_v_node->best_edge = __pyx_v_edge;
 
-  /* "circuit1.pyx":29
+  /* "circuit1.pyx":31
  *     node.hem.priority = -distance
  *     node.best_edge = edge
  *     node.last_seen = current_iteration             # <<<<<<<<<<<<<<
  * 
  *   Node * dijkstra(Node** initial_nodes, int num_initial_nodes, Heap* heap, int current_iteration):
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_current_iteration); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_current_iteration); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L1_error)
   __pyx_v_node->last_seen = __pyx_t_1;
 
-  /* "circuit1.pyx":25
+  /* "circuit1.pyx":27
  *     float resistance
  * 
  *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):             # <<<<<<<<<<<<<<
@@ -962,7 +1079,7 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
   __Pyx_RefNannyFinishContext();
 }
 
-/* "circuit1.pyx":31
+/* "circuit1.pyx":33
  *     node.last_seen = current_iteration
  * 
  *   Node * dijkstra(Node** initial_nodes, int num_initial_nodes, Heap* heap, int current_iteration):             # <<<<<<<<<<<<<<
@@ -987,7 +1104,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
   PyObject *__pyx_t_7 = NULL;
   __Pyx_RefNannySetupContext("dijkstra", 0);
 
-  /* "circuit1.pyx":36
+  /* "circuit1.pyx":38
  *     cdef Node * end_node
  * 
  *     for i in range(num_initial_nodes):             # <<<<<<<<<<<<<<
@@ -998,7 +1115,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "circuit1.pyx":37
+    /* "circuit1.pyx":39
  * 
  *     for i in range(num_initial_nodes):
  *       if initial_nodes[i].terminal:             # <<<<<<<<<<<<<<
@@ -1008,7 +1125,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
     __pyx_t_3 = ((__pyx_v_initial_nodes[__pyx_v_i])->terminal != 0);
     if (__pyx_t_3) {
 
-      /* "circuit1.pyx":38
+      /* "circuit1.pyx":40
  *     for i in range(num_initial_nodes):
  *       if initial_nodes[i].terminal:
  *         printf("Short circuit! A node is both initial and terminal.")             # <<<<<<<<<<<<<<
@@ -1017,17 +1134,17 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
       printf(((char const *)"Short circuit! A node is both initial and terminal."));
 
-      /* "circuit1.pyx":39
+      /* "circuit1.pyx":41
  *       if initial_nodes[i].terminal:
  *         printf("Short circuit! A node is both initial and terminal.")
  *         return NULL             # <<<<<<<<<<<<<<
  *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])
+ *         edge = &initial_nodes[i].edges[j]
  */
       __pyx_r = NULL;
       goto __pyx_L0;
 
-      /* "circuit1.pyx":37
+      /* "circuit1.pyx":39
  * 
  *     for i in range(num_initial_nodes):
  *       if initial_nodes[i].terminal:             # <<<<<<<<<<<<<<
@@ -1036,29 +1153,29 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
     }
 
-    /* "circuit1.pyx":40
+    /* "circuit1.pyx":42
  *         printf("Short circuit! A node is both initial and terminal.")
  *         return NULL
  *       for j in range(initial_nodes[i].num_edges):             # <<<<<<<<<<<<<<
- *         edge = &(initial_nodes[i].edges[j])
+ *         edge = &initial_nodes[i].edges[j]
  *         end_node = edge.end
  */
     __pyx_t_4 = (__pyx_v_initial_nodes[__pyx_v_i])->num_edges;
     for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
       __pyx_v_j = __pyx_t_5;
 
-      /* "circuit1.pyx":41
+      /* "circuit1.pyx":43
  *         return NULL
  *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])             # <<<<<<<<<<<<<<
+ *         edge = &initial_nodes[i].edges[j]             # <<<<<<<<<<<<<<
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:
  */
       __pyx_v_edge = (&((__pyx_v_initial_nodes[__pyx_v_i])->edges[__pyx_v_j]));
 
-      /* "circuit1.pyx":42
+      /* "circuit1.pyx":44
  *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])
+ *         edge = &initial_nodes[i].edges[j]
  *         end_node = edge.end             # <<<<<<<<<<<<<<
  *         if end_node.last_seen < current_iteration:
  *           update_node(end_node, edge, edge.length, current_iteration)
@@ -1066,8 +1183,8 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_6 = __pyx_v_edge->end;
       __pyx_v_end_node = __pyx_t_6;
 
-      /* "circuit1.pyx":43
- *         edge = &(initial_nodes[i].edges[j])
+      /* "circuit1.pyx":45
+ *         edge = &initial_nodes[i].edges[j]
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:             # <<<<<<<<<<<<<<
  *           update_node(end_node, edge, edge.length, current_iteration)
@@ -1076,19 +1193,19 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_3 = ((__pyx_v_end_node->last_seen < __pyx_v_current_iteration) != 0);
       if (__pyx_t_3) {
 
-        /* "circuit1.pyx":44
+        /* "circuit1.pyx":46
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:
  *           update_node(end_node, edge, edge.length, current_iteration)             # <<<<<<<<<<<<<<
  *           heap_push(end_node.hem, heap)
  *         elif edge.length < end_node.dist:
  */
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 44, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 46, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_t_7);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-        /* "circuit1.pyx":45
+        /* "circuit1.pyx":47
  *         if end_node.last_seen < current_iteration:
  *           update_node(end_node, edge, edge.length, current_iteration)
  *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1097,8 +1214,8 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
         __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "circuit1.pyx":43
- *         edge = &(initial_nodes[i].edges[j])
+        /* "circuit1.pyx":45
+ *         edge = &initial_nodes[i].edges[j]
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:             # <<<<<<<<<<<<<<
  *           update_node(end_node, edge, edge.length, current_iteration)
@@ -1107,7 +1224,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
         goto __pyx_L8;
       }
 
-      /* "circuit1.pyx":46
+      /* "circuit1.pyx":48
  *           update_node(end_node, edge, edge.length, current_iteration)
  *           heap_push(end_node.hem, heap)
  *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
@@ -1117,19 +1234,19 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_3 = ((__pyx_v_edge->length < __pyx_v_end_node->dist) != 0);
       if (__pyx_t_3) {
 
-        /* "circuit1.pyx":47
+        /* "circuit1.pyx":49
  *           heap_push(end_node.hem, heap)
  *         elif edge.length < end_node.dist:
  *           update_node(end_node, edge, edge.length, current_iteration)             # <<<<<<<<<<<<<<
  *           #print initial_nodes[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)
  */
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 47, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 49, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_t_7);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-        /* "circuit1.pyx":49
+        /* "circuit1.pyx":51
  *           update_node(end_node, edge, edge.length, current_iteration)
  *           #print initial_nodes[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1138,7 +1255,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
         __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "circuit1.pyx":46
+        /* "circuit1.pyx":48
  *           update_node(end_node, edge, edge.length, current_iteration)
  *           heap_push(end_node.hem, heap)
  *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
@@ -1150,7 +1267,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
     }
   }
 
-  /* "circuit1.pyx":51
+  /* "circuit1.pyx":53
  *           bubble_up(end_node.hem, heap)
  * 
  *     while(heap.size > 0):             # <<<<<<<<<<<<<<
@@ -1161,7 +1278,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
     __pyx_t_3 = ((__pyx_v_heap->size > 0) != 0);
     if (!__pyx_t_3) break;
 
-    /* "circuit1.pyx":52
+    /* "circuit1.pyx":54
  * 
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data             # <<<<<<<<<<<<<<
@@ -1170,7 +1287,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
     __pyx_v_node = ((struct __pyx_t_8circuit1_Node *)__pyx_f_4heap_heap_pop(__pyx_v_heap)->data);
 
-    /* "circuit1.pyx":53
+    /* "circuit1.pyx":55
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data
  *       if node.terminal == True:             # <<<<<<<<<<<<<<
@@ -1180,17 +1297,17 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
     __pyx_t_3 = ((__pyx_v_node->terminal == 1) != 0);
     if (__pyx_t_3) {
 
-      /* "circuit1.pyx":54
+      /* "circuit1.pyx":56
  *       node = <Node*>heap_pop(heap).data
  *       if node.terminal == True:
  *         return node             # <<<<<<<<<<<<<<
  *       for i in range(node.num_edges):
- *         edge = &(node.edges[i])
+ *         edge = &node.edges[i]
  */
       __pyx_r = __pyx_v_node;
       goto __pyx_L0;
 
-      /* "circuit1.pyx":53
+      /* "circuit1.pyx":55
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data
  *       if node.terminal == True:             # <<<<<<<<<<<<<<
@@ -1199,29 +1316,29 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
     }
 
-    /* "circuit1.pyx":55
+    /* "circuit1.pyx":57
  *       if node.terminal == True:
  *         return node
  *       for i in range(node.num_edges):             # <<<<<<<<<<<<<<
- *         edge = &(node.edges[i])
+ *         edge = &node.edges[i]
  *         end_node = edge.end
  */
     __pyx_t_1 = __pyx_v_node->num_edges;
     for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
       __pyx_v_i = __pyx_t_2;
 
-      /* "circuit1.pyx":56
+      /* "circuit1.pyx":58
  *         return node
  *       for i in range(node.num_edges):
- *         edge = &(node.edges[i])             # <<<<<<<<<<<<<<
+ *         edge = &node.edges[i]             # <<<<<<<<<<<<<<
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:
  */
       __pyx_v_edge = (&(__pyx_v_node->edges[__pyx_v_i]));
 
-      /* "circuit1.pyx":57
+      /* "circuit1.pyx":59
  *       for i in range(node.num_edges):
- *         edge = &(node.edges[i])
+ *         edge = &node.edges[i]
  *         end_node = edge.end             # <<<<<<<<<<<<<<
  *         if end_node.last_seen < current_iteration:
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
@@ -1229,8 +1346,8 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_6 = __pyx_v_edge->end;
       __pyx_v_end_node = __pyx_t_6;
 
-      /* "circuit1.pyx":58
- *         edge = &(node.edges[i])
+      /* "circuit1.pyx":60
+ *         edge = &node.edges[i]
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:             # <<<<<<<<<<<<<<
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
@@ -1239,19 +1356,19 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_3 = ((__pyx_v_end_node->last_seen < __pyx_v_current_iteration) != 0);
       if (__pyx_t_3) {
 
-        /* "circuit1.pyx":59
+        /* "circuit1.pyx":61
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)             # <<<<<<<<<<<<<<
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  */
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 59, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 61, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_t_7);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-        /* "circuit1.pyx":61
+        /* "circuit1.pyx":63
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1260,8 +1377,8 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
         __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "circuit1.pyx":58
- *         edge = &(node.edges[i])
+        /* "circuit1.pyx":60
+ *         edge = &node.edges[i]
  *         end_node = edge.end
  *         if end_node.last_seen < current_iteration:             # <<<<<<<<<<<<<<
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
@@ -1270,7 +1387,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
         goto __pyx_L14;
       }
 
-      /* "circuit1.pyx":62
+      /* "circuit1.pyx":64
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
@@ -1280,19 +1397,19 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
       __pyx_t_3 = (((__pyx_v_node->dist + __pyx_v_edge->length) < __pyx_v_end_node->dist) != 0);
       if (__pyx_t_3) {
 
-        /* "circuit1.pyx":63
+        /* "circuit1.pyx":65
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)             # <<<<<<<<<<<<<<
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)
  */
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 63, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 65, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_t_7);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-        /* "circuit1.pyx":65
+        /* "circuit1.pyx":67
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1301,7 +1418,7 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
  */
         __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "circuit1.pyx":62
+        /* "circuit1.pyx":64
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
@@ -1313,17 +1430,17 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
     }
   }
 
-  /* "circuit1.pyx":66
+  /* "circuit1.pyx":68
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)
  *     return NULL             # <<<<<<<<<<<<<<
  * 
- *   void thing(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):
+ *   void determine_flow(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):
  */
   __pyx_r = NULL;
   goto __pyx_L0;
 
-  /* "circuit1.pyx":31
+  /* "circuit1.pyx":33
  *     node.last_seen = current_iteration
  * 
  *   Node * dijkstra(Node** initial_nodes, int num_initial_nodes, Heap* heap, int current_iteration):             # <<<<<<<<<<<<<<
@@ -1341,15 +1458,15 @@ static struct __pyx_t_8circuit1_Node *__pyx_f_8circuit1_dijkstra(struct __pyx_t_
   return __pyx_r;
 }
 
-/* "circuit1.pyx":68
+/* "circuit1.pyx":70
  *     return NULL
  * 
- *   void thing(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):             # <<<<<<<<<<<<<<
+ *   void determine_flow(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(num_iterations):
  */
 
-static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_initial_nodes, int __pyx_v_num_initial_nodes, struct __pyx_t_4heap_Heap *__pyx_v_heap, int __pyx_v_num_iterations) {
+static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node **__pyx_v_initial_nodes, int __pyx_v_num_initial_nodes, struct __pyx_t_4heap_Heap *__pyx_v_heap, int __pyx_v_num_iterations) {
   int __pyx_v_i;
   struct __pyx_t_8circuit1_Node *__pyx_v_node;
   struct __pyx_t_8circuit1_Edge *__pyx_v_edge;
@@ -1359,10 +1476,10 @@ static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_init
   int __pyx_t_3;
   struct __pyx_t_8circuit1_Edge *__pyx_t_4;
   struct __pyx_t_8circuit1_Node *__pyx_t_5;
-  __Pyx_RefNannySetupContext("thing", 0);
+  __Pyx_RefNannySetupContext("determine_flow", 0);
 
-  /* "circuit1.pyx":70
- *   void thing(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):
+  /* "circuit1.pyx":72
+ *   void determine_flow(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):
  *     cdef int i
  *     for i in range(num_iterations):             # <<<<<<<<<<<<<<
  *       node = dijkstra(initial_nodes, num_initial_nodes, heap, i)
@@ -1372,7 +1489,7 @@ static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_init
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "circuit1.pyx":71
+    /* "circuit1.pyx":73
  *     cdef int i
  *     for i in range(num_iterations):
  *       node = dijkstra(initial_nodes, num_initial_nodes, heap, i)             # <<<<<<<<<<<<<<
@@ -1381,7 +1498,7 @@ static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_init
  */
     __pyx_v_node = __pyx_f_8circuit1_dijkstra(__pyx_v_initial_nodes, __pyx_v_num_initial_nodes, __pyx_v_heap, __pyx_v_i);
 
-    /* "circuit1.pyx":72
+    /* "circuit1.pyx":74
  *     for i in range(num_iterations):
  *       node = dijkstra(initial_nodes, num_initial_nodes, heap, i)
  *       while(node.initial == False):             # <<<<<<<<<<<<<<
@@ -1392,7 +1509,7 @@ static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_init
       __pyx_t_3 = ((__pyx_v_node->initial == 0) != 0);
       if (!__pyx_t_3) break;
 
-      /* "circuit1.pyx":73
+      /* "circuit1.pyx":75
  *       node = dijkstra(initial_nodes, num_initial_nodes, heap, i)
  *       while(node.initial == False):
  *         edge = node.best_edge             # <<<<<<<<<<<<<<
@@ -1402,52 +1519,1364 @@ static void __pyx_f_8circuit1_thing(struct __pyx_t_8circuit1_Node **__pyx_v_init
       __pyx_t_4 = __pyx_v_node->best_edge;
       __pyx_v_edge = __pyx_t_4;
 
-      /* "circuit1.pyx":74
+      /* "circuit1.pyx":76
  *       while(node.initial == False):
  *         edge = node.best_edge
  *         edge.current += 1             # <<<<<<<<<<<<<<
  *         edge.length = (1 + edge.current) * edge.resistance
- *         node = edge.beginning
+ *         node = edge.start
  */
       __pyx_v_edge->current = (__pyx_v_edge->current + 1);
 
-      /* "circuit1.pyx":75
+      /* "circuit1.pyx":77
  *         edge = node.best_edge
  *         edge.current += 1
  *         edge.length = (1 + edge.current) * edge.resistance             # <<<<<<<<<<<<<<
- *         node = edge.beginning
+ *         node = edge.start
  *       heap.size = 0
  */
       __pyx_v_edge->length = ((1 + __pyx_v_edge->current) * __pyx_v_edge->resistance);
 
-      /* "circuit1.pyx":76
+      /* "circuit1.pyx":78
  *         edge.current += 1
  *         edge.length = (1 + edge.current) * edge.resistance
- *         node = edge.beginning             # <<<<<<<<<<<<<<
+ *         node = edge.start             # <<<<<<<<<<<<<<
  *       heap.size = 0
+ * 
  */
-      __pyx_t_5 = __pyx_v_edge->beginning;
+      __pyx_t_5 = __pyx_v_edge->start;
       __pyx_v_node = __pyx_t_5;
     }
 
-    /* "circuit1.pyx":77
+    /* "circuit1.pyx":79
  *         edge.length = (1 + edge.current) * edge.resistance
- *         node = edge.beginning
+ *         node = edge.start
  *       heap.size = 0             # <<<<<<<<<<<<<<
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):
  */
     __pyx_v_heap->size = 0;
   }
 
-  /* "circuit1.pyx":68
+  /* "circuit1.pyx":70
  *     return NULL
  * 
- *   void thing(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):             # <<<<<<<<<<<<<<
+ *   void determine_flow(Node ** initial_nodes, int num_initial_nodes, Heap * heap, int num_iterations):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(num_iterations):
  */
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
+}
+
+/* "circuit1.pyx":81
+ *       heap.size = 0
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):             # <<<<<<<<<<<<<<
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8circuit1_1circuit_test(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8circuit1_1circuit_test = {"circuit_test", (PyCFunction)__pyx_pw_8circuit1_1circuit_test, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8circuit1_1circuit_test(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_num_nodes = 0;
+  PyObject *__pyx_v_initial_node_indices = 0;
+  PyObject *__pyx_v_terminal_node_indices = 0;
+  PyObject *__pyx_v_edges = 0;
+  PyObject *__pyx_v_num_iterations = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("circuit_test (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_num_nodes,&__pyx_n_s_initial_node_indices,&__pyx_n_s_terminal_node_indices,&__pyx_n_s_edges,&__pyx_n_s_num_iterations,0};
+    PyObject* values[5] = {0,0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_num_nodes)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_initial_node_indices)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("circuit_test", 1, 5, 5, 1); __PYX_ERR(0, 81, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_terminal_node_indices)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("circuit_test", 1, 5, 5, 2); __PYX_ERR(0, 81, __pyx_L3_error)
+        }
+        case  3:
+        if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_edges)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("circuit_test", 1, 5, 5, 3); __PYX_ERR(0, 81, __pyx_L3_error)
+        }
+        case  4:
+        if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_num_iterations)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("circuit_test", 1, 5, 5, 4); __PYX_ERR(0, 81, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "circuit_test") < 0)) __PYX_ERR(0, 81, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+    }
+    __pyx_v_num_nodes = values[0];
+    __pyx_v_initial_node_indices = values[1];
+    __pyx_v_terminal_node_indices = values[2];
+    __pyx_v_edges = values[3];
+    __pyx_v_num_iterations = values[4];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("circuit_test", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 81, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("circuit1.circuit_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8circuit1_circuit_test(__pyx_self, __pyx_v_num_nodes, __pyx_v_initial_node_indices, __pyx_v_terminal_node_indices, __pyx_v_edges, __pyx_v_num_iterations);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8circuit1_circuit_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_indices, PyObject *__pyx_v_terminal_node_indices, PyObject *__pyx_v_edges, PyObject *__pyx_v_num_iterations) {
+  struct __pyx_t_8circuit1_Node *__pyx_v_nodes;
+  struct __pyx_t_8circuit1_Node **__pyx_v_initial_nodes;
+  struct __pyx_t_4heap_HeapEm *__pyx_v_hems;
+  struct __pyx_t_4heap_Heap __pyx_v_heap;
+  struct __pyx_t_8circuit1_Edge *__pyx_v_edge;
+  float __pyx_v_power;
+  PyObject *__pyx_v_i = NULL;
+  PyObject *__pyx_v_initial_node_index = NULL;
+  PyObject *__pyx_v_start = NULL;
+  PyObject *__pyx_v_end = NULL;
+  PyObject *__pyx_v_resistance = NULL;
+  PyObject *__pyx_v_j = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  size_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  PyObject *(*__pyx_t_5)(PyObject *);
+  PyObject *__pyx_t_6 = NULL;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  int __pyx_t_9;
+  int __pyx_t_10;
+  float __pyx_t_11;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *(*__pyx_t_15)(PyObject *);
+  int __pyx_t_16;
+  PyObject *(*__pyx_t_17)(PyObject *);
+  Py_ssize_t __pyx_t_18;
+  __Pyx_RefNannySetupContext("circuit_test", 0);
+
+  /* "circuit1.pyx":82
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))             # <<<<<<<<<<<<<<
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
+ */
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_8circuit1_Node))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_nodes = ((struct __pyx_t_8circuit1_Node *)malloc(__pyx_t_3));
+
+  /* "circuit1.pyx":83
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))             # <<<<<<<<<<<<<<
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
+ *   cdef Heap heap
+ */
+  __pyx_t_4 = PyObject_Length(__pyx_v_initial_node_indices); if (unlikely(__pyx_t_4 == -1)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_v_initial_nodes = ((struct __pyx_t_8circuit1_Node **)malloc((__pyx_t_4 * (sizeof(struct __pyx_t_8circuit1_Node *)))));
+
+  /* "circuit1.pyx":84
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))             # <<<<<<<<<<<<<<
+ *   cdef Heap heap
+ *   cdef Edge * edge
+ */
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_1); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 84, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_hems = ((struct __pyx_t_4heap_HeapEm *)malloc(__pyx_t_3));
+
+  /* "circuit1.pyx":87
+ *   cdef Heap heap
+ *   cdef Edge * edge
+ *   cdef float power = 0.0             # <<<<<<<<<<<<<<
+ * 
+ *   heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
+ */
+  __pyx_v_power = 0.0;
+
+  /* "circuit1.pyx":89
+ *   cdef float power = 0.0
+ * 
+ *   heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))             # <<<<<<<<<<<<<<
+ *   heap.size = 0
+ * 
+ */
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm *))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 89, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_heap.inv_location = ((struct __pyx_t_4heap_HeapEm **)malloc(__pyx_t_3));
+
+  /* "circuit1.pyx":90
+ * 
+ *   heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
+ *   heap.size = 0             # <<<<<<<<<<<<<<
+ * 
+ *   for i, initial_node_index in enumerate(initial_node_indices):
+ */
+  __pyx_v_heap.size = 0;
+
+  /* "circuit1.pyx":92
+ *   heap.size = 0
+ * 
+ *   for i, initial_node_index in enumerate(initial_node_indices):             # <<<<<<<<<<<<<<
+ *     initial_nodes[i] = &nodes[initial_node_index]
+ * 
+ */
+  __Pyx_INCREF(__pyx_int_0);
+  __pyx_t_2 = __pyx_int_0;
+  if (likely(PyList_CheckExact(__pyx_v_initial_node_indices)) || PyTuple_CheckExact(__pyx_v_initial_node_indices)) {
+    __pyx_t_1 = __pyx_v_initial_node_indices; __Pyx_INCREF(__pyx_t_1); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_initial_node_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 92, __pyx_L1_error)
+  }
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_1))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_1)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 92, __pyx_L1_error)
+        #else
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 92, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 92, __pyx_L1_error)
+        #else
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 92, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        #endif
+      }
+    } else {
+      __pyx_t_6 = __pyx_t_5(__pyx_t_1);
+      if (unlikely(!__pyx_t_6)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 92, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_6);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_initial_node_index, __pyx_t_6);
+    __pyx_t_6 = 0;
+    __Pyx_INCREF(__pyx_t_2);
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
+    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_2);
+    __pyx_t_2 = __pyx_t_6;
+    __pyx_t_6 = 0;
+
+    /* "circuit1.pyx":93
+ * 
+ *   for i, initial_node_index in enumerate(initial_node_indices):
+ *     initial_nodes[i] = &nodes[initial_node_index]             # <<<<<<<<<<<<<<
+ * 
+ *   for i in range(num_nodes):
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_initial_node_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+    (__pyx_v_initial_nodes[__pyx_t_8]) = (&(__pyx_v_nodes[__pyx_t_7]));
+
+    /* "circuit1.pyx":92
+ *   heap.size = 0
+ * 
+ *   for i, initial_node_index in enumerate(initial_node_indices):             # <<<<<<<<<<<<<<
+ *     initial_nodes[i] = &nodes[initial_node_index]
+ * 
+ */
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":95
+ *     initial_nodes[i] = &nodes[initial_node_index]
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     if i in initial_node_indices:
+ *       nodes[i].initial = True
+ */
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_num_nodes);
+  __Pyx_GIVEREF(__pyx_v_num_nodes);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 95, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_2))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 95, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 95, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_2);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 95, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "circuit1.pyx":96
+ * 
+ *   for i in range(num_nodes):
+ *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].initial = True
+ *     else:
+ */
+    __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_i, __pyx_v_initial_node_indices, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 96, __pyx_L1_error)
+    __pyx_t_10 = (__pyx_t_9 != 0);
+    if (__pyx_t_10) {
+
+      /* "circuit1.pyx":97
+ *   for i in range(num_nodes):
+ *     if i in initial_node_indices:
+ *       nodes[i].initial = True             # <<<<<<<<<<<<<<
+ *     else:
+ *       nodes[i].initial = False
+ */
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 97, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).initial = 1;
+
+      /* "circuit1.pyx":96
+ * 
+ *   for i in range(num_nodes):
+ *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].initial = True
+ *     else:
+ */
+      goto __pyx_L7;
+    }
+
+    /* "circuit1.pyx":99
+ *       nodes[i].initial = True
+ *     else:
+ *       nodes[i].initial = False             # <<<<<<<<<<<<<<
+ *     if i in terminal_node_indices:
+ *       nodes[i].terminal = True
+ */
+    /*else*/ {
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 99, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).initial = 0;
+    }
+    __pyx_L7:;
+
+    /* "circuit1.pyx":100
+ *     else:
+ *       nodes[i].initial = False
+ *     if i in terminal_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].terminal = True
+ *     else:
+ */
+    __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_i, __pyx_v_terminal_node_indices, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 100, __pyx_L1_error)
+    __pyx_t_9 = (__pyx_t_10 != 0);
+    if (__pyx_t_9) {
+
+      /* "circuit1.pyx":101
+ *       nodes[i].initial = False
+ *     if i in terminal_node_indices:
+ *       nodes[i].terminal = True             # <<<<<<<<<<<<<<
+ *     else:
+ *       nodes[i].terminal = False
+ */
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 101, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).terminal = 1;
+
+      /* "circuit1.pyx":100
+ *     else:
+ *       nodes[i].initial = False
+ *     if i in terminal_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].terminal = True
+ *     else:
+ */
+      goto __pyx_L8;
+    }
+
+    /* "circuit1.pyx":103
+ *       nodes[i].terminal = True
+ *     else:
+ *       nodes[i].terminal = False             # <<<<<<<<<<<<<<
+ *     if i in initial_node_indices:
+ *       nodes[i].dist = 0.0
+ */
+    /*else*/ {
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).terminal = 0;
+    }
+    __pyx_L8:;
+
+    /* "circuit1.pyx":104
+ *     else:
+ *       nodes[i].terminal = False
+ *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].dist = 0.0
+ *     else:
+ */
+    __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_i, __pyx_v_initial_node_indices, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 104, __pyx_L1_error)
+    __pyx_t_10 = (__pyx_t_9 != 0);
+    if (__pyx_t_10) {
+
+      /* "circuit1.pyx":105
+ *       nodes[i].terminal = False
+ *     if i in initial_node_indices:
+ *       nodes[i].dist = 0.0             # <<<<<<<<<<<<<<
+ *     else:
+ *       nodes[i].dist = INFINITY
+ */
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 105, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).dist = 0.0;
+
+      /* "circuit1.pyx":104
+ *     else:
+ *       nodes[i].terminal = False
+ *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+ *       nodes[i].dist = 0.0
+ *     else:
+ */
+      goto __pyx_L9;
+    }
+
+    /* "circuit1.pyx":107
+ *       nodes[i].dist = 0.0
+ *     else:
+ *       nodes[i].dist = INFINITY             # <<<<<<<<<<<<<<
+ *     nodes[i].num_edges = 0
+ *     nodes[i].hem = &hems[i]
+ */
+    /*else*/ {
+      __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_v_8circuit1_INFINITY); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 107, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 107, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).dist = __pyx_t_11;
+    }
+    __pyx_L9:;
+
+    /* "circuit1.pyx":108
+ *     else:
+ *       nodes[i].dist = INFINITY
+ *     nodes[i].num_edges = 0             # <<<<<<<<<<<<<<
+ *     nodes[i].hem = &hems[i]
+ *     #nodes[i].id = i
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 108, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_7]).num_edges = 0;
+
+    /* "circuit1.pyx":109
+ *       nodes[i].dist = INFINITY
+ *     nodes[i].num_edges = 0
+ *     nodes[i].hem = &hems[i]             # <<<<<<<<<<<<<<
+ *     #nodes[i].id = i
+ *     #nodes[i].sp_in = NULL
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 109, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 109, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).hem = (&(__pyx_v_hems[__pyx_t_7]));
+
+    /* "circuit1.pyx":112
+ *     #nodes[i].id = i
+ *     #nodes[i].sp_in = NULL
+ *     hems[i].data = &(nodes[i])             # <<<<<<<<<<<<<<
+ *     nodes[i].best_edge = NULL
+ *     nodes[i].last_seen = -1
+ */
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
+    (__pyx_v_hems[__pyx_t_7]).data = (&(__pyx_v_nodes[__pyx_t_8]));
+
+    /* "circuit1.pyx":113
+ *     #nodes[i].sp_in = NULL
+ *     hems[i].data = &(nodes[i])
+ *     nodes[i].best_edge = NULL             # <<<<<<<<<<<<<<
+ *     nodes[i].last_seen = -1
+ *   for start, end, resistance in edges:
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_7]).best_edge = NULL;
+
+    /* "circuit1.pyx":114
+ *     hems[i].data = &(nodes[i])
+ *     nodes[i].best_edge = NULL
+ *     nodes[i].last_seen = -1             # <<<<<<<<<<<<<<
+ *   for start, end, resistance in edges:
+ *     nodes[start].num_edges += 1
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_7]).last_seen = -1;
+
+    /* "circuit1.pyx":95
+ *     initial_nodes[i] = &nodes[initial_node_index]
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     if i in initial_node_indices:
+ *       nodes[i].initial = True
+ */
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":115
+ *     nodes[i].best_edge = NULL
+ *     nodes[i].last_seen = -1
+ *   for start, end, resistance in edges:             # <<<<<<<<<<<<<<
+ *     nodes[start].num_edges += 1
+ *   for i in range(num_nodes):
+ */
+  if (likely(PyList_CheckExact(__pyx_v_edges)) || PyTuple_CheckExact(__pyx_v_edges)) {
+    __pyx_t_2 = __pyx_v_edges; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
+  }
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_2))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_2);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 115, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
+      PyObject* sequence = __pyx_t_1;
+      #if !CYTHON_COMPILING_IN_PYPY
+      Py_ssize_t size = Py_SIZE(sequence);
+      #else
+      Py_ssize_t size = PySequence_Size(sequence);
+      #endif
+      if (unlikely(size != 3)) {
+        if (size > 3) __Pyx_RaiseTooManyValuesError(3);
+        else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+        __PYX_ERR(0, 115, __pyx_L1_error)
+      }
+      #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+      if (likely(PyTuple_CheckExact(sequence))) {
+        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_13 = PyTuple_GET_ITEM(sequence, 2); 
+      } else {
+        __pyx_t_6 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_12 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_13 = PyList_GET_ITEM(sequence, 2); 
+      }
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_12);
+      __Pyx_INCREF(__pyx_t_13);
+      #else
+      __pyx_t_6 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_12);
+      __pyx_t_13 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      #endif
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    } else {
+      Py_ssize_t index = -1;
+      __pyx_t_14 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext;
+      index = 0; __pyx_t_6 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_6)) goto __pyx_L12_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_6);
+      index = 1; __pyx_t_12 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_12)) goto __pyx_L12_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_12);
+      index = 2; __pyx_t_13 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_13)) goto __pyx_L12_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_13);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 3) < 0) __PYX_ERR(0, 115, __pyx_L1_error)
+      __pyx_t_15 = NULL;
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      goto __pyx_L13_unpacking_done;
+      __pyx_L12_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_t_15 = NULL;
+      if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+      __PYX_ERR(0, 115, __pyx_L1_error)
+      __pyx_L13_unpacking_done:;
+    }
+    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_6);
+    __pyx_t_6 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_12);
+    __pyx_t_12 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_resistance, __pyx_t_13);
+    __pyx_t_13 = 0;
+
+    /* "circuit1.pyx":116
+ *     nodes[i].last_seen = -1
+ *   for start, end, resistance in edges:
+ *     nodes[start].num_edges += 1             # <<<<<<<<<<<<<<
+ *   for i in range(num_nodes):
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_7]).num_edges = ((__pyx_v_nodes[__pyx_t_7]).num_edges + 1);
+
+    /* "circuit1.pyx":115
+ *     nodes[i].best_edge = NULL
+ *     nodes[i].last_seen = -1
+ *   for start, end, resistance in edges:             # <<<<<<<<<<<<<<
+ *     nodes[start].num_edges += 1
+ *   for i in range(num_nodes):
+ */
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":117
+ *   for start, end, resistance in edges:
+ *     nodes[start].num_edges += 1
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ *     nodes[i].num_edges = 0
+ */
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_num_nodes);
+  __Pyx_GIVEREF(__pyx_v_num_nodes);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 117, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_2))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 117, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_2);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 117, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "circuit1.pyx":118
+ *     nodes[start].num_edges += 1
+ *   for i in range(num_nodes):
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))             # <<<<<<<<<<<<<<
+ *     nodes[i].num_edges = 0
+ *   for start, end, resistance in edges:
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).edges = ((struct __pyx_t_8circuit1_Edge *)malloc(((__pyx_v_nodes[__pyx_t_7]).num_edges * (sizeof(struct __pyx_t_8circuit1_Edge)))));
+
+    /* "circuit1.pyx":119
+ *   for i in range(num_nodes):
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ *     nodes[i].num_edges = 0             # <<<<<<<<<<<<<<
+ *   for start, end, resistance in edges:
+ *     edge = &nodes[start].edges[nodes[start].num_edges]
+ */
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).num_edges = 0;
+
+    /* "circuit1.pyx":117
+ *   for start, end, resistance in edges:
+ *     nodes[start].num_edges += 1
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ *     nodes[i].num_edges = 0
+ */
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":120
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ *     nodes[i].num_edges = 0
+ *   for start, end, resistance in edges:             # <<<<<<<<<<<<<<
+ *     edge = &nodes[start].edges[nodes[start].num_edges]
+ *     edge.start = &nodes[start]
+ */
+  if (likely(PyList_CheckExact(__pyx_v_edges)) || PyTuple_CheckExact(__pyx_v_edges)) {
+    __pyx_t_2 = __pyx_v_edges; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 120, __pyx_L1_error)
+  }
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_2))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 120, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_2);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 120, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
+      PyObject* sequence = __pyx_t_1;
+      #if !CYTHON_COMPILING_IN_PYPY
+      Py_ssize_t size = Py_SIZE(sequence);
+      #else
+      Py_ssize_t size = PySequence_Size(sequence);
+      #endif
+      if (unlikely(size != 3)) {
+        if (size > 3) __Pyx_RaiseTooManyValuesError(3);
+        else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+        __PYX_ERR(0, 120, __pyx_L1_error)
+      }
+      #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+      if (likely(PyTuple_CheckExact(sequence))) {
+        __pyx_t_13 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 2); 
+      } else {
+        __pyx_t_13 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_12 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_6 = PyList_GET_ITEM(sequence, 2); 
+      }
+      __Pyx_INCREF(__pyx_t_13);
+      __Pyx_INCREF(__pyx_t_12);
+      __Pyx_INCREF(__pyx_t_6);
+      #else
+      __pyx_t_13 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 120, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 120, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_12);
+      __pyx_t_6 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 120, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      #endif
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    } else {
+      Py_ssize_t index = -1;
+      __pyx_t_14 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 120, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_14);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext;
+      index = 0; __pyx_t_13 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_13)) goto __pyx_L18_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_13);
+      index = 1; __pyx_t_12 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_12)) goto __pyx_L18_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_12);
+      index = 2; __pyx_t_6 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_6)) goto __pyx_L18_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_6);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 3) < 0) __PYX_ERR(0, 120, __pyx_L1_error)
+      __pyx_t_15 = NULL;
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      goto __pyx_L19_unpacking_done;
+      __pyx_L18_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_t_15 = NULL;
+      if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+      __PYX_ERR(0, 120, __pyx_L1_error)
+      __pyx_L19_unpacking_done:;
+    }
+    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_13);
+    __pyx_t_13 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_12);
+    __pyx_t_12 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_resistance, __pyx_t_6);
+    __pyx_t_6 = 0;
+
+    /* "circuit1.pyx":121
+ *     nodes[i].num_edges = 0
+ *   for start, end, resistance in edges:
+ *     edge = &nodes[start].edges[nodes[start].num_edges]             # <<<<<<<<<<<<<<
+ *     edge.start = &nodes[start]
+ *     edge.end = &nodes[end]
+ */
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_v_edge = (&((__pyx_v_nodes[__pyx_t_8]).edges[(__pyx_v_nodes[__pyx_t_7]).num_edges]));
+
+    /* "circuit1.pyx":122
+ *   for start, end, resistance in edges:
+ *     edge = &nodes[start].edges[nodes[start].num_edges]
+ *     edge.start = &nodes[start]             # <<<<<<<<<<<<<<
+ *     edge.end = &nodes[end]
+ *     edge.resistance = resistance
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_v_edge->start = (&(__pyx_v_nodes[__pyx_t_7]));
+
+    /* "circuit1.pyx":123
+ *     edge = &nodes[start].edges[nodes[start].num_edges]
+ *     edge.start = &nodes[start]
+ *     edge.end = &nodes[end]             # <<<<<<<<<<<<<<
+ *     edge.resistance = resistance
+ *     edge.length = resistance
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_end); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 123, __pyx_L1_error)
+    __pyx_v_edge->end = (&(__pyx_v_nodes[__pyx_t_7]));
+
+    /* "circuit1.pyx":124
+ *     edge.start = &nodes[start]
+ *     edge.end = &nodes[end]
+ *     edge.resistance = resistance             # <<<<<<<<<<<<<<
+ *     edge.length = resistance
+ *     edge.current = 0
+ */
+    __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_v_resistance); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_v_edge->resistance = __pyx_t_11;
+
+    /* "circuit1.pyx":125
+ *     edge.end = &nodes[end]
+ *     edge.resistance = resistance
+ *     edge.length = resistance             # <<<<<<<<<<<<<<
+ *     edge.current = 0
+ *     nodes[start].num_edges += 1
+ */
+    __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_v_resistance); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_v_edge->length = __pyx_t_11;
+
+    /* "circuit1.pyx":126
+ *     edge.resistance = resistance
+ *     edge.length = resistance
+ *     edge.current = 0             # <<<<<<<<<<<<<<
+ *     nodes[start].num_edges += 1
+ *   print "done preparing"
+ */
+    __pyx_v_edge->current = 0;
+
+    /* "circuit1.pyx":127
+ *     edge.length = resistance
+ *     edge.current = 0
+ *     nodes[start].num_edges += 1             # <<<<<<<<<<<<<<
+ *   print "done preparing"
+ * 
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_7]).num_edges = ((__pyx_v_nodes[__pyx_t_7]).num_edges + 1);
+
+    /* "circuit1.pyx":120
+ *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+ *     nodes[i].num_edges = 0
+ *   for start, end, resistance in edges:             # <<<<<<<<<<<<<<
+ *     edge = &nodes[start].edges[nodes[start].num_edges]
+ *     edge.start = &nodes[start]
+ */
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":128
+ *     edge.current = 0
+ *     nodes[start].num_edges += 1
+ *   print "done preparing"             # <<<<<<<<<<<<<<
+ * 
+ *   determine_flow(initial_nodes, len(initial_node_indices), &heap, num_iterations)
+ */
+  if (__Pyx_PrintOne(0, __pyx_kp_s_done_preparing) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+
+  /* "circuit1.pyx":130
+ *   print "done preparing"
+ * 
+ *   determine_flow(initial_nodes, len(initial_node_indices), &heap, num_iterations)             # <<<<<<<<<<<<<<
+ * 
+ *   for i in range(num_nodes):
+ */
+  __pyx_t_4 = PyObject_Length(__pyx_v_initial_node_indices); if (unlikely(__pyx_t_4 == -1)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_16 = __Pyx_PyInt_As_int(__pyx_v_num_iterations); if (unlikely((__pyx_t_16 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_f_8circuit1_determine_flow(__pyx_v_initial_nodes, __pyx_t_4, (&__pyx_v_heap), __pyx_t_16);
+
+  /* "circuit1.pyx":132
+ *   determine_flow(initial_nodes, len(initial_node_indices), &heap, num_iterations)
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     for j in range(nodes[i].num_edges):
+ *       edge = &nodes[i].edges[j]
+ */
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_num_nodes);
+  __Pyx_GIVEREF(__pyx_v_num_nodes);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_2))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+        #else
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        #endif
+      }
+    } else {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_2);
+      if (unlikely(!__pyx_t_1)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 132, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_1);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "circuit1.pyx":133
+ * 
+ *   for i in range(num_nodes):
+ *     for j in range(nodes[i].num_edges):             # <<<<<<<<<<<<<<
+ *       edge = &nodes[i].edges[j]
+ *       print edge.resistance, edge.current
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_int((__pyx_v_nodes[__pyx_t_7]).num_edges); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_6 = PyTuple_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_1);
+    __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
+      __pyx_t_6 = __pyx_t_1; __Pyx_INCREF(__pyx_t_6); __pyx_t_7 = 0;
+      __pyx_t_17 = NULL;
+    } else {
+      __pyx_t_7 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_17 = Py_TYPE(__pyx_t_6)->tp_iternext; if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 133, __pyx_L1_error)
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    for (;;) {
+      if (likely(!__pyx_t_17)) {
+        if (likely(PyList_CheckExact(__pyx_t_6))) {
+          if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_6)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
+          #else
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_1);
+          #endif
+        } else {
+          if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_6)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
+          #else
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_1);
+          #endif
+        }
+      } else {
+        __pyx_t_1 = __pyx_t_17(__pyx_t_6);
+        if (unlikely(!__pyx_t_1)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 133, __pyx_L1_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_1);
+      }
+      __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_1);
+      __pyx_t_1 = 0;
+
+      /* "circuit1.pyx":134
+ *   for i in range(num_nodes):
+ *     for j in range(nodes[i].num_edges):
+ *       edge = &nodes[i].edges[j]             # <<<<<<<<<<<<<<
+ *       print edge.resistance, edge.current
+ *       power += edge.resistance * edge.current ** 2
+ */
+      __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyIndex_AsSsize_t(__pyx_v_j); if (unlikely((__pyx_t_18 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
+      __pyx_v_edge = (&((__pyx_v_nodes[__pyx_t_8]).edges[__pyx_t_18]));
+
+      /* "circuit1.pyx":135
+ *     for j in range(nodes[i].num_edges):
+ *       edge = &nodes[i].edges[j]
+ *       print edge.resistance, edge.current             # <<<<<<<<<<<<<<
+ *       power += edge.resistance * edge.current ** 2
+ * 
+ */
+      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_edge->resistance); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_edge->current); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_12);
+      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_13);
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_1);
+      __Pyx_GIVEREF(__pyx_t_12);
+      PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_12);
+      __pyx_t_1 = 0;
+      __pyx_t_12 = 0;
+      if (__Pyx_Print(0, __pyx_t_13, 1) < 0) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+
+      /* "circuit1.pyx":136
+ *       edge = &nodes[i].edges[j]
+ *       print edge.resistance, edge.current
+ *       power += edge.resistance * edge.current ** 2             # <<<<<<<<<<<<<<
+ * 
+ *   print power / num_iterations ** 2
+ */
+      __pyx_v_power = (__pyx_v_power + (__pyx_v_edge->resistance * __Pyx_pow_long(((long)__pyx_v_edge->current), 2)));
+
+      /* "circuit1.pyx":133
+ * 
+ *   for i in range(num_nodes):
+ *     for j in range(nodes[i].num_edges):             # <<<<<<<<<<<<<<
+ *       edge = &nodes[i].edges[j]
+ *       print edge.resistance, edge.current
+ */
+    }
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "circuit1.pyx":132
+ *   determine_flow(initial_nodes, len(initial_node_indices), &heap, num_iterations)
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     for j in range(nodes[i].num_edges):
+ *       edge = &nodes[i].edges[j]
+ */
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":138
+ *       power += edge.resistance * edge.current ** 2
+ * 
+ *   print power / num_iterations ** 2             # <<<<<<<<<<<<<<
+ * 
+ *   for i in range(num_nodes):
+ */
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_power); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_6 = PyNumber_Power(__pyx_v_num_iterations, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_13 = __Pyx_PyNumber_Divide(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  if (__Pyx_PrintOne(0, __pyx_t_13) < 0) __PYX_ERR(0, 138, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+
+  /* "circuit1.pyx":140
+ *   print power / num_iterations ** 2
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     free(nodes[i].edges)
+ *   free(heap.inv_location)
+ */
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_INCREF(__pyx_v_num_nodes);
+  __Pyx_GIVEREF(__pyx_v_num_nodes);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_v_num_nodes);
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_13, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (likely(PyList_CheckExact(__pyx_t_6)) || PyTuple_CheckExact(__pyx_t_6)) {
+    __pyx_t_13 = __pyx_t_6; __Pyx_INCREF(__pyx_t_13); __pyx_t_4 = 0;
+    __pyx_t_5 = NULL;
+  } else {
+    __pyx_t_4 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 140, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_5 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 140, __pyx_L1_error)
+  }
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  for (;;) {
+    if (likely(!__pyx_t_5)) {
+      if (likely(PyList_CheckExact(__pyx_t_13))) {
+        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_13)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+        #else
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_13, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 140, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        #endif
+      } else {
+        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 140, __pyx_L1_error)
+        #else
+        __pyx_t_6 = PySequence_ITEM(__pyx_t_13, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 140, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        #endif
+      }
+    } else {
+      __pyx_t_6 = __pyx_t_5(__pyx_t_13);
+      if (unlikely(!__pyx_t_6)) {
+        PyObject* exc_type = PyErr_Occurred();
+        if (exc_type) {
+          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+          else __PYX_ERR(0, 140, __pyx_L1_error)
+        }
+        break;
+      }
+      __Pyx_GOTREF(__pyx_t_6);
+    }
+    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_6);
+    __pyx_t_6 = 0;
+
+    /* "circuit1.pyx":141
+ * 
+ *   for i in range(num_nodes):
+ *     free(nodes[i].edges)             # <<<<<<<<<<<<<<
+ *   free(heap.inv_location)
+ *   free(hems)
+ */
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L1_error)
+    free((__pyx_v_nodes[__pyx_t_7]).edges);
+
+    /* "circuit1.pyx":140
+ *   print power / num_iterations ** 2
+ * 
+ *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
+ *     free(nodes[i].edges)
+ *   free(heap.inv_location)
+ */
+  }
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+
+  /* "circuit1.pyx":142
+ *   for i in range(num_nodes):
+ *     free(nodes[i].edges)
+ *   free(heap.inv_location)             # <<<<<<<<<<<<<<
+ *   free(hems)
+ *   free(initial_nodes)
+ */
+  free(__pyx_v_heap.inv_location);
+
+  /* "circuit1.pyx":143
+ *     free(nodes[i].edges)
+ *   free(heap.inv_location)
+ *   free(hems)             # <<<<<<<<<<<<<<
+ *   free(initial_nodes)
+ *   free(nodes)
+ */
+  free(__pyx_v_hems);
+
+  /* "circuit1.pyx":144
+ *   free(heap.inv_location)
+ *   free(hems)
+ *   free(initial_nodes)             # <<<<<<<<<<<<<<
+ *   free(nodes)
+ */
+  free(__pyx_v_initial_nodes);
+
+  /* "circuit1.pyx":145
+ *   free(hems)
+ *   free(initial_nodes)
+ *   free(nodes)             # <<<<<<<<<<<<<<
+ */
+  free(__pyx_v_nodes);
+
+  /* "circuit1.pyx":81
+ *       heap.size = 0
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):             # <<<<<<<<<<<<<<
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_AddTraceback("circuit1.circuit_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_i);
+  __Pyx_XDECREF(__pyx_v_initial_node_index);
+  __Pyx_XDECREF(__pyx_v_start);
+  __Pyx_XDECREF(__pyx_v_end);
+  __Pyx_XDECREF(__pyx_v_resistance);
+  __Pyx_XDECREF(__pyx_v_j);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
 }
 
 static PyMethodDef __pyx_methods[] = {
@@ -1473,14 +2902,39 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_s_circuit1, __pyx_k_circuit1, sizeof(__pyx_k_circuit1), 0, 0, 1, 1},
+  {&__pyx_n_s_circuit_test, __pyx_k_circuit_test, sizeof(__pyx_k_circuit_test), 0, 0, 1, 1},
+  {&__pyx_kp_s_done_preparing, __pyx_k_done_preparing, sizeof(__pyx_k_done_preparing), 0, 0, 1, 0},
+  {&__pyx_n_s_edge, __pyx_k_edge, sizeof(__pyx_k_edge), 0, 0, 1, 1},
+  {&__pyx_n_s_edges, __pyx_k_edges, sizeof(__pyx_k_edges), 0, 0, 1, 1},
+  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
+  {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
+  {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
+  {&__pyx_n_s_heap, __pyx_k_heap, sizeof(__pyx_k_heap), 0, 0, 1, 1},
+  {&__pyx_n_s_hems, __pyx_k_hems, sizeof(__pyx_k_hems), 0, 0, 1, 1},
+  {&__pyx_kp_s_home_tom_electric_circuit1_pyx, __pyx_k_home_tom_electric_circuit1_pyx, sizeof(__pyx_k_home_tom_electric_circuit1_pyx), 0, 0, 1, 0},
+  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_inf, __pyx_k_inf, sizeof(__pyx_k_inf), 0, 0, 1, 1},
+  {&__pyx_n_s_initial_node_index, __pyx_k_initial_node_index, sizeof(__pyx_k_initial_node_index), 0, 0, 1, 1},
+  {&__pyx_n_s_initial_node_indices, __pyx_k_initial_node_indices, sizeof(__pyx_k_initial_node_indices), 0, 0, 1, 1},
+  {&__pyx_n_s_initial_nodes, __pyx_k_initial_nodes, sizeof(__pyx_k_initial_nodes), 0, 0, 1, 1},
+  {&__pyx_n_s_j, __pyx_k_j, sizeof(__pyx_k_j), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_nodes, __pyx_k_nodes, sizeof(__pyx_k_nodes), 0, 0, 1, 1},
+  {&__pyx_n_s_num_iterations, __pyx_k_num_iterations, sizeof(__pyx_k_num_iterations), 0, 0, 1, 1},
+  {&__pyx_n_s_num_nodes, __pyx_k_num_nodes, sizeof(__pyx_k_num_nodes), 0, 0, 1, 1},
+  {&__pyx_n_s_power, __pyx_k_power, sizeof(__pyx_k_power), 0, 0, 1, 1},
+  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
+  {&__pyx_n_s_resistance, __pyx_k_resistance, sizeof(__pyx_k_resistance), 0, 0, 1, 1},
+  {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
+  {&__pyx_n_s_terminal_node_indices, __pyx_k_terminal_node_indices, sizeof(__pyx_k_terminal_node_indices), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 36, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 92, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1489,12 +2943,30 @@ static int __Pyx_InitCachedBuiltins(void) {
 static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
+
+  /* "circuit1.pyx":81
+ *       heap.size = 0
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):             # <<<<<<<<<<<<<<
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ */
+  __pyx_tuple_ = PyTuple_Pack(17, __pyx_n_s_num_nodes, __pyx_n_s_initial_node_indices, __pyx_n_s_terminal_node_indices, __pyx_n_s_edges, __pyx_n_s_num_iterations, __pyx_n_s_nodes, __pyx_n_s_initial_nodes, __pyx_n_s_hems, __pyx_n_s_heap, __pyx_n_s_edge, __pyx_n_s_power, __pyx_n_s_i, __pyx_n_s_initial_node_index, __pyx_n_s_start, __pyx_n_s_end, __pyx_n_s_resistance, __pyx_n_s_j); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple_);
+  __Pyx_GIVEREF(__pyx_tuple_);
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(5, 0, 17, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_tom_electric_circuit1_pyx, __pyx_n_s_circuit_test, 81, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 81, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
+  __pyx_L1_error:;
+  __Pyx_RefNannyFinishContext();
+  return -1;
 }
 
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -1599,19 +3071,31 @@ PyMODINIT_FUNC PyInit_circuit1(void)
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "circuit1.pyx":6
+  /* "circuit1.pyx":8
  * 
  * cdef:
  *   INFINITY = float("inf")             # <<<<<<<<<<<<<<
  * 
  *   struct Node:
  */
-  __pyx_t_2 = __Pyx_PyNumber_Float(__pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Float(__pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(__pyx_v_8circuit1_INFINITY);
   __Pyx_DECREF_SET(__pyx_v_8circuit1_INFINITY, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
+
+  /* "circuit1.pyx":81
+ *       heap.size = 0
+ * 
+ * def circuit_test(num_nodes, initial_node_indices, terminal_node_indices, edges, num_iterations):             # <<<<<<<<<<<<<<
+ *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+ *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ */
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8circuit1_1circuit_test, NULL, __pyx_n_s_circuit1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_circuit_test, __pyx_t_2) < 0) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "circuit1.pyx":1
  * from heap cimport *             # <<<<<<<<<<<<<<
@@ -1742,6 +3226,344 @@ static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
     if (nogil)
         PyGILState_Release(state);
 #endif
+}
+
+/* RaiseArgTupleInvalid */
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
+    } else {
+        num_expected = num_max;
+        more_or_less = "at most";
+    }
+    if (exact) {
+        more_or_less = "exactly";
+    }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
+}
+
+/* RaiseDoubleKeywords */
+static void __Pyx_RaiseDoubleKeywordsError(
+    const char* func_name,
+    PyObject* kw_name)
+{
+    PyErr_Format(PyExc_TypeError,
+        #if PY_MAJOR_VERSION >= 3
+        "%s() got multiple values for keyword argument '%U'", func_name, kw_name);
+        #else
+        "%s() got multiple values for keyword argument '%s'", func_name,
+        PyString_AsString(kw_name));
+        #endif
+}
+
+/* ParseKeywords */
+static int __Pyx_ParseOptionalKeywords(
+    PyObject *kwds,
+    PyObject **argnames[],
+    PyObject *kwds2,
+    PyObject *values[],
+    Py_ssize_t num_pos_args,
+    const char* function_name)
+{
+    PyObject *key = 0, *value = 0;
+    Py_ssize_t pos = 0;
+    PyObject*** name;
+    PyObject*** first_kw_arg = argnames + num_pos_args;
+    while (PyDict_Next(kwds, &pos, &key, &value)) {
+        name = first_kw_arg;
+        while (*name && (**name != key)) name++;
+        if (*name) {
+            values[name-argnames] = value;
+            continue;
+        }
+        name = first_kw_arg;
+        #if PY_MAJOR_VERSION < 3
+        if (likely(PyString_CheckExact(key)) || likely(PyString_Check(key))) {
+            while (*name) {
+                if ((CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**name) == PyString_GET_SIZE(key))
+                        && _PyString_Eq(**name, key)) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    if ((**argname == key) || (
+                            (CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**argname) == PyString_GET_SIZE(key))
+                             && _PyString_Eq(**argname, key))) {
+                        goto arg_passed_twice;
+                    }
+                    argname++;
+                }
+            }
+        } else
+        #endif
+        if (likely(PyUnicode_Check(key))) {
+            while (*name) {
+                int cmp = (**name == key) ? 0 :
+                #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                    (PyUnicode_GET_SIZE(**name) != PyUnicode_GET_SIZE(key)) ? 1 :
+                #endif
+                    PyUnicode_Compare(**name, key);
+                if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                if (cmp == 0) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    int cmp = (**argname == key) ? 0 :
+                    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                        (PyUnicode_GET_SIZE(**argname) != PyUnicode_GET_SIZE(key)) ? 1 :
+                    #endif
+                        PyUnicode_Compare(**argname, key);
+                    if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                    if (cmp == 0) goto arg_passed_twice;
+                    argname++;
+                }
+            }
+        } else
+            goto invalid_keyword_type;
+        if (kwds2) {
+            if (unlikely(PyDict_SetItem(kwds2, key, value))) goto bad;
+        } else {
+            goto invalid_keyword;
+        }
+    }
+    return 0;
+arg_passed_twice:
+    __Pyx_RaiseDoubleKeywordsError(function_name, key);
+    goto bad;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    goto bad;
+invalid_keyword:
+    PyErr_Format(PyExc_TypeError,
+    #if PY_MAJOR_VERSION < 3
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+bad:
+    return -1;
+}
+
+/* PyIntBinop */
+#if !CYTHON_COMPILING_IN_PYPY
+static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, CYTHON_UNUSED int inplace) {
+    #if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_CheckExact(op1))) {
+        const long b = intval;
+        long x;
+        long a = PyInt_AS_LONG(op1);
+            x = (long)((unsigned long)a + b);
+            if (likely((x^a) >= 0 || (x^b) >= 0))
+                return PyInt_FromLong(x);
+            return PyLong_Type.tp_as_number->nb_add(op1, op2);
+    }
+    #endif
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        const long b = intval;
+        long a, x;
+#ifdef HAVE_LONG_LONG
+        const PY_LONG_LONG llb = intval;
+        PY_LONG_LONG lla, llx;
+#endif
+        const digit* digits = ((PyLongObject*)op1)->ob_digit;
+        const Py_ssize_t size = Py_SIZE(op1);
+        if (likely(__Pyx_sst_abs(size) <= 1)) {
+            a = likely(size) ? digits[0] : 0;
+            if (size == -1) a = -a;
+        } else {
+            switch (size) {
+                case -2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        a = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                case 2:
+                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
+                        a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                case -3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        a = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                case 3:
+                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
+                        a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                case -4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        a = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        lla = -(PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                case 4:
+                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
+                        a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
+                        break;
+#ifdef HAVE_LONG_LONG
+                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
+                        lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
+                        goto long_long;
+#endif
+                    }
+                default: return PyLong_Type.tp_as_number->nb_add(op1, op2);
+            }
+        }
+                x = a + b;
+            return PyLong_FromLong(x);
+#ifdef HAVE_LONG_LONG
+        long_long:
+                llx = lla + llb;
+            return PyLong_FromLongLong(llx);
+#endif
+        
+        
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+        double a = PyFloat_AS_DOUBLE(op1);
+            double result;
+            PyFPE_START_PROTECT("add", return NULL)
+            result = ((double)a) + (double)b;
+            PyFPE_END_PROTECT(result)
+            return PyFloat_FromDouble(result);
+    }
+    return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
+}
+#endif
+
+/* PyObjectCall */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = func->ob_type->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* RaiseTooManyValuesToUnpack */
+static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected) {
+    PyErr_Format(PyExc_ValueError,
+                 "too many values to unpack (expected %" CYTHON_FORMAT_SSIZE_T "d)", expected);
+}
+
+/* RaiseNeedMoreValuesToUnpack */
+static CYTHON_INLINE void __Pyx_RaiseNeedMoreValuesError(Py_ssize_t index) {
+    PyErr_Format(PyExc_ValueError,
+                 "need more than %" CYTHON_FORMAT_SSIZE_T "d value%.1s to unpack",
+                 index, (index == 1) ? "" : "s");
+}
+
+/* IterFinish */
+static CYTHON_INLINE int __Pyx_IterFinish(void) {
+#if CYTHON_FAST_THREAD_STATE
+    PyThreadState *tstate = PyThreadState_GET();
+    PyObject* exc_type = tstate->curexc_type;
+    if (unlikely(exc_type)) {
+        if (likely(exc_type == PyExc_StopIteration) || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration)) {
+            PyObject *exc_value, *exc_tb;
+            exc_value = tstate->curexc_value;
+            exc_tb = tstate->curexc_traceback;
+            tstate->curexc_type = 0;
+            tstate->curexc_value = 0;
+            tstate->curexc_traceback = 0;
+            Py_DECREF(exc_type);
+            Py_XDECREF(exc_value);
+            Py_XDECREF(exc_tb);
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+    return 0;
+#else
+    if (unlikely(PyErr_Occurred())) {
+        if (likely(PyErr_ExceptionMatches(PyExc_StopIteration))) {
+            PyErr_Clear();
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+    return 0;
+#endif
+}
+
+/* UnpackItemEndCheck */
+static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
+    if (unlikely(retval)) {
+        Py_DECREF(retval);
+        __Pyx_RaiseTooManyValuesError(expected);
+        return -1;
+    } else {
+        return __Pyx_IterFinish();
+    }
+    return 0;
 }
 
 /* CodeObjectCache */
@@ -1958,6 +3780,137 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
     }
 }
 
+/* Print */
+#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
+static PyObject *__Pyx_GetStdout(void) {
+    PyObject *f = PySys_GetObject((char *)"stdout");
+    if (!f) {
+        PyErr_SetString(PyExc_RuntimeError, "lost sys.stdout");
+    }
+    return f;
+}
+static int __Pyx_Print(PyObject* f, PyObject *arg_tuple, int newline) {
+    int i;
+    if (!f) {
+        if (!(f = __Pyx_GetStdout()))
+            return -1;
+    }
+    Py_INCREF(f);
+    for (i=0; i < PyTuple_GET_SIZE(arg_tuple); i++) {
+        PyObject* v;
+        if (PyFile_SoftSpace(f, 1)) {
+            if (PyFile_WriteString(" ", f) < 0)
+                goto error;
+        }
+        v = PyTuple_GET_ITEM(arg_tuple, i);
+        if (PyFile_WriteObject(v, f, Py_PRINT_RAW) < 0)
+            goto error;
+        if (PyString_Check(v)) {
+            char *s = PyString_AsString(v);
+            Py_ssize_t len = PyString_Size(v);
+            if (len > 0) {
+                switch (s[len-1]) {
+                    case ' ': break;
+                    case '\f': case '\r': case '\n': case '\t': case '\v':
+                        PyFile_SoftSpace(f, 0);
+                        break;
+                    default:  break;
+                }
+            }
+        }
+    }
+    if (newline) {
+        if (PyFile_WriteString("\n", f) < 0)
+            goto error;
+        PyFile_SoftSpace(f, 0);
+    }
+    Py_DECREF(f);
+    return 0;
+error:
+    Py_DECREF(f);
+    return -1;
+}
+#else
+static int __Pyx_Print(PyObject* stream, PyObject *arg_tuple, int newline) {
+    PyObject* kwargs = 0;
+    PyObject* result = 0;
+    PyObject* end_string;
+    if (unlikely(!__pyx_print)) {
+        __pyx_print = PyObject_GetAttr(__pyx_b, __pyx_n_s_print);
+        if (!__pyx_print)
+            return -1;
+    }
+    if (stream) {
+        kwargs = PyDict_New();
+        if (unlikely(!kwargs))
+            return -1;
+        if (unlikely(PyDict_SetItem(kwargs, __pyx_n_s_file, stream) < 0))
+            goto bad;
+        if (!newline) {
+            end_string = PyUnicode_FromStringAndSize(" ", 1);
+            if (unlikely(!end_string))
+                goto bad;
+            if (PyDict_SetItem(kwargs, __pyx_n_s_end, end_string) < 0) {
+                Py_DECREF(end_string);
+                goto bad;
+            }
+            Py_DECREF(end_string);
+        }
+    } else if (!newline) {
+        if (unlikely(!__pyx_print_kwargs)) {
+            __pyx_print_kwargs = PyDict_New();
+            if (unlikely(!__pyx_print_kwargs))
+                return -1;
+            end_string = PyUnicode_FromStringAndSize(" ", 1);
+            if (unlikely(!end_string))
+                return -1;
+            if (PyDict_SetItem(__pyx_print_kwargs, __pyx_n_s_end, end_string) < 0) {
+                Py_DECREF(end_string);
+                return -1;
+            }
+            Py_DECREF(end_string);
+        }
+        kwargs = __pyx_print_kwargs;
+    }
+    result = PyObject_Call(__pyx_print, arg_tuple, kwargs);
+    if (unlikely(kwargs) && (kwargs != __pyx_print_kwargs))
+        Py_DECREF(kwargs);
+    if (!result)
+        return -1;
+    Py_DECREF(result);
+    return 0;
+bad:
+    if (kwargs != __pyx_print_kwargs)
+        Py_XDECREF(kwargs);
+    return -1;
+}
+#endif
+
+/* None */
+static CYTHON_INLINE long __Pyx_pow_long(long b, long e) {
+    long t = b;
+    switch (e) {
+        case 3:
+            t *= b;
+        case 2:
+            t *= b;
+        case 1:
+            return t;
+        case 0:
+            return 1;
+    }
+    #if 1
+    if (unlikely(e<0)) return 0;
+    #endif
+    t = 1;
+    while (likely(e)) {
+        t *= (b * (e&1)) | ((~e)&1);
+        b *= b;
+        e >>= 1;
+    }
+    return t;
+}
+
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
     const int neg_one = (int) -1, const_zero = (int) 0;
@@ -2146,6 +4099,232 @@ raise_neg_overflow:
         "can't convert negative value to int");
     return (int) -1;
 }
+
+/* CIntFromPy */
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
+    const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(size_t) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(size_t, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (size_t) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(size_t, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 2 * PyLong_SHIFT) {
+                            return (size_t) (((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 3 * PyLong_SHIFT) {
+                            return (size_t) (((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 4 * PyLong_SHIFT) {
+                            return (size_t) (((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (size_t) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(size_t, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(size_t,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(size_t) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) ((((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) ((((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) ((((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            size_t val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (size_t) -1;
+        }
+    } else {
+        size_t val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (size_t) -1;
+        val = __Pyx_PyInt_As_size_t(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to size_t");
+    return (size_t) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to size_t");
+    return (size_t) -1;
+}
+
+/* PrintOne */
+#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
+static int __Pyx_PrintOne(PyObject* f, PyObject *o) {
+    if (!f) {
+        if (!(f = __Pyx_GetStdout()))
+            return -1;
+    }
+    Py_INCREF(f);
+    if (PyFile_SoftSpace(f, 0)) {
+        if (PyFile_WriteString(" ", f) < 0)
+            goto error;
+    }
+    if (PyFile_WriteObject(o, f, Py_PRINT_RAW) < 0)
+        goto error;
+    if (PyFile_WriteString("\n", f) < 0)
+        goto error;
+    Py_DECREF(f);
+    return 0;
+error:
+    Py_DECREF(f);
+    return -1;
+    /* the line below is just to avoid C compiler
+     * warnings about unused functions */
+    return __Pyx_Print(f, NULL, 0);
+}
+#else
+static int __Pyx_PrintOne(PyObject* stream, PyObject *o) {
+    int res;
+    PyObject* arg_tuple = PyTuple_Pack(1, o);
+    if (unlikely(!arg_tuple))
+        return -1;
+    res = __Pyx_Print(stream, arg_tuple, 1);
+    Py_DECREF(arg_tuple);
+    return res;
+}
+#endif
 
 /* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
