@@ -405,16 +405,12 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">022</span>:     <span class="nb">int</span> <span class="n">current</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">023</span>:     <span class="nb">float</span> <span class="n">resistance</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">024</span>: </pre>
-<pre class="cython line score-2" onclick='toggleDiv(this)'>+<span class="">025</span>:   <span class="n">inline</span> <span class="n">void</span> <span class="n">update_node</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">node</span><span class="p">,</span> <span class="n">Edge</span> <span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="nb">float</span> <span class="n">distance</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">):</span></pre>
-<pre class='cython code score-2 '>static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *__pyx_v_node, struct __pyx_t_8circuit1_Edge *__pyx_v_edge, float __pyx_v_distance, PyObject *__pyx_v_current_iteration) {
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">025</span>:   <span class="n">inline</span> <span class="n">void</span> <span class="n">update_node</span><span class="p">(</span><span class="n">Node</span> <span class="o">*</span><span class="n">node</span><span class="p">,</span> <span class="n">Edge</span> <span class="o">*</span><span class="n">edge</span><span class="p">,</span> <span class="nb">float</span> <span class="n">distance</span><span class="p">,</span> <span class="nb">int</span> <span class="n">current_iteration</span><span class="p">):</span></pre>
+<pre class='cython code score-0 '>static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *__pyx_v_node, struct __pyx_t_8circuit1_Edge *__pyx_v_edge, float __pyx_v_distance, int __pyx_v_current_iteration) {
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("update_node", 0);
 /* … */
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  <span class='pyx_c_api'>__Pyx_WriteUnraisable</span>("circuit1.update_node", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
-  __pyx_L0:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
 }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">026</span>:     <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">distance</span></pre>
@@ -423,12 +419,11 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class='cython code score-0 '>  __pyx_v_node-&gt;hem-&gt;priority = (-__pyx_v_distance);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">028</span>:     <span class="n">node</span><span class="o">.</span><span class="n">best_edge</span> <span class="o">=</span> <span class="n">edge</span></pre>
 <pre class='cython code score-0 '>  __pyx_v_node-&gt;best_edge = __pyx_v_edge;
-</pre><pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">029</span>:     <span class="n">node</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">current_iteration</span></pre>
-<pre class='cython code score-7 '>  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyInt_As_int</span>(__pyx_v_current_iteration); if (unlikely((__pyx_t_1 == (int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 29, __pyx_L1_error)
-  __pyx_v_node-&gt;last_seen = __pyx_t_1;
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">029</span>:     <span class="n">node</span><span class="o">.</span><span class="n">last_seen</span> <span class="o">=</span> <span class="n">current_iteration</span></pre>
+<pre class='cython code score-0 '>  __pyx_v_node-&gt;last_seen = __pyx_v_current_iteration;
 </pre><pre class="cython line score-0">&#xA0;<span class="">030</span>: </pre>
-<pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">031</span>:   <span class="nb">int</span> <span class="n">dijkstra</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">initial_node</span><span class="p">,</span> <span class="n">Node</span><span class="o">*</span> <span class="n">terminal_node</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">,</span> <span class="nb">int</span> <span class="n">current_iteration</span><span class="p">):</span></pre>
-<pre class='cython code score-3 '>static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_initial_node, struct __pyx_t_8circuit1_Node *__pyx_v_terminal_node, struct __pyx_t_4heap_Heap *__pyx_v_heap, int __pyx_v_current_iteration) {
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">031</span>:   <span class="nb">int</span> <span class="n">dijkstra</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">initial_node</span><span class="p">,</span> <span class="n">Node</span><span class="o">*</span> <span class="n">terminal_node</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">,</span> <span class="nb">int</span> <span class="n">current_iteration</span><span class="p">):</span></pre>
+<pre class='cython code score-0 '>static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_initial_node, struct __pyx_t_8circuit1_Node *__pyx_v_terminal_node, struct __pyx_t_4heap_Heap *__pyx_v_heap, int __pyx_v_current_iteration) {
   struct __pyx_t_8circuit1_Edge *__pyx_v_edge;
   struct __pyx_t_8circuit1_Node *__pyx_v_node;
   struct __pyx_t_8circuit1_Node *__pyx_v_end_node;
@@ -438,10 +433,6 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("dijkstra", 0);
 /* … */
   /* function exit code */
-  __pyx_L1_error:;
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_5);
-  <span class='pyx_c_api'>__Pyx_WriteUnraisable</span>("circuit1.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
-  __pyx_r = 0;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
@@ -465,11 +456,8 @@ body.cython { font-family: courier; font-size: 12; }
 /* … */
       goto __pyx_L5;
     }
-</pre><pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">040</span>:         <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
-<pre class='cython code score-3 '>      __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyInt_From_int</span>(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
-      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge-&gt;length, __pyx_t_5);
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">040</span>:         <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
+<pre class='cython code score-0 '>      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge-&gt;length, __pyx_v_current_iteration);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">041</span>:         <span class="n">heap_push</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>      __pyx_f_4heap_heap_push(__pyx_v_end_node-&gt;hem, __pyx_v_heap);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">042</span>:       <span class="k">elif</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span><span class="p">:</span></pre>
@@ -479,11 +467,8 @@ body.cython { font-family: courier; font-size: 12; }
     }
     __pyx_L5:;
   }
-</pre><pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">043</span>:         <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
-<pre class='cython code score-3 '>      __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyInt_From_int</span>(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
-      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge-&gt;length, __pyx_t_5);
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">043</span>:         <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
+<pre class='cython code score-0 '>      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge-&gt;length, __pyx_v_current_iteration);
 </pre><pre class="cython line score-0">&#xA0;<span class="">044</span>:         <span class="c">#print initial_nodes[i].id, end_node.id</span></pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">045</span>:         <span class="n">bubble_up</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>      __pyx_f_4heap_bubble_up(__pyx_v_end_node-&gt;hem, __pyx_v_heap);
@@ -517,11 +502,8 @@ body.cython { font-family: courier; font-size: 12; }
 /* … */
         goto __pyx_L11;
       }
-</pre><pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">055</span>:           <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
-<pre class='cython code score-3 '>        __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyInt_From_int</span>(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
-        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
-        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length), __pyx_t_5);
-        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">055</span>:           <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
+<pre class='cython code score-0 '>        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length), __pyx_v_current_iteration);
 </pre><pre class="cython line score-0">&#xA0;<span class="">056</span>:           <span class="c">#print node[i].id, end_node.id</span></pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">057</span>:           <span class="n">heap_push</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>        __pyx_f_4heap_heap_push(__pyx_v_end_node-&gt;hem, __pyx_v_heap);
@@ -533,11 +515,8 @@ body.cython { font-family: courier; font-size: 12; }
       __pyx_L11:;
     }
   }
-</pre><pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">059</span>:           <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
-<pre class='cython code score-3 '>        __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyInt_From_int</span>(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 59, __pyx_L1_error)
-        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
-        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length), __pyx_t_5);
-        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">059</span>:           <span class="n">update_node</span><span class="p">(</span><span class="n">end_node</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">current_iteration</span><span class="p">)</span></pre>
+<pre class='cython code score-0 '>        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length), __pyx_v_current_iteration);
 </pre><pre class="cython line score-0">&#xA0;<span class="">060</span>:           <span class="c">#print node[i].id, end_node.id</span></pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">061</span>:           <span class="n">bubble_up</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>        __pyx_f_4heap_bubble_up(__pyx_v_end_node-&gt;hem, __pyx_v_heap);

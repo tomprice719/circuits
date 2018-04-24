@@ -783,35 +783,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
-/* PyThreadStateGet.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
-#define __Pyx_PyThreadState_assign  __pyx_tstate = PyThreadState_GET();
-#else
-#define __Pyx_PyThreadState_declare
-#define __Pyx_PyThreadState_assign
-#endif
-
-/* PyErrFetchRestore.proto */
-#if CYTHON_FAST_THREAD_STATE
-#define __Pyx_ErrRestoreWithState(type, value, tb)  __Pyx_ErrRestoreInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)    __Pyx_ErrFetchInState(PyThreadState_GET(), type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  __Pyx_ErrRestoreInState(__pyx_tstate, type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)    __Pyx_ErrFetchInState(__pyx_tstate, type, value, tb)
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb);
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb);
-#else
-#define __Pyx_ErrRestoreWithState(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetchWithState(type, value, tb)  PyErr_Fetch(type, value, tb)
-#define __Pyx_ErrRestore(type, value, tb)  PyErr_Restore(type, value, tb)
-#define __Pyx_ErrFetch(type, value, tb)  PyErr_Fetch(type, value, tb)
-#endif
-
-/* WriteUnraisableException.proto */
-static void __Pyx_WriteUnraisable(const char *name, int clineno,
-                                  int lineno, const char *filename,
-                                  int full_traceback, int nogil);
-
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -925,7 +896,7 @@ static struct __pyx_t_4heap_HeapEm *(*__pyx_f_4heap_heap_pop)(struct __pyx_t_4he
 
 /* Module declarations from 'circuit1' */
 static PyObject *__pyx_v_8circuit1_INFINITY = 0;
-static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *, struct __pyx_t_8circuit1_Edge *, float, PyObject *); /*proto*/
+static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *, struct __pyx_t_8circuit1_Edge *, float, int); /*proto*/
 static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *, struct __pyx_t_8circuit1_Node *, struct __pyx_t_4heap_Heap *, int); /*proto*/
 static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node *, struct __pyx_t_8circuit1_Node *, struct __pyx_t_4heap_Heap *, int); /*proto*/
 #define __Pyx_MODULE_NAME "circuit1"
@@ -991,19 +962,18 @@ static PyObject *__pyx_codeobj__2;
 /* "circuit1.pyx":25
  *     float resistance
  * 
- *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):             # <<<<<<<<<<<<<<
+ *   inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):             # <<<<<<<<<<<<<<
  *     node.dist = distance
  *     node.hem.priority = -distance
  */
 
-static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *__pyx_v_node, struct __pyx_t_8circuit1_Edge *__pyx_v_edge, float __pyx_v_distance, PyObject *__pyx_v_current_iteration) {
+static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1_Node *__pyx_v_node, struct __pyx_t_8circuit1_Edge *__pyx_v_edge, float __pyx_v_distance, int __pyx_v_current_iteration) {
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
   __Pyx_RefNannySetupContext("update_node", 0);
 
   /* "circuit1.pyx":26
  * 
- *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):
+ *   inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):
  *     node.dist = distance             # <<<<<<<<<<<<<<
  *     node.hem.priority = -distance
  *     node.best_edge = edge
@@ -1011,7 +981,7 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
   __pyx_v_node->dist = __pyx_v_distance;
 
   /* "circuit1.pyx":27
- *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):
+ *   inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):
  *     node.dist = distance
  *     node.hem.priority = -distance             # <<<<<<<<<<<<<<
  *     node.best_edge = edge
@@ -1035,22 +1005,17 @@ static CYTHON_INLINE void __pyx_f_8circuit1_update_node(struct __pyx_t_8circuit1
  * 
  *   int dijkstra(Node* initial_node, Node* terminal_node, Heap* heap, int current_iteration):
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_current_iteration); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 29, __pyx_L1_error)
-  __pyx_v_node->last_seen = __pyx_t_1;
+  __pyx_v_node->last_seen = __pyx_v_current_iteration;
 
   /* "circuit1.pyx":25
  *     float resistance
  * 
- *   inline void update_node(Node *node, Edge *edge, float distance, current_iteration):             # <<<<<<<<<<<<<<
+ *   inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):             # <<<<<<<<<<<<<<
  *     node.dist = distance
  *     node.hem.priority = -distance
  */
 
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_WriteUnraisable("circuit1.update_node", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
-  __pyx_L0:;
   __Pyx_RefNannyFinishContext();
 }
 
@@ -1073,7 +1038,6 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
   int __pyx_t_2;
   struct __pyx_t_8circuit1_Node *__pyx_t_3;
   int __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("dijkstra", 0);
 
   /* "circuit1.pyx":36
@@ -1123,10 +1087,7 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
  *         heap_push(end_node.hem, heap)
  *       elif edge.length < end_node.dist:
  */
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 40, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_t_5);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_v_current_iteration);
 
       /* "circuit1.pyx":41
  *       if end_node.last_seen < current_iteration:
@@ -1164,10 +1125,7 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
  *         #print initial_nodes[i].id, end_node.id
  *         bubble_up(end_node.hem, heap)
  */
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_t_5);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, __pyx_v_edge->length, __pyx_v_current_iteration);
 
       /* "circuit1.pyx":45
  *         update_node(end_node, edge, edge.length, current_iteration)
@@ -1285,10 +1243,7 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  */
-        __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_t_5);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_v_current_iteration);
 
         /* "circuit1.pyx":57
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
@@ -1326,10 +1281,7 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)
  */
-        __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_current_iteration); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 59, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_t_5);
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __pyx_f_8circuit1_update_node(__pyx_v_end_node, __pyx_v_edge, (__pyx_v_node->dist + __pyx_v_edge->length), __pyx_v_current_iteration);
 
         /* "circuit1.pyx":61
  *           update_node(end_node, edge, node.dist + edge.length, current_iteration)
@@ -1371,10 +1323,6 @@ static int __pyx_f_8circuit1_dijkstra(struct __pyx_t_8circuit1_Node *__pyx_v_ini
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_WriteUnraisable("circuit1.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
-  __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -2898,72 +2846,6 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     return result;
 }
 
-/* PyErrFetchRestore */
-#if CYTHON_FAST_THREAD_STATE
-static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
-    PyObject *tmp_type, *tmp_value, *tmp_tb;
-    tmp_type = tstate->curexc_type;
-    tmp_value = tstate->curexc_value;
-    tmp_tb = tstate->curexc_traceback;
-    tstate->curexc_type = type;
-    tstate->curexc_value = value;
-    tstate->curexc_traceback = tb;
-    Py_XDECREF(tmp_type);
-    Py_XDECREF(tmp_value);
-    Py_XDECREF(tmp_tb);
-}
-static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject **type, PyObject **value, PyObject **tb) {
-    *type = tstate->curexc_type;
-    *value = tstate->curexc_value;
-    *tb = tstate->curexc_traceback;
-    tstate->curexc_type = 0;
-    tstate->curexc_value = 0;
-    tstate->curexc_traceback = 0;
-}
-#endif
-
-/* WriteUnraisableException */
-static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
-                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
-                                  int full_traceback, CYTHON_UNUSED int nogil) {
-    PyObject *old_exc, *old_val, *old_tb;
-    PyObject *ctx;
-    __Pyx_PyThreadState_declare
-#ifdef WITH_THREAD
-    PyGILState_STATE state;
-    if (nogil)
-        state = PyGILState_Ensure();
-#ifdef _MSC_VER
-    else state = (PyGILState_STATE)-1;
-#endif
-#endif
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
-    if (full_traceback) {
-        Py_XINCREF(old_exc);
-        Py_XINCREF(old_val);
-        Py_XINCREF(old_tb);
-        __Pyx_ErrRestore(old_exc, old_val, old_tb);
-        PyErr_PrintEx(1);
-    }
-    #if PY_MAJOR_VERSION < 3
-    ctx = PyString_FromString(name);
-    #else
-    ctx = PyUnicode_FromString(name);
-    #endif
-    __Pyx_ErrRestore(old_exc, old_val, old_tb);
-    if (!ctx) {
-        PyErr_WriteUnraisable(Py_None);
-    } else {
-        PyErr_WriteUnraisable(ctx);
-        Py_DECREF(ctx);
-    }
-#ifdef WITH_THREAD
-    if (nogil)
-        PyGILState_Release(state);
-#endif
-}
-
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
     const char* func_name,
@@ -3347,28 +3229,6 @@ bad:
     Py_XDECREF(py_frame);
 }
 
-/* CIntFromPyVerify */
-#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
 /* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
     const int neg_one = (int) -1, const_zero = (int) 0;
@@ -3399,6 +3259,28 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
                                      little, !is_unsigned);
     }
 }
+
+/* CIntFromPyVerify */
+#define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
 
 /* Print */
 #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3

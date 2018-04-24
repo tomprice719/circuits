@@ -2,7 +2,7 @@ from heap cimport *
 from libc.stdlib cimport malloc, free
 
 cdef:
-  INFINITY = float("inf")
+  float INFINITY = float("inf")
 
   struct Node:
     float dist

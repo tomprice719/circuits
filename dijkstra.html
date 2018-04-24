@@ -371,13 +371,9 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">02</span>: <span class="k">from</span> <span class="nn">libc.stdlib</span> <span class="k">cimport</span> <span class="n">malloc</span><span class="p">,</span> <span class="n">free</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">03</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">04</span>: <span class="k">cdef</span><span class="p">:</span></pre>
-<pre class="cython line score-3" onclick='toggleDiv(this)'>+<span class="">05</span>:   <span class="n">INFINITY</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;inf&quot;</span><span class="p">)</span></pre>
-<pre class='cython code score-3 '>  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyNumber_Float</span>(__pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 5, __pyx_L1_error)
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  <span class='refnanny'>__Pyx_XGOTREF</span>(__pyx_v_8dijkstra_INFINITY);
-  <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_8dijkstra_INFINITY, __pyx_t_2);
-  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_2);
-  __pyx_t_2 = 0;
+<pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">05</span>:   <span class="nb">float</span> <span class="n">INFINITY</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&quot;inf&quot;</span><span class="p">)</span></pre>
+<pre class='cython code score-7 '>  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_AsDouble</span>(__pyx_n_s_inf); if (unlikely(__pyx_t_2 == ((double)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 5, __pyx_L1_error)
+  __pyx_v_8dijkstra_INFINITY = __pyx_t_2;
 </pre><pre class="cython line score-0">&#xA0;<span class="">06</span>: </pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">07</span>:   <span class="k">struct</span> <span class="nc">Node</span><span class="p">:</span></pre>
 <pre class='cython code score-0 '>struct __pyx_t_8dijkstra_Node {
@@ -395,8 +391,8 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">14</span>:     <span class="n">Node</span> <span class="o">*</span> <span class="n">end</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">15</span>:     <span class="nb">float</span> <span class="n">length</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">16</span>: </pre>
-<pre class="cython line score-4" onclick='toggleDiv(this)'>+<span class="">17</span>:   <span class="nb">float</span> <span class="n">shortest_distance</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">initial_node</span><span class="p">,</span> <span class="n">Node</span><span class="o">*</span> <span class="n">terminal_node</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
-<pre class='cython code score-4 '>static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *__pyx_v_initial_node, struct __pyx_t_8dijkstra_Node *__pyx_v_terminal_node, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
+<pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">17</span>:   <span class="nb">float</span> <span class="n">shortest_distance</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">initial_node</span><span class="p">,</span> <span class="n">Node</span><span class="o">*</span> <span class="n">terminal_node</span><span class="p">,</span> <span class="n">Heap</span><span class="o">*</span> <span class="n">heap</span><span class="p">):</span></pre>
+<pre class='cython code score-0 '>static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *__pyx_v_initial_node, struct __pyx_t_8dijkstra_Node *__pyx_v_terminal_node, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   struct __pyx_t_8dijkstra_Edge *__pyx_v_edge;
   struct __pyx_t_8dijkstra_Node *__pyx_v_node;
   struct __pyx_t_8dijkstra_Node *__pyx_v_end_node;
@@ -406,11 +402,6 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("shortest_distance", 0);
 /* … */
   /* function exit code */
-  __pyx_L1_error:;
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_4);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_5);
-  <span class='pyx_c_api'>__Pyx_WriteUnraisable</span>("dijkstra.shortest_distance", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
-  __pyx_r = 0;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
@@ -428,35 +419,30 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">24</span>:       <span class="n">end_node</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span></pre>
 <pre class='cython code score-0 '>    __pyx_t_3 = __pyx_v_edge-&gt;end;
     __pyx_v_end_node = __pyx_t_3;
-</pre><pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">25</span>:       <span class="k">if</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">==</span> <span class="n">INFINITY</span><span class="p">:</span></pre>
-<pre class='cython code score-14 '>    __pyx_t_4 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_v_end_node-&gt;dist); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
-    __pyx_t_5 = <span class='py_c_api'>PyObject_RichCompare</span>(__pyx_t_4, __pyx_v_8dijkstra_INFINITY, Py_EQ); <span class='refnanny'>__Pyx_XGOTREF</span>(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 25, __pyx_L1_error)
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_6 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_5); if (unlikely(__pyx_t_6 &lt; 0)) __PYX_ERR(0, 25, __pyx_L1_error)
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
-    if (__pyx_t_6) {
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">25</span>:       <span class="k">if</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">==</span> <span class="n">INFINITY</span><span class="p">:</span></pre>
+<pre class='cython code score-0 '>    __pyx_t_4 = ((__pyx_v_end_node-&gt;dist == __pyx_v_8dijkstra_INFINITY) != 0);
+    if (__pyx_t_4) {
 /* … */
       goto __pyx_L5;
     }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">26</span>:         <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span></pre>
-<pre class='cython code score-0 '>      __pyx_t_7 = __pyx_v_edge-&gt;length;
-      __pyx_v_end_node-&gt;dist = __pyx_t_7;
+<pre class='cython code score-0 '>      __pyx_t_5 = __pyx_v_edge-&gt;length;
+      __pyx_v_end_node-&gt;dist = __pyx_t_5;
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">27</span>:         <span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="n">end_node</span><span class="o">.</span><span class="n">dist</span></pre>
 <pre class='cython code score-0 '>      __pyx_v_end_node-&gt;hem-&gt;priority = (-__pyx_v_end_node-&gt;dist);
 </pre><pre class="cython line score-0">&#xA0;<span class="">28</span>:         <span class="c">#print initial_nodes[i].id, end_node.id</span></pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">29</span>:         <span class="n">heap_push</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>      __pyx_f_4heap_heap_push(__pyx_v_end_node-&gt;hem, __pyx_v_heap);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">30</span>:       <span class="k">elif</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span><span class="p">:</span></pre>
-<pre class='cython code score-0 '>    __pyx_t_6 = ((__pyx_v_edge-&gt;length &lt; __pyx_v_end_node-&gt;dist) != 0);
-    if (__pyx_t_6) {
+<pre class='cython code score-0 '>    __pyx_t_4 = ((__pyx_v_edge-&gt;length &lt; __pyx_v_end_node-&gt;dist) != 0);
+    if (__pyx_t_4) {
 /* … */
     }
     __pyx_L5:;
   }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">31</span>:         <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span></pre>
-<pre class='cython code score-0 '>      __pyx_t_7 = __pyx_v_edge-&gt;length;
-      __pyx_v_end_node-&gt;dist = __pyx_t_7;
+<pre class='cython code score-0 '>      __pyx_t_5 = __pyx_v_edge-&gt;length;
+      __pyx_v_end_node-&gt;dist = __pyx_t_5;
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">32</span>:         <span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="o">-</span><span class="n">end_node</span><span class="o">.</span><span class="n">dist</span></pre>
 <pre class='cython code score-0 '>      __pyx_v_end_node-&gt;hem-&gt;priority = (-__pyx_v_end_node-&gt;dist);
 </pre><pre class="cython line score-0">&#xA0;<span class="">33</span>:         <span class="c">#print initial_nodes[i].id, end_node.id</span></pre>
@@ -465,13 +451,13 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0">&#xA0;<span class="">35</span>: </pre>
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">36</span>:     <span class="k">while</span><span class="p">(</span><span class="n">heap</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">):</span></pre>
 <pre class='cython code score-0 '>  while (1) {
-    __pyx_t_6 = ((__pyx_v_heap-&gt;size &gt; 0) != 0);
-    if (!__pyx_t_6) break;
+    __pyx_t_4 = ((__pyx_v_heap-&gt;size &gt; 0) != 0);
+    if (!__pyx_t_4) break;
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">37</span>:       <span class="n">node</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">Node</span><span class="o">*&gt;</span><span class="n">heap_pop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span><span class="o">.</span><span class="n">data</span></pre>
 <pre class='cython code score-0 '>    __pyx_v_node = ((struct __pyx_t_8dijkstra_Node *)__pyx_f_4heap_heap_pop(__pyx_v_heap)-&gt;data);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">38</span>:       <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="n">terminal_node</span><span class="p">:</span></pre>
-<pre class='cython code score-0 '>    __pyx_t_6 = ((__pyx_v_node == __pyx_v_terminal_node) != 0);
-    if (__pyx_t_6) {
+<pre class='cython code score-0 '>    __pyx_t_4 = ((__pyx_v_node == __pyx_v_terminal_node) != 0);
+    if (__pyx_t_4) {
 /* … */
     }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">39</span>:         <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span></pre>
@@ -486,14 +472,9 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">42</span>:         <span class="n">end_node</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span></pre>
 <pre class='cython code score-0 '>      __pyx_t_3 = __pyx_v_edge-&gt;end;
       __pyx_v_end_node = __pyx_t_3;
-</pre><pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">43</span>:         <span class="k">if</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">==</span> <span class="n">INFINITY</span><span class="p">:</span></pre>
-<pre class='cython code score-14 '>      __pyx_t_5 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_v_end_node-&gt;dist); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);
-      __pyx_t_4 = <span class='py_c_api'>PyObject_RichCompare</span>(__pyx_t_5, __pyx_v_8dijkstra_INFINITY, Py_EQ); <span class='refnanny'>__Pyx_XGOTREF</span>(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_6 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_4); if (unlikely(__pyx_t_6 &lt; 0)) __PYX_ERR(0, 43, __pyx_L1_error)
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
-      if (__pyx_t_6) {
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">43</span>:         <span class="k">if</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span> <span class="o">==</span> <span class="n">INFINITY</span><span class="p">:</span></pre>
+<pre class='cython code score-0 '>      __pyx_t_4 = ((__pyx_v_end_node-&gt;dist == __pyx_v_8dijkstra_INFINITY) != 0);
+      if (__pyx_t_4) {
 /* … */
         goto __pyx_L11;
       }
@@ -505,8 +486,8 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">47</span>:           <span class="n">heap_push</span><span class="p">(</span><span class="n">end_node</span><span class="o">.</span><span class="n">hem</span><span class="p">,</span> <span class="n">heap</span><span class="p">)</span></pre>
 <pre class='cython code score-0 '>        __pyx_f_4heap_heap_push(__pyx_v_end_node-&gt;hem, __pyx_v_heap);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">48</span>:         <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">dist</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">end_node</span><span class="o">.</span><span class="n">dist</span><span class="p">:</span></pre>
-<pre class='cython code score-0 '>      __pyx_t_6 = (((__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length) &lt; __pyx_v_end_node-&gt;dist) != 0);
-      if (__pyx_t_6) {
+<pre class='cython code score-0 '>      __pyx_t_4 = (((__pyx_v_node-&gt;dist + __pyx_v_edge-&gt;length) &lt; __pyx_v_end_node-&gt;dist) != 0);
+      if (__pyx_t_4) {
 /* … */
       }
       __pyx_L11:;
@@ -620,10 +601,10 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   __pyx_L1_error:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_2);
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_9);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_12);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_13);
   <span class='pyx_c_api'>__Pyx_AddTraceback</span>("dijkstra.dijkstra_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -640,10 +621,10 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_tuple_);
   <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_tuple_);
 /* … */
-  __pyx_t_2 = PyCFunction_NewEx(&amp;__pyx_mdef_8dijkstra_1dijkstra_test, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_dijkstra_test, __pyx_t_2) &lt; 0) __PYX_ERR(0, 55, __pyx_L1_error)
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = PyCFunction_NewEx(&amp;__pyx_mdef_8dijkstra_1dijkstra_test, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 55, __pyx_L1_error)
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
+  if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_d, __pyx_n_s_dijkstra_test, __pyx_t_3) &lt; 0) __PYX_ERR(0, 55, __pyx_L1_error)
+  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
 </pre><pre class="cython line score-16" onclick='toggleDiv(this)'>+<span class="">56</span>:   <span class="k">cdef</span> <span class="kt">Node</span> * <span class="nf">nodes</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">Node</span> <span class="o">*&gt;</span> <span class="n">malloc</span><span class="p">(</span><span class="n">num_nodes</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">Node</span><span class="p">))</span></pre>
 <pre class='cython code score-16 '>  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyInt_FromSize_t</span>((sizeof(struct __pyx_t_8dijkstra_Node))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
@@ -743,11 +724,10 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
 <pre class='cython code score-7 '>      __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 66, __pyx_L1_error)
       (__pyx_v_nodes[__pyx_t_7]).dist = 0.0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">67</span>:     <span class="k">else</span><span class="p">:</span></pre>
-<pre class="cython line score-17" onclick='toggleDiv(this)'>+<span class="">68</span>:       <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">INFINITY</span></pre>
-<pre class='cython code score-17 '>    /*else*/ {
-      __pyx_t_8 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_v_8dijkstra_INFINITY); if (unlikely((__pyx_t_8 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 68, __pyx_L1_error)
+<pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">68</span>:       <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="n">INFINITY</span></pre>
+<pre class='cython code score-7 '>    /*else*/ {
       __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 68, __pyx_L1_error)
-      (__pyx_v_nodes[__pyx_t_7]).dist = __pyx_t_8;
+      (__pyx_v_nodes[__pyx_t_7]).dist = __pyx_v_8dijkstra_INFINITY;
     }
     __pyx_L5:;
 </pre><pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">69</span>:     <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">=</span> <span class="mf">0</span></pre>
@@ -755,14 +735,14 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     (__pyx_v_nodes[__pyx_t_7]).num_edges = 0;
 </pre><pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">70</span>:     <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hem</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">hems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></pre>
 <pre class='cython code score-14 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 70, __pyx_L1_error)
-    __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 70, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_9]).hem = (&amp;(__pyx_v_hems[__pyx_t_7]));
+    __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 70, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).hem = (&amp;(__pyx_v_hems[__pyx_t_7]));
 </pre><pre class="cython line score-0">&#xA0;<span class="">71</span>:     <span class="c">#nodes[i].id = i</span></pre>
 <pre class="cython line score-0">&#xA0;<span class="">72</span>:     <span class="c">#nodes[i].sp_in = NULL</span></pre>
 <pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">73</span>:     <span class="n">hems</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></pre>
-<pre class='cython code score-14 '>    __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 73, __pyx_L1_error)
+<pre class='cython code score-14 '>    __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 73, __pyx_L1_error)
     __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 73, __pyx_L1_error)
-    (__pyx_v_hems[__pyx_t_7]).data = (&amp;(__pyx_v_nodes[__pyx_t_9]));
+    (__pyx_v_hems[__pyx_t_7]).data = (&amp;(__pyx_v_nodes[__pyx_t_8]));
 </pre><pre class="cython line score-99" onclick='toggleDiv(this)'>+<span class="">74</span>:   <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span></pre>
 <pre class='cython code score-99 '>  if (likely(<span class='py_c_api'>PyList_CheckExact</span>(__pyx_v_edges)) || <span class='py_c_api'>PyTuple_CheckExact</span>(__pyx_v_edges)) {
     __pyx_t_2 = __pyx_v_edges; <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_2); __pyx_t_4 = 0;
@@ -817,55 +797,55 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       }
       #if CYTHON_ASSUME_SAFE_MACROS &amp;&amp; !CYTHON_AVOID_BORROWED_REFS
       if (likely(<span class='py_c_api'>PyTuple_CheckExact</span>(sequence))) {
-        __pyx_t_10 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 0); 
-        __pyx_t_11 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 1); 
-        __pyx_t_12 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 2); 
+        __pyx_t_9 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 0); 
+        __pyx_t_10 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 1); 
+        __pyx_t_11 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 2); 
       } else {
-        __pyx_t_10 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 0); 
-        __pyx_t_11 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 1); 
-        __pyx_t_12 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 2); 
+        __pyx_t_9 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 0); 
+        __pyx_t_10 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 1); 
+        __pyx_t_11 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 2); 
       }
+      <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_9);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
-      <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_12);
       #else
-      __pyx_t_10 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 74, __pyx_L1_error)
+      __pyx_t_9 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 74, __pyx_L1_error)
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_9);
+      __pyx_t_10 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 74, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
-      __pyx_t_11 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 74, __pyx_L1_error)
+      __pyx_t_11 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 74, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-      __pyx_t_12 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 74, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
       #endif
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_13 = <span class='py_c_api'>PyObject_GetIter</span>(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 74, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_13);
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_14 = Py_TYPE(__pyx_t_13)-&gt;tp_iternext;
-      index = 0; __pyx_t_10 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_10)) goto __pyx_L8_unpacking_failed;
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
-      index = 1; __pyx_t_11 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_11)) goto __pyx_L8_unpacking_failed;
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-      index = 2; __pyx_t_12 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_12)) goto __pyx_L8_unpacking_failed;
+      __pyx_t_12 = <span class='py_c_api'>PyObject_GetIter</span>(__pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 74, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
-      if (<span class='pyx_c_api'>__Pyx_IternextUnpackEndCheck</span>(__pyx_t_14(__pyx_t_13), 3) &lt; 0) __PYX_ERR(0, 74, __pyx_L1_error)
-      __pyx_t_14 = NULL;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_13); __pyx_t_13 = 0;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_13 = Py_TYPE(__pyx_t_12)-&gt;tp_iternext;
+      index = 0; __pyx_t_9 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_9)) goto __pyx_L8_unpacking_failed;
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_9);
+      index = 1; __pyx_t_10 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_10)) goto __pyx_L8_unpacking_failed;
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
+      index = 2; __pyx_t_11 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_11)) goto __pyx_L8_unpacking_failed;
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
+      if (<span class='pyx_c_api'>__Pyx_IternextUnpackEndCheck</span>(__pyx_t_13(__pyx_t_12), 3) &lt; 0) __PYX_ERR(0, 74, __pyx_L1_error)
+      __pyx_t_13 = NULL;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
       goto __pyx_L9_unpacking_done;
       __pyx_L8_unpacking_failed:;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_14 = NULL;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
+      __pyx_t_13 = NULL;
       if (<span class='pyx_c_api'>__Pyx_IterFinish</span>() == 0) <span class='pyx_c_api'>__Pyx_RaiseNeedMoreValuesError</span>(index);
       __PYX_ERR(0, 74, __pyx_L1_error)
       __pyx_L9_unpacking_done:;
     }
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_start, __pyx_t_10);
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_start, __pyx_t_9);
+    __pyx_t_9 = 0;
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_end, __pyx_t_10);
     __pyx_t_10 = 0;
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_end, __pyx_t_11);
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_length, __pyx_t_11);
     __pyx_t_11 = 0;
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_length, __pyx_t_12);
-    __pyx_t_12 = 0;
 /* … */
   }
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
@@ -928,11 +908,11 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
 </pre><pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">77</span>:     <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">Edge</span> <span class="o">*&gt;</span><span class="n">malloc</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">Edge</span><span class="p">))</span></pre>
 <pre class='cython code score-14 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 77, __pyx_L1_error)
-    __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 77, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_9]).edges = ((struct __pyx_t_8dijkstra_Edge *)malloc(((__pyx_v_nodes[__pyx_t_7]).num_edges * (sizeof(struct __pyx_t_8dijkstra_Edge)))));
+    __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 77, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).edges = ((struct __pyx_t_8dijkstra_Edge *)malloc(((__pyx_v_nodes[__pyx_t_7]).num_edges * (sizeof(struct __pyx_t_8dijkstra_Edge)))));
 </pre><pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">78</span>:     <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">=</span> <span class="mf">0</span></pre>
-<pre class='cython code score-7 '>    __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 78, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_9]).num_edges = 0;
+<pre class='cython code score-7 '>    __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 78, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_8]).num_edges = 0;
 </pre><pre class="cython line score-99" onclick='toggleDiv(this)'>+<span class="">79</span>:   <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span></pre>
 <pre class='cython code score-99 '>  if (likely(<span class='py_c_api'>PyList_CheckExact</span>(__pyx_v_edges)) || <span class='py_c_api'>PyTuple_CheckExact</span>(__pyx_v_edges)) {
     __pyx_t_2 = __pyx_v_edges; <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_2); __pyx_t_4 = 0;
@@ -987,68 +967,68 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       }
       #if CYTHON_ASSUME_SAFE_MACROS &amp;&amp; !CYTHON_AVOID_BORROWED_REFS
       if (likely(<span class='py_c_api'>PyTuple_CheckExact</span>(sequence))) {
-        __pyx_t_12 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 0); 
-        __pyx_t_11 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 1); 
-        __pyx_t_10 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 2); 
+        __pyx_t_11 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 0); 
+        __pyx_t_10 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 1); 
+        __pyx_t_9 = <span class='py_macro_api'>PyTuple_GET_ITEM</span>(sequence, 2); 
       } else {
-        __pyx_t_12 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 0); 
-        __pyx_t_11 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 1); 
-        __pyx_t_10 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 2); 
+        __pyx_t_11 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 0); 
+        __pyx_t_10 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 1); 
+        __pyx_t_9 = <span class='py_macro_api'>PyList_GET_ITEM</span>(sequence, 2); 
       }
-      <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_12);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
+      <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_9);
       #else
-      __pyx_t_12 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 79, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
-      __pyx_t_11 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_11 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 79, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-      __pyx_t_10 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_10 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 79, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
+      __pyx_t_9 = <span class='py_macro_api'>PySequence_ITEM</span>(sequence, 2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 79, __pyx_L1_error)
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_9);
       #endif
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_13 = <span class='py_c_api'>PyObject_GetIter</span>(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 79, __pyx_L1_error)
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_13);
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_14 = Py_TYPE(__pyx_t_13)-&gt;tp_iternext;
-      index = 0; __pyx_t_12 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_12)) goto __pyx_L14_unpacking_failed;
+      __pyx_t_12 = <span class='py_c_api'>PyObject_GetIter</span>(__pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 79, __pyx_L1_error)
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
-      index = 1; __pyx_t_11 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_11)) goto __pyx_L14_unpacking_failed;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_13 = Py_TYPE(__pyx_t_12)-&gt;tp_iternext;
+      index = 0; __pyx_t_11 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_11)) goto __pyx_L14_unpacking_failed;
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-      index = 2; __pyx_t_10 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_10)) goto __pyx_L14_unpacking_failed;
+      index = 1; __pyx_t_10 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_10)) goto __pyx_L14_unpacking_failed;
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
-      if (<span class='pyx_c_api'>__Pyx_IternextUnpackEndCheck</span>(__pyx_t_14(__pyx_t_13), 3) &lt; 0) __PYX_ERR(0, 79, __pyx_L1_error)
-      __pyx_t_14 = NULL;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_13); __pyx_t_13 = 0;
+      index = 2; __pyx_t_9 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_9)) goto __pyx_L14_unpacking_failed;
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_9);
+      if (<span class='pyx_c_api'>__Pyx_IternextUnpackEndCheck</span>(__pyx_t_13(__pyx_t_12), 3) &lt; 0) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_13 = NULL;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
       goto __pyx_L15_unpacking_done;
       __pyx_L14_unpacking_failed:;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_14 = NULL;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
+      __pyx_t_13 = NULL;
       if (<span class='pyx_c_api'>__Pyx_IterFinish</span>() == 0) <span class='pyx_c_api'>__Pyx_RaiseNeedMoreValuesError</span>(index);
       __PYX_ERR(0, 79, __pyx_L1_error)
       __pyx_L15_unpacking_done:;
     }
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_start, __pyx_t_12);
-    __pyx_t_12 = 0;
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_end, __pyx_t_11);
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_start, __pyx_t_11);
     __pyx_t_11 = 0;
-    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_length, __pyx_t_10);
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_end, __pyx_t_10);
     __pyx_t_10 = 0;
+    <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_length, __pyx_t_9);
+    __pyx_t_9 = 0;
 /* … */
   }
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
 </pre><pre class="cython line score-14" onclick='toggleDiv(this)'>+<span class="">80</span>:     <span class="n">edge</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">num_edges</span><span class="p">])</span></pre>
-<pre class='cython code score-14 '>    __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_start); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 80, __pyx_L1_error)
+<pre class='cython code score-14 '>    __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_start); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 80, __pyx_L1_error)
     __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 80, __pyx_L1_error)
-    __pyx_v_edge = (&amp;((__pyx_v_nodes[__pyx_t_9]).edges[(__pyx_v_nodes[__pyx_t_7]).num_edges]));
+    __pyx_v_edge = (&amp;((__pyx_v_nodes[__pyx_t_8]).edges[(__pyx_v_nodes[__pyx_t_7]).num_edges]));
 </pre><pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">81</span>:     <span class="n">edge</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">end</span><span class="p">])</span></pre>
 <pre class='cython code score-7 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_end); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 81, __pyx_L1_error)
     __pyx_v_edge-&gt;end = (&amp;(__pyx_v_nodes[__pyx_t_7]));
 </pre><pre class="cython line score-10" onclick='toggleDiv(this)'>+<span class="">82</span>:     <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span></pre>
-<pre class='cython code score-10 '>    __pyx_t_8 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_v_length); if (unlikely((__pyx_t_8 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 82, __pyx_L1_error)
-    __pyx_v_edge-&gt;length = __pyx_t_8;
+<pre class='cython code score-10 '>    __pyx_t_14 = __pyx_<span class='py_c_api'>PyFloat_AsFloat</span>(__pyx_v_length); if (unlikely((__pyx_t_14 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 82, __pyx_L1_error)
+    __pyx_v_edge-&gt;length = __pyx_t_14;
 </pre><pre class="cython line score-7" onclick='toggleDiv(this)'>+<span class="">83</span>:     <span class="n">nodes</span><span class="p">[</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">+=</span> <span class="mf">1</span></pre>
 <pre class='cython code score-7 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyIndex_AsSsize_t</span>(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) __PYX_ERR(0, 83, __pyx_L1_error)
     (__pyx_v_nodes[__pyx_t_7]).num_edges = ((__pyx_v_nodes[__pyx_t_7]).num_edges + 1);

@@ -22,7 +22,7 @@ cdef:
     int current
     float resistance
 
-  inline void update_node(Node *node, Edge *edge, float distance, current_iteration):
+  inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):
     node.dist = distance
     node.hem.priority = -distance
     node.best_edge = edge
