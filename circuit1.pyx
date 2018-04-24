@@ -22,11 +22,18 @@ cdef:
     int current
     float resistance
 
-  inline void update_node(Node *node, Edge *edge, float distance, int current_iteration):
+  inline void spot_node(Node *node, Edge *edge, float distance, int current_iteration, Heap *heap):
     node.dist = distance
     node.hem.priority = -distance
     node.best_edge = edge
     node.last_seen = current_iteration
+    heap_push(node.hem, heap)
+
+  inline void improve_node(Node *node, Edge *edge, float distance, Heap *heap):
+    node.dist = distance
+    node.hem.priority = -distance
+    node.best_edge = edge
+    bubble_up(node.hem, heap)
 
   int dijkstra(Node* initial_node, Node* terminal_node, Heap* heap, int current_iteration):
     cdef Edge * edge
@@ -35,14 +42,7 @@ cdef:
 
     for i in range(initial_node.num_edges):
       edge = &initial_node.edges[i]
-      end_node = edge.end
-      if end_node.last_seen < current_iteration:
-        update_node(end_node, edge, edge.length, current_iteration)
-        heap_push(end_node.hem, heap)
-      elif edge.length < end_node.dist:
-        update_node(end_node, edge, edge.length, current_iteration)
-        #print initial_nodes[i].id, end_node.id
-        bubble_up(end_node.hem, heap)
+      spot_node(edge.end, edge, edge.length, current_iteration, heap)
 
     while(heap.size > 0):
       node = <Node*>heap_pop(heap).data
@@ -52,13 +52,9 @@ cdef:
         edge = &node.edges[i]
         end_node = edge.end
         if end_node.last_seen < current_iteration:
-          update_node(end_node, edge, node.dist + edge.length, current_iteration)
-          #print node[i].id, end_node.id
-          heap_push(end_node.hem, heap)
+          spot_node(end_node, edge, node.dist + edge.length, current_iteration, heap)
         elif node.dist + edge.length < end_node.dist:
-          update_node(end_node, edge, node.dist + edge.length, current_iteration)
-          #print node[i].id, end_node.id
-          bubble_up(end_node.hem, heap)
+          improve_node(end_node, edge, node.dist + edge.length, heap)
     return 1
 
   #TODO: handle error for when no path is found
