@@ -672,18 +672,17 @@ struct __pyx_t_8dijkstra_Edge;
  *   INFINITY = float("inf")
  * 
  *   struct Node:             # <<<<<<<<<<<<<<
- *     bint terminal
  *     float dist
+ *     Edge * edges
  */
 struct __pyx_t_8dijkstra_Node {
-  int terminal;
   float dist;
   struct __pyx_t_8dijkstra_Edge *edges;
   int num_edges;
   struct __pyx_t_4heap_HeapEm *hem;
 };
 
-/* "dijkstra.pyx":14
+/* "dijkstra.pyx":13
  *     HeapEm * hem
  *     #int id
  *   struct Edge:             # <<<<<<<<<<<<<<
@@ -819,26 +818,12 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
 
-/* PyIntBinop.proto */
-#if !CYTHON_COMPILING_IN_PYPY
-static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, long intval, int inplace);
-#else
-#define __Pyx_PyInt_AddObjC(op1, op2, intval, inplace)\
-    (inplace ? PyNumber_InPlaceAdd(op1, op2) : PyNumber_Add(op1, op2))
-#endif
-
 /* PyObjectCall.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
 #else
 #define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
 #endif
-
-/* PySequenceContains.proto */
-static CYTHON_INLINE int __Pyx_PySequence_ContainsTF(PyObject* item, PyObject* seq, int eq) {
-    int result = PySequence_Contains(seq, item);
-    return unlikely(result < 0) ? result : (result == (eq == Py_EQ));
-}
 
 /* RaiseTooManyValuesToUnpack.proto */
 static CYTHON_INLINE void __Pyx_RaiseTooManyValuesError(Py_ssize_t expected);
@@ -929,13 +914,12 @@ static struct __pyx_t_4heap_HeapEm *(*__pyx_f_4heap_heap_pop)(struct __pyx_t_4he
 
 /* Module declarations from 'dijkstra' */
 static PyObject *__pyx_v_8dijkstra_INFINITY = 0;
-static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node **, int, struct __pyx_t_4heap_Heap *); /*proto*/
+static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *, struct __pyx_t_8dijkstra_Node *, struct __pyx_t_4heap_Heap *); /*proto*/
 #define __Pyx_MODULE_NAME "dijkstra"
 int __pyx_module_is_main_dijkstra = 0;
 
 /* Implementation of 'dijkstra' */
 static PyObject *__pyx_builtin_range;
-static PyObject *__pyx_builtin_enumerate;
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_end[] = "end";
 static const char __pyx_k_inf[] = "inf";
@@ -952,14 +936,11 @@ static const char __pyx_k_range[] = "range";
 static const char __pyx_k_start[] = "start";
 static const char __pyx_k_length[] = "length";
 static const char __pyx_k_dijkstra[] = "dijkstra";
-static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_num_nodes[] = "num_nodes";
 static const char __pyx_k_dijkstra_test[] = "dijkstra_test";
-static const char __pyx_k_initial_nodes[] = "initial_nodes";
 static const char __pyx_k_done_preparing[] = "done preparing";
 static const char __pyx_k_initial_node_index[] = "initial_node_index";
-static const char __pyx_k_initial_node_indices[] = "initial_node_indices";
-static const char __pyx_k_terminal_node_indices[] = "terminal_node_indices";
+static const char __pyx_k_terminal_node_index[] = "terminal_node_index";
 static const char __pyx_k_home_tom_electric_dijkstra_pyx[] = "/home/tom/electric/dijkstra.pyx";
 static PyObject *__pyx_n_s_dijkstra;
 static PyObject *__pyx_n_s_dijkstra_test;
@@ -967,7 +948,6 @@ static PyObject *__pyx_kp_s_done_preparing;
 static PyObject *__pyx_n_s_edge;
 static PyObject *__pyx_n_s_edges;
 static PyObject *__pyx_n_s_end;
-static PyObject *__pyx_n_s_enumerate;
 static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_heap;
 static PyObject *__pyx_n_s_hems;
@@ -975,8 +955,6 @@ static PyObject *__pyx_kp_s_home_tom_electric_dijkstra_pyx;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_inf;
 static PyObject *__pyx_n_s_initial_node_index;
-static PyObject *__pyx_n_s_initial_node_indices;
-static PyObject *__pyx_n_s_initial_nodes;
 static PyObject *__pyx_n_s_length;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_nodes;
@@ -984,218 +962,201 @@ static PyObject *__pyx_n_s_num_nodes;
 static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_start;
-static PyObject *__pyx_n_s_terminal_node_indices;
+static PyObject *__pyx_n_s_terminal_node_index;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_indices, PyObject *__pyx_v_terminal_node_indices, PyObject *__pyx_v_edges); /* proto */
-static PyObject *__pyx_int_0;
-static PyObject *__pyx_int_1;
+static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_index, PyObject *__pyx_v_terminal_node_index, PyObject *__pyx_v_edges); /* proto */
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_codeobj__2;
 
-/* "dijkstra.pyx":18
+/* "dijkstra.pyx":17
  *     float length
  * 
- *   float shortest_distance(Node** initial_nodes, int num_initial_nodes, Heap* heap):             # <<<<<<<<<<<<<<
+ *   float shortest_distance(Node* initial_node, Node* terminal_node, Heap* heap):             # <<<<<<<<<<<<<<
  *     cdef Edge * edge
  *     cdef Node * node
  */
 
-static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node **__pyx_v_initial_nodes, int __pyx_v_num_initial_nodes, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
+static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *__pyx_v_initial_node, struct __pyx_t_8dijkstra_Node *__pyx_v_terminal_node, struct __pyx_t_4heap_Heap *__pyx_v_heap) {
   struct __pyx_t_8dijkstra_Edge *__pyx_v_edge;
   struct __pyx_t_8dijkstra_Node *__pyx_v_node;
   struct __pyx_t_8dijkstra_Node *__pyx_v_end_node;
   int __pyx_v_i;
-  int __pyx_v_j;
   float __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  int __pyx_t_3;
-  int __pyx_t_4;
-  struct __pyx_t_8dijkstra_Node *__pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  int __pyx_t_8;
-  float __pyx_t_9;
+  struct __pyx_t_8dijkstra_Node *__pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  int __pyx_t_6;
+  float __pyx_t_7;
   __Pyx_RefNannySetupContext("shortest_distance", 0);
 
-  /* "dijkstra.pyx":23
+  /* "dijkstra.pyx":22
  *     cdef Node * end_node
  * 
- *     for i in range(num_initial_nodes):             # <<<<<<<<<<<<<<
- *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])
+ *     for i in range(initial_node.num_edges):             # <<<<<<<<<<<<<<
+ *       edge = &initial_node.edges[i]
+ *       end_node = edge.end
  */
-  __pyx_t_1 = __pyx_v_num_initial_nodes;
+  __pyx_t_1 = __pyx_v_initial_node->num_edges;
   for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
     __pyx_v_i = __pyx_t_2;
 
-    /* "dijkstra.pyx":24
+    /* "dijkstra.pyx":23
  * 
- *     for i in range(num_initial_nodes):
- *       for j in range(initial_nodes[i].num_edges):             # <<<<<<<<<<<<<<
- *         edge = &(initial_nodes[i].edges[j])
- *         end_node = edge.end
+ *     for i in range(initial_node.num_edges):
+ *       edge = &initial_node.edges[i]             # <<<<<<<<<<<<<<
+ *       end_node = edge.end
+ *       if end_node.dist == INFINITY:
  */
-    __pyx_t_3 = (__pyx_v_initial_nodes[__pyx_v_i])->num_edges;
-    for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-      __pyx_v_j = __pyx_t_4;
+    __pyx_v_edge = (&(__pyx_v_initial_node->edges[__pyx_v_i]));
 
-      /* "dijkstra.pyx":25
- *     for i in range(num_initial_nodes):
- *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])             # <<<<<<<<<<<<<<
- *         end_node = edge.end
- *         if end_node.dist == INFINITY:
+    /* "dijkstra.pyx":24
+ *     for i in range(initial_node.num_edges):
+ *       edge = &initial_node.edges[i]
+ *       end_node = edge.end             # <<<<<<<<<<<<<<
+ *       if end_node.dist == INFINITY:
+ *         end_node.dist = edge.length
  */
-      __pyx_v_edge = (&((__pyx_v_initial_nodes[__pyx_v_i])->edges[__pyx_v_j]));
+    __pyx_t_3 = __pyx_v_edge->end;
+    __pyx_v_end_node = __pyx_t_3;
+
+    /* "dijkstra.pyx":25
+ *       edge = &initial_node.edges[i]
+ *       end_node = edge.end
+ *       if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist
+ */
+    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = PyObject_RichCompare(__pyx_t_4, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 25, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_5); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 25, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (__pyx_t_6) {
 
       /* "dijkstra.pyx":26
- *       for j in range(initial_nodes[i].num_edges):
- *         edge = &(initial_nodes[i].edges[j])
- *         end_node = edge.end             # <<<<<<<<<<<<<<
- *         if end_node.dist == INFINITY:
- *           end_node.dist = edge.length
+ *       end_node = edge.end
+ *       if end_node.dist == INFINITY:
+ *         end_node.dist = edge.length             # <<<<<<<<<<<<<<
+ *         end_node.hem.priority = -end_node.dist
+ *         #print initial_nodes[i].id, end_node.id
  */
-      __pyx_t_5 = __pyx_v_edge->end;
-      __pyx_v_end_node = __pyx_t_5;
+      __pyx_t_7 = __pyx_v_edge->length;
+      __pyx_v_end_node->dist = __pyx_t_7;
 
       /* "dijkstra.pyx":27
- *         edge = &(initial_nodes[i].edges[j])
- *         end_node = edge.end
- *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist
+ *       if end_node.dist == INFINITY:
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *         #print initial_nodes[i].id, end_node.id
+ *         heap_push(end_node.hem, heap)
  */
-      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 27, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = PyObject_RichCompare(__pyx_t_6, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_7); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 27, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 27, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (__pyx_t_8) {
+      __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
 
-        /* "dijkstra.pyx":28
- *         end_node = edge.end
- *         if end_node.dist == INFINITY:
- *           end_node.dist = edge.length             # <<<<<<<<<<<<<<
- *           end_node.hem.priority = -end_node.dist
- *           #print initial_nodes[i].id, end_node.id
+      /* "dijkstra.pyx":29
+ *         end_node.hem.priority = -end_node.dist
+ *         #print initial_nodes[i].id, end_node.id
+ *         heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
+ *       elif edge.length < end_node.dist:
+ *         end_node.dist = edge.length
  */
-        __pyx_t_9 = __pyx_v_edge->length;
-        __pyx_v_end_node->dist = __pyx_t_9;
+      __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "dijkstra.pyx":29
- *         if end_node.dist == INFINITY:
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
- *           #print initial_nodes[i].id, end_node.id
- *           heap_push(end_node.hem, heap)
+      /* "dijkstra.pyx":25
+ *       edge = &initial_node.edges[i]
+ *       end_node = edge.end
+ *       if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist
  */
-        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
+      goto __pyx_L5;
+    }
 
-        /* "dijkstra.pyx":31
- *           end_node.hem.priority = -end_node.dist
- *           #print initial_nodes[i].id, end_node.id
- *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
- *         elif edge.length < end_node.dist:
- *           end_node.dist = edge.length
+    /* "dijkstra.pyx":30
+ *         #print initial_nodes[i].id, end_node.id
+ *         heap_push(end_node.hem, heap)
+ *       elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist
  */
-        __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
+    __pyx_t_6 = ((__pyx_v_edge->length < __pyx_v_end_node->dist) != 0);
+    if (__pyx_t_6) {
 
-        /* "dijkstra.pyx":27
- *         edge = &(initial_nodes[i].edges[j])
- *         end_node = edge.end
- *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist
+      /* "dijkstra.pyx":31
+ *         heap_push(end_node.hem, heap)
+ *       elif edge.length < end_node.dist:
+ *         end_node.dist = edge.length             # <<<<<<<<<<<<<<
+ *         end_node.hem.priority = -end_node.dist
+ *         #print initial_nodes[i].id, end_node.id
  */
-        goto __pyx_L7;
-      }
+      __pyx_t_7 = __pyx_v_edge->length;
+      __pyx_v_end_node->dist = __pyx_t_7;
 
       /* "dijkstra.pyx":32
- *           #print initial_nodes[i].id, end_node.id
- *           heap_push(end_node.hem, heap)
- *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist
+ *       elif edge.length < end_node.dist:
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
+ *         #print initial_nodes[i].id, end_node.id
+ *         bubble_up(end_node.hem, heap)
  */
-      __pyx_t_8 = ((__pyx_v_edge->length < __pyx_v_end_node->dist) != 0);
-      if (__pyx_t_8) {
+      __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
 
-        /* "dijkstra.pyx":33
- *           heap_push(end_node.hem, heap)
- *         elif edge.length < end_node.dist:
- *           end_node.dist = edge.length             # <<<<<<<<<<<<<<
- *           end_node.hem.priority = -end_node.dist
- *           #print initial_nodes[i].id, end_node.id
- */
-        __pyx_t_9 = __pyx_v_edge->length;
-        __pyx_v_end_node->dist = __pyx_t_9;
-
-        /* "dijkstra.pyx":34
- *         elif edge.length < end_node.dist:
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
- *           #print initial_nodes[i].id, end_node.id
- *           bubble_up(end_node.hem, heap)
- */
-        __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
-
-        /* "dijkstra.pyx":36
- *           end_node.hem.priority = -end_node.dist
- *           #print initial_nodes[i].id, end_node.id
- *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
+      /* "dijkstra.pyx":34
+ *         end_node.hem.priority = -end_node.dist
+ *         #print initial_nodes[i].id, end_node.id
+ *         bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
  * 
  *     while(heap.size > 0):
  */
-        __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
+      __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "dijkstra.pyx":32
- *           #print initial_nodes[i].id, end_node.id
- *           heap_push(end_node.hem, heap)
- *         elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
- *           end_node.dist = edge.length
- *           end_node.hem.priority = -end_node.dist
+      /* "dijkstra.pyx":30
+ *         #print initial_nodes[i].id, end_node.id
+ *         heap_push(end_node.hem, heap)
+ *       elif edge.length < end_node.dist:             # <<<<<<<<<<<<<<
+ *         end_node.dist = edge.length
+ *         end_node.hem.priority = -end_node.dist
  */
-      }
-      __pyx_L7:;
     }
+    __pyx_L5:;
   }
 
-  /* "dijkstra.pyx":38
- *           bubble_up(end_node.hem, heap)
+  /* "dijkstra.pyx":36
+ *         bubble_up(end_node.hem, heap)
  * 
  *     while(heap.size > 0):             # <<<<<<<<<<<<<<
  *       node = <Node*>heap_pop(heap).data
- *       if node.terminal == True:
+ *       if node == terminal_node:
  */
   while (1) {
-    __pyx_t_8 = ((__pyx_v_heap->size > 0) != 0);
-    if (!__pyx_t_8) break;
+    __pyx_t_6 = ((__pyx_v_heap->size > 0) != 0);
+    if (!__pyx_t_6) break;
 
-    /* "dijkstra.pyx":39
+    /* "dijkstra.pyx":37
  * 
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data             # <<<<<<<<<<<<<<
- *       if node.terminal == True:
+ *       if node == terminal_node:
  *         return node.dist
  */
     __pyx_v_node = ((struct __pyx_t_8dijkstra_Node *)__pyx_f_4heap_heap_pop(__pyx_v_heap)->data);
 
-    /* "dijkstra.pyx":40
+    /* "dijkstra.pyx":38
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data
- *       if node.terminal == True:             # <<<<<<<<<<<<<<
+ *       if node == terminal_node:             # <<<<<<<<<<<<<<
  *         return node.dist
  *       for i in range(node.num_edges):
  */
-    __pyx_t_8 = ((__pyx_v_node->terminal == 1) != 0);
-    if (__pyx_t_8) {
+    __pyx_t_6 = ((__pyx_v_node == __pyx_v_terminal_node) != 0);
+    if (__pyx_t_6) {
 
-      /* "dijkstra.pyx":41
+      /* "dijkstra.pyx":39
  *       node = <Node*>heap_pop(heap).data
- *       if node.terminal == True:
+ *       if node == terminal_node:
  *         return node.dist             # <<<<<<<<<<<<<<
  *       for i in range(node.num_edges):
  *         edge = &(node.edges[i])
@@ -1203,17 +1164,17 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
       __pyx_r = __pyx_v_node->dist;
       goto __pyx_L0;
 
-      /* "dijkstra.pyx":40
+      /* "dijkstra.pyx":38
  *     while(heap.size > 0):
  *       node = <Node*>heap_pop(heap).data
- *       if node.terminal == True:             # <<<<<<<<<<<<<<
+ *       if node == terminal_node:             # <<<<<<<<<<<<<<
  *         return node.dist
  *       for i in range(node.num_edges):
  */
     }
 
-    /* "dijkstra.pyx":42
- *       if node.terminal == True:
+    /* "dijkstra.pyx":40
+ *       if node == terminal_node:
  *         return node.dist
  *       for i in range(node.num_edges):             # <<<<<<<<<<<<<<
  *         edge = &(node.edges[i])
@@ -1223,7 +1184,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
     for (__pyx_t_2 = 0; __pyx_t_2 < __pyx_t_1; __pyx_t_2+=1) {
       __pyx_v_i = __pyx_t_2;
 
-      /* "dijkstra.pyx":43
+      /* "dijkstra.pyx":41
  *         return node.dist
  *       for i in range(node.num_edges):
  *         edge = &(node.edges[i])             # <<<<<<<<<<<<<<
@@ -1232,32 +1193,32 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
       __pyx_v_edge = (&(__pyx_v_node->edges[__pyx_v_i]));
 
-      /* "dijkstra.pyx":44
+      /* "dijkstra.pyx":42
  *       for i in range(node.num_edges):
  *         edge = &(node.edges[i])
  *         end_node = edge.end             # <<<<<<<<<<<<<<
  *         if end_node.dist == INFINITY:
  *           end_node.dist = node.dist + edge.length
  */
-      __pyx_t_5 = __pyx_v_edge->end;
-      __pyx_v_end_node = __pyx_t_5;
+      __pyx_t_3 = __pyx_v_edge->end;
+      __pyx_v_end_node = __pyx_t_3;
 
-      /* "dijkstra.pyx":45
+      /* "dijkstra.pyx":43
  *         edge = &(node.edges[i])
  *         end_node = edge.end
  *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
  *           end_node.dist = node.dist + edge.length
  *           end_node.hem.priority = -end_node.dist
  */
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 45, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = PyObject_RichCompare(__pyx_t_7, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 45, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 45, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (__pyx_t_8) {
+      __pyx_t_5 = PyFloat_FromDouble(__pyx_v_end_node->dist); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 43, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __pyx_t_4 = PyObject_RichCompare(__pyx_t_5, __pyx_v_8dijkstra_INFINITY, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 43, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 43, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (__pyx_t_6) {
 
-        /* "dijkstra.pyx":46
+        /* "dijkstra.pyx":44
  *         end_node = edge.end
  *         if end_node.dist == INFINITY:
  *           end_node.dist = node.dist + edge.length             # <<<<<<<<<<<<<<
@@ -1266,7 +1227,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_v_end_node->dist = (__pyx_v_node->dist + __pyx_v_edge->length);
 
-        /* "dijkstra.pyx":47
+        /* "dijkstra.pyx":45
  *         if end_node.dist == INFINITY:
  *           end_node.dist = node.dist + edge.length
  *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
@@ -1275,7 +1236,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
 
-        /* "dijkstra.pyx":49
+        /* "dijkstra.pyx":47
  *           end_node.hem.priority = -end_node.dist
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1284,27 +1245,27 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_f_4heap_heap_push(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "dijkstra.pyx":45
+        /* "dijkstra.pyx":43
  *         edge = &(node.edges[i])
  *         end_node = edge.end
  *         if end_node.dist == INFINITY:             # <<<<<<<<<<<<<<
  *           end_node.dist = node.dist + edge.length
  *           end_node.hem.priority = -end_node.dist
  */
-        goto __pyx_L13;
+        goto __pyx_L11;
       }
 
-      /* "dijkstra.pyx":50
+      /* "dijkstra.pyx":48
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
  *           end_node.dist = node.dist + edge.length
  *           end_node.hem.priority = -end_node.dist
  */
-      __pyx_t_8 = (((__pyx_v_node->dist + __pyx_v_edge->length) < __pyx_v_end_node->dist) != 0);
-      if (__pyx_t_8) {
+      __pyx_t_6 = (((__pyx_v_node->dist + __pyx_v_edge->length) < __pyx_v_end_node->dist) != 0);
+      if (__pyx_t_6) {
 
-        /* "dijkstra.pyx":51
+        /* "dijkstra.pyx":49
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:
  *           end_node.dist = node.dist + edge.length             # <<<<<<<<<<<<<<
@@ -1313,7 +1274,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_v_end_node->dist = (__pyx_v_node->dist + __pyx_v_edge->length);
 
-        /* "dijkstra.pyx":52
+        /* "dijkstra.pyx":50
  *         elif node.dist + edge.length < end_node.dist:
  *           end_node.dist = node.dist + edge.length
  *           end_node.hem.priority = -end_node.dist             # <<<<<<<<<<<<<<
@@ -1322,7 +1283,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_v_end_node->hem->priority = (-__pyx_v_end_node->dist);
 
-        /* "dijkstra.pyx":54
+        /* "dijkstra.pyx":52
  *           end_node.hem.priority = -end_node.dist
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)             # <<<<<<<<<<<<<<
@@ -1331,7 +1292,7 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  */
         __pyx_f_4heap_bubble_up(__pyx_v_end_node->hem, __pyx_v_heap);
 
-        /* "dijkstra.pyx":50
+        /* "dijkstra.pyx":48
  *           #print node[i].id, end_node.id
  *           heap_push(end_node.hem, heap)
  *         elif node.dist + edge.length < end_node.dist:             # <<<<<<<<<<<<<<
@@ -1339,32 +1300,32 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
  *           end_node.hem.priority = -end_node.dist
  */
       }
-      __pyx_L13:;
+      __pyx_L11:;
     }
   }
 
-  /* "dijkstra.pyx":55
+  /* "dijkstra.pyx":53
  *           #print node[i].id, end_node.id
  *           bubble_up(end_node.hem, heap)
  *     return -1.0             # <<<<<<<<<<<<<<
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):
  */
   __pyx_r = -1.0;
   goto __pyx_L0;
 
-  /* "dijkstra.pyx":18
+  /* "dijkstra.pyx":17
  *     float length
  * 
- *   float shortest_distance(Node** initial_nodes, int num_initial_nodes, Heap* heap):             # <<<<<<<<<<<<<<
+ *   float shortest_distance(Node* initial_node, Node* terminal_node, Heap* heap):             # <<<<<<<<<<<<<<
  *     cdef Edge * edge
  *     cdef Node * node
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
   __Pyx_WriteUnraisable("dijkstra.shortest_distance", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
@@ -1372,12 +1333,12 @@ static float __pyx_f_8dijkstra_shortest_distance(struct __pyx_t_8dijkstra_Node *
   return __pyx_r;
 }
 
-/* "dijkstra.pyx":57
+/* "dijkstra.pyx":55
  *     return -1.0
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):             # <<<<<<<<<<<<<<
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):             # <<<<<<<<<<<<<<
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
  */
 
 /* Python wrapper */
@@ -1385,14 +1346,14 @@ static PyObject *__pyx_pw_8dijkstra_1dijkstra_test(PyObject *__pyx_self, PyObjec
 static PyMethodDef __pyx_mdef_8dijkstra_1dijkstra_test = {"dijkstra_test", (PyCFunction)__pyx_pw_8dijkstra_1dijkstra_test, METH_VARARGS|METH_KEYWORDS, 0};
 static PyObject *__pyx_pw_8dijkstra_1dijkstra_test(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_num_nodes = 0;
-  PyObject *__pyx_v_initial_node_indices = 0;
-  PyObject *__pyx_v_terminal_node_indices = 0;
+  PyObject *__pyx_v_initial_node_index = 0;
+  PyObject *__pyx_v_terminal_node_index = 0;
   PyObject *__pyx_v_edges = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("dijkstra_test (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_num_nodes,&__pyx_n_s_initial_node_indices,&__pyx_n_s_terminal_node_indices,&__pyx_n_s_edges,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_num_nodes,&__pyx_n_s_initial_node_index,&__pyx_n_s_terminal_node_index,&__pyx_n_s_edges,0};
     PyObject* values[4] = {0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
@@ -1411,23 +1372,23 @@ static PyObject *__pyx_pw_8dijkstra_1dijkstra_test(PyObject *__pyx_self, PyObjec
         if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_num_nodes)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         case  1:
-        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_initial_node_indices)) != 0)) kw_args--;
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_initial_node_index)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 1); __PYX_ERR(0, 57, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 1); __PYX_ERR(0, 55, __pyx_L3_error)
         }
         case  2:
-        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_terminal_node_indices)) != 0)) kw_args--;
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_terminal_node_index)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 2); __PYX_ERR(0, 57, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 2); __PYX_ERR(0, 55, __pyx_L3_error)
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_edges)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 3); __PYX_ERR(0, 57, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, 3); __PYX_ERR(0, 55, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "dijkstra_test") < 0)) __PYX_ERR(0, 57, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "dijkstra_test") < 0)) __PYX_ERR(0, 55, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -1438,33 +1399,31 @@ static PyObject *__pyx_pw_8dijkstra_1dijkstra_test(PyObject *__pyx_self, PyObjec
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
     }
     __pyx_v_num_nodes = values[0];
-    __pyx_v_initial_node_indices = values[1];
-    __pyx_v_terminal_node_indices = values[2];
+    __pyx_v_initial_node_index = values[1];
+    __pyx_v_terminal_node_index = values[2];
     __pyx_v_edges = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 57, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("dijkstra_test", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 55, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("dijkstra.dijkstra_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8dijkstra_dijkstra_test(__pyx_self, __pyx_v_num_nodes, __pyx_v_initial_node_indices, __pyx_v_terminal_node_indices, __pyx_v_edges);
+  __pyx_r = __pyx_pf_8dijkstra_dijkstra_test(__pyx_self, __pyx_v_num_nodes, __pyx_v_initial_node_index, __pyx_v_terminal_node_index, __pyx_v_edges);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_indices, PyObject *__pyx_v_terminal_node_indices, PyObject *__pyx_v_edges) {
+static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_num_nodes, PyObject *__pyx_v_initial_node_index, PyObject *__pyx_v_terminal_node_index, PyObject *__pyx_v_edges) {
   struct __pyx_t_8dijkstra_Node *__pyx_v_nodes;
-  struct __pyx_t_8dijkstra_Node **__pyx_v_initial_nodes;
   struct __pyx_t_4heap_HeapEm *__pyx_v_hems;
   struct __pyx_t_4heap_Heap __pyx_v_heap;
   struct __pyx_t_8dijkstra_Edge *__pyx_v_edge;
   PyObject *__pyx_v_i = NULL;
-  PyObject *__pyx_v_initial_node_index = NULL;
   PyObject *__pyx_v_start = NULL;
   PyObject *__pyx_v_end = NULL;
   PyObject *__pyx_v_length = NULL;
@@ -1475,187 +1434,96 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   size_t __pyx_t_3;
   Py_ssize_t __pyx_t_4;
   PyObject *(*__pyx_t_5)(PyObject *);
-  PyObject *__pyx_t_6 = NULL;
+  int __pyx_t_6;
   Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  int __pyx_t_9;
-  int __pyx_t_10;
-  float __pyx_t_11;
+  float __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  PyObject *(*__pyx_t_15)(PyObject *);
+  PyObject *(*__pyx_t_14)(PyObject *);
   __Pyx_RefNannySetupContext("dijkstra_test", 0);
 
-  /* "dijkstra.pyx":58
+  /* "dijkstra.pyx":56
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))             # <<<<<<<<<<<<<<
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
- *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
- */
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_8dijkstra_Node))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 58, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_nodes = ((struct __pyx_t_8dijkstra_Node *)malloc(__pyx_t_3));
-
-  /* "dijkstra.pyx":59
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):
- *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))             # <<<<<<<<<<<<<<
  *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
  *   cdef Heap heap
  */
-  __pyx_t_4 = PyObject_Length(__pyx_v_initial_node_indices); if (unlikely(__pyx_t_4 == -1)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __pyx_v_initial_nodes = ((struct __pyx_t_8dijkstra_Node **)malloc((__pyx_t_4 * (sizeof(struct __pyx_t_8dijkstra_Node *)))));
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_8dijkstra_Node))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_nodes = ((struct __pyx_t_8dijkstra_Node *)malloc(__pyx_t_3));
 
-  /* "dijkstra.pyx":60
+  /* "dijkstra.pyx":57
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
  *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))             # <<<<<<<<<<<<<<
  *   cdef Heap heap
  *   cdef Edge * edge
  */
-  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_1 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_1); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_1); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 57, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_hems = ((struct __pyx_t_4heap_HeapEm *)malloc(__pyx_t_3));
 
-  /* "dijkstra.pyx":64
+  /* "dijkstra.pyx":61
  *   cdef Edge * edge
  * 
  *   heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))             # <<<<<<<<<<<<<<
  *   heap.size = 0
  * 
  */
-  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm *))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(struct __pyx_t_4heap_HeapEm *))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_v_num_nodes, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_size_t(__pyx_t_2); if (unlikely((__pyx_t_3 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_heap.inv_location = ((struct __pyx_t_4heap_HeapEm **)malloc(__pyx_t_3));
 
-  /* "dijkstra.pyx":65
+  /* "dijkstra.pyx":62
  * 
  *   heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
  *   heap.size = 0             # <<<<<<<<<<<<<<
  * 
- *   for i, initial_node_index in enumerate(initial_node_indices):
+ *   for i in range(num_nodes):
  */
   __pyx_v_heap.size = 0;
 
-  /* "dijkstra.pyx":67
+  /* "dijkstra.pyx":64
  *   heap.size = 0
- * 
- *   for i, initial_node_index in enumerate(initial_node_indices):             # <<<<<<<<<<<<<<
- *     initial_nodes[i] = &nodes[initial_node_index]
- * 
- */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_t_2 = __pyx_int_0;
-  if (likely(PyList_CheckExact(__pyx_v_initial_node_indices)) || PyTuple_CheckExact(__pyx_v_initial_node_indices)) {
-    __pyx_t_1 = __pyx_v_initial_node_indices; __Pyx_INCREF(__pyx_t_1); __pyx_t_4 = 0;
-    __pyx_t_5 = NULL;
-  } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_initial_node_indices); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 67, __pyx_L1_error)
-  }
-  for (;;) {
-    if (likely(!__pyx_t_5)) {
-      if (likely(PyList_CheckExact(__pyx_t_1))) {
-        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
-        #else
-        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        #endif
-      } else {
-        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4); __Pyx_INCREF(__pyx_t_6); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 67, __pyx_L1_error)
-        #else
-        __pyx_t_6 = PySequence_ITEM(__pyx_t_1, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        #endif
-      }
-    } else {
-      __pyx_t_6 = __pyx_t_5(__pyx_t_1);
-      if (unlikely(!__pyx_t_6)) {
-        PyObject* exc_type = PyErr_Occurred();
-        if (exc_type) {
-          if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 67, __pyx_L1_error)
-        }
-        break;
-      }
-      __Pyx_GOTREF(__pyx_t_6);
-    }
-    __Pyx_XDECREF_SET(__pyx_v_initial_node_index, __pyx_t_6);
-    __pyx_t_6 = 0;
-    __Pyx_INCREF(__pyx_t_2);
-    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_2);
-    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_2);
-    __pyx_t_2 = __pyx_t_6;
-    __pyx_t_6 = 0;
-
-    /* "dijkstra.pyx":68
- * 
- *   for i, initial_node_index in enumerate(initial_node_indices):
- *     initial_nodes[i] = &nodes[initial_node_index]             # <<<<<<<<<<<<<<
- * 
- *   for i in range(num_nodes):
- */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_initial_node_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
-    (__pyx_v_initial_nodes[__pyx_t_8]) = (&(__pyx_v_nodes[__pyx_t_7]));
-
-    /* "dijkstra.pyx":67
- *   heap.size = 0
- * 
- *   for i, initial_node_index in enumerate(initial_node_indices):             # <<<<<<<<<<<<<<
- *     initial_nodes[i] = &nodes[initial_node_index]
- * 
- */
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "dijkstra.pyx":70
- *     initial_nodes[i] = &nodes[initial_node_index]
  * 
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
- *     if i in terminal_node_indices:
- *       nodes[i].terminal = True
+ *     if i == initial_node_index:
+ *       nodes[i].dist = 0.0
  */
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_num_nodes);
   __Pyx_GIVEREF(__pyx_v_num_nodes);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
     __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 64, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 64, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -1663,17 +1531,17 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 70, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 70, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 64, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 70, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 64, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -1683,7 +1551,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 70, __pyx_L1_error)
+          else __PYX_ERR(0, 64, __pyx_L1_error)
         }
         break;
       }
@@ -1692,82 +1560,39 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "dijkstra.pyx":71
+    /* "dijkstra.pyx":65
  * 
  *   for i in range(num_nodes):
- *     if i in terminal_node_indices:             # <<<<<<<<<<<<<<
- *       nodes[i].terminal = True
- *     else:
- */
-    __pyx_t_9 = (__Pyx_PySequence_ContainsTF(__pyx_v_i, __pyx_v_terminal_node_indices, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 71, __pyx_L1_error)
-    __pyx_t_10 = (__pyx_t_9 != 0);
-    if (__pyx_t_10) {
-
-      /* "dijkstra.pyx":72
- *   for i in range(num_nodes):
- *     if i in terminal_node_indices:
- *       nodes[i].terminal = True             # <<<<<<<<<<<<<<
- *     else:
- *       nodes[i].terminal = False
- */
-      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L1_error)
-      (__pyx_v_nodes[__pyx_t_7]).terminal = 1;
-
-      /* "dijkstra.pyx":71
- * 
- *   for i in range(num_nodes):
- *     if i in terminal_node_indices:             # <<<<<<<<<<<<<<
- *       nodes[i].terminal = True
- *     else:
- */
-      goto __pyx_L7;
-    }
-
-    /* "dijkstra.pyx":74
- *       nodes[i].terminal = True
- *     else:
- *       nodes[i].terminal = False             # <<<<<<<<<<<<<<
- *     if i in initial_node_indices:
- *       nodes[i].dist = 0.0
- */
-    /*else*/ {
-      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L1_error)
-      (__pyx_v_nodes[__pyx_t_7]).terminal = 0;
-    }
-    __pyx_L7:;
-
-    /* "dijkstra.pyx":75
- *     else:
- *       nodes[i].terminal = False
- *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+ *     if i == initial_node_index:             # <<<<<<<<<<<<<<
  *       nodes[i].dist = 0.0
  *     else:
  */
-    __pyx_t_10 = (__Pyx_PySequence_ContainsTF(__pyx_v_i, __pyx_v_initial_node_indices, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 75, __pyx_L1_error)
-    __pyx_t_9 = (__pyx_t_10 != 0);
-    if (__pyx_t_9) {
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_i, __pyx_v_initial_node_index, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 65, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (__pyx_t_6) {
 
-      /* "dijkstra.pyx":76
- *       nodes[i].terminal = False
- *     if i in initial_node_indices:
+      /* "dijkstra.pyx":66
+ *   for i in range(num_nodes):
+ *     if i == initial_node_index:
  *       nodes[i].dist = 0.0             # <<<<<<<<<<<<<<
  *     else:
  *       nodes[i].dist = INFINITY
  */
-      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L1_error)
       (__pyx_v_nodes[__pyx_t_7]).dist = 0.0;
 
-      /* "dijkstra.pyx":75
- *     else:
- *       nodes[i].terminal = False
- *     if i in initial_node_indices:             # <<<<<<<<<<<<<<
+      /* "dijkstra.pyx":65
+ * 
+ *   for i in range(num_nodes):
+ *     if i == initial_node_index:             # <<<<<<<<<<<<<<
  *       nodes[i].dist = 0.0
  *     else:
  */
-      goto __pyx_L8;
+      goto __pyx_L5;
     }
 
-    /* "dijkstra.pyx":78
+    /* "dijkstra.pyx":68
  *       nodes[i].dist = 0.0
  *     else:
  *       nodes[i].dist = INFINITY             # <<<<<<<<<<<<<<
@@ -1775,55 +1600,55 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
  *     nodes[i].hem = &hems[i]
  */
     /*else*/ {
-      __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_v_8dijkstra_INFINITY); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L1_error)
-      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L1_error)
-      (__pyx_v_nodes[__pyx_t_7]).dist = __pyx_t_11;
+      __pyx_t_8 = __pyx_PyFloat_AsFloat(__pyx_v_8dijkstra_INFINITY); if (unlikely((__pyx_t_8 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
+      (__pyx_v_nodes[__pyx_t_7]).dist = __pyx_t_8;
     }
-    __pyx_L8:;
+    __pyx_L5:;
 
-    /* "dijkstra.pyx":79
+    /* "dijkstra.pyx":69
  *     else:
  *       nodes[i].dist = INFINITY
  *     nodes[i].num_edges = 0             # <<<<<<<<<<<<<<
  *     nodes[i].hem = &hems[i]
  *     #nodes[i].id = i
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L1_error)
     (__pyx_v_nodes[__pyx_t_7]).num_edges = 0;
 
-    /* "dijkstra.pyx":80
+    /* "dijkstra.pyx":70
  *       nodes[i].dist = INFINITY
  *     nodes[i].num_edges = 0
  *     nodes[i].hem = &hems[i]             # <<<<<<<<<<<<<<
  *     #nodes[i].id = i
  *     #nodes[i].sp_in = NULL
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_8]).hem = (&(__pyx_v_hems[__pyx_t_7]));
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_9]).hem = (&(__pyx_v_hems[__pyx_t_7]));
 
-    /* "dijkstra.pyx":83
+    /* "dijkstra.pyx":73
  *     #nodes[i].id = i
  *     #nodes[i].sp_in = NULL
  *     hems[i].data = &(nodes[i])             # <<<<<<<<<<<<<<
  *   for start, end, length in edges:
  *     nodes[start].num_edges += 1
  */
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
-    (__pyx_v_hems[__pyx_t_7]).data = (&(__pyx_v_nodes[__pyx_t_8]));
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
+    (__pyx_v_hems[__pyx_t_7]).data = (&(__pyx_v_nodes[__pyx_t_9]));
 
-    /* "dijkstra.pyx":70
- *     initial_nodes[i] = &nodes[initial_node_index]
+    /* "dijkstra.pyx":64
+ *   heap.size = 0
  * 
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
- *     if i in terminal_node_indices:
- *       nodes[i].terminal = True
+ *     if i == initial_node_index:
+ *       nodes[i].dist = 0.0
  */
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":84
+  /* "dijkstra.pyx":74
  *     #nodes[i].sp_in = NULL
  *     hems[i].data = &(nodes[i])
  *   for start, end, length in edges:             # <<<<<<<<<<<<<<
@@ -1834,26 +1659,26 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     __pyx_t_2 = __pyx_v_edges; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 74, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 84, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 74, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_5)) {
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 74, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 74, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -1863,7 +1688,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 84, __pyx_L1_error)
+          else __PYX_ERR(0, 74, __pyx_L1_error)
         }
         break;
       }
@@ -1879,71 +1704,71 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 84, __pyx_L1_error)
+        __PYX_ERR(0, 74, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
-        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 1); 
-        __pyx_t_13 = PyTuple_GET_ITEM(sequence, 2); 
+        __pyx_t_10 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 2); 
       } else {
-        __pyx_t_6 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_12 = PyList_GET_ITEM(sequence, 1); 
-        __pyx_t_13 = PyList_GET_ITEM(sequence, 2); 
+        __pyx_t_10 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_12 = PyList_GET_ITEM(sequence, 2); 
       }
-      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_10);
+      __Pyx_INCREF(__pyx_t_11);
       __Pyx_INCREF(__pyx_t_12);
-      __Pyx_INCREF(__pyx_t_13);
       #else
-      __pyx_t_6 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 84, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 84, __pyx_L1_error)
+      __pyx_t_10 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 74, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_11 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 74, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_12 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_13 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 84, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_13);
       #endif
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_14 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 84, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext;
-      index = 0; __pyx_t_6 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_6)) goto __pyx_L11_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_6);
-      index = 1; __pyx_t_12 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_12)) goto __pyx_L11_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_12);
-      index = 2; __pyx_t_13 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_13)) goto __pyx_L11_unpacking_failed;
+      __pyx_t_13 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 74, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 3) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
-      __pyx_t_15 = NULL;
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      goto __pyx_L12_unpacking_done;
-      __pyx_L11_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_15 = NULL;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_14 = Py_TYPE(__pyx_t_13)->tp_iternext;
+      index = 0; __pyx_t_10 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_10)) goto __pyx_L8_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_10);
+      index = 1; __pyx_t_11 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_11)) goto __pyx_L8_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_11);
+      index = 2; __pyx_t_12 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_12)) goto __pyx_L8_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_12);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_14(__pyx_t_13), 3) < 0) __PYX_ERR(0, 74, __pyx_L1_error)
+      __pyx_t_14 = NULL;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      goto __pyx_L9_unpacking_done;
+      __pyx_L8_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __pyx_t_14 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 84, __pyx_L1_error)
-      __pyx_L12_unpacking_done:;
+      __PYX_ERR(0, 74, __pyx_L1_error)
+      __pyx_L9_unpacking_done:;
     }
-    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_6);
-    __pyx_t_6 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_12);
+    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_10);
+    __pyx_t_10 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_11);
+    __pyx_t_11 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_12);
     __pyx_t_12 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_13);
-    __pyx_t_13 = 0;
 
-    /* "dijkstra.pyx":85
+    /* "dijkstra.pyx":75
  *     hems[i].data = &(nodes[i])
  *   for start, end, length in edges:
  *     nodes[start].num_edges += 1             # <<<<<<<<<<<<<<
  *   for i in range(num_nodes):
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 75, __pyx_L1_error)
     (__pyx_v_nodes[__pyx_t_7]).num_edges = ((__pyx_v_nodes[__pyx_t_7]).num_edges + 1);
 
-    /* "dijkstra.pyx":84
+    /* "dijkstra.pyx":74
  *     #nodes[i].sp_in = NULL
  *     hems[i].data = &(nodes[i])
  *   for start, end, length in edges:             # <<<<<<<<<<<<<<
@@ -1953,28 +1778,28 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":86
+  /* "dijkstra.pyx":76
  *   for start, end, length in edges:
  *     nodes[start].num_edges += 1
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
  *     nodes[i].num_edges = 0
  */
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_num_nodes);
   __Pyx_GIVEREF(__pyx_v_num_nodes);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
     __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 76, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -1982,17 +1807,17 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 86, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 76, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 86, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 76, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 86, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 76, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -2002,7 +1827,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 86, __pyx_L1_error)
+          else __PYX_ERR(0, 76, __pyx_L1_error)
         }
         break;
       }
@@ -2011,28 +1836,28 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "dijkstra.pyx":87
+    /* "dijkstra.pyx":77
  *     nodes[start].num_edges += 1
  *   for i in range(num_nodes):
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))             # <<<<<<<<<<<<<<
  *     nodes[i].num_edges = 0
  *   for start, end, length in edges:
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_8]).edges = ((struct __pyx_t_8dijkstra_Edge *)malloc(((__pyx_v_nodes[__pyx_t_7]).num_edges * (sizeof(struct __pyx_t_8dijkstra_Edge)))));
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 77, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_9]).edges = ((struct __pyx_t_8dijkstra_Edge *)malloc(((__pyx_v_nodes[__pyx_t_7]).num_edges * (sizeof(struct __pyx_t_8dijkstra_Edge)))));
 
-    /* "dijkstra.pyx":88
+    /* "dijkstra.pyx":78
  *   for i in range(num_nodes):
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
  *     nodes[i].num_edges = 0             # <<<<<<<<<<<<<<
  *   for start, end, length in edges:
  *     edge = &(nodes[start].edges[nodes[start].num_edges])
  */
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
-    (__pyx_v_nodes[__pyx_t_8]).num_edges = 0;
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L1_error)
+    (__pyx_v_nodes[__pyx_t_9]).num_edges = 0;
 
-    /* "dijkstra.pyx":86
+    /* "dijkstra.pyx":76
  *   for start, end, length in edges:
  *     nodes[start].num_edges += 1
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
@@ -2042,7 +1867,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":89
+  /* "dijkstra.pyx":79
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
  *     nodes[i].num_edges = 0
  *   for start, end, length in edges:             # <<<<<<<<<<<<<<
@@ -2053,26 +1878,26 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     __pyx_t_2 = __pyx_v_edges; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_edges); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 79, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 89, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 79, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_5)) {
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 79, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 89, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 79, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 89, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 79, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -2082,7 +1907,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 89, __pyx_L1_error)
+          else __PYX_ERR(0, 79, __pyx_L1_error)
         }
         break;
       }
@@ -2098,102 +1923,102 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 89, __pyx_L1_error)
+        __PYX_ERR(0, 79, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
-        __pyx_t_13 = PyTuple_GET_ITEM(sequence, 0); 
-        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 1); 
-        __pyx_t_6 = PyTuple_GET_ITEM(sequence, 2); 
+        __pyx_t_12 = PyTuple_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyTuple_GET_ITEM(sequence, 1); 
+        __pyx_t_10 = PyTuple_GET_ITEM(sequence, 2); 
       } else {
-        __pyx_t_13 = PyList_GET_ITEM(sequence, 0); 
-        __pyx_t_12 = PyList_GET_ITEM(sequence, 1); 
-        __pyx_t_6 = PyList_GET_ITEM(sequence, 2); 
+        __pyx_t_12 = PyList_GET_ITEM(sequence, 0); 
+        __pyx_t_11 = PyList_GET_ITEM(sequence, 1); 
+        __pyx_t_10 = PyList_GET_ITEM(sequence, 2); 
       }
-      __Pyx_INCREF(__pyx_t_13);
       __Pyx_INCREF(__pyx_t_12);
-      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_11);
+      __Pyx_INCREF(__pyx_t_10);
       #else
-      __pyx_t_13 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 89, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 89, __pyx_L1_error)
+      __pyx_t_12 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 79, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_6 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 89, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_11 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_10 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 79, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
       #endif
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_14 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 89, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_14);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_15 = Py_TYPE(__pyx_t_14)->tp_iternext;
-      index = 0; __pyx_t_13 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_13)) goto __pyx_L17_unpacking_failed;
+      __pyx_t_13 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 79, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      index = 1; __pyx_t_12 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_12)) goto __pyx_L17_unpacking_failed;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_14 = Py_TYPE(__pyx_t_13)->tp_iternext;
+      index = 0; __pyx_t_12 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_12)) goto __pyx_L14_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_12);
-      index = 2; __pyx_t_6 = __pyx_t_15(__pyx_t_14); if (unlikely(!__pyx_t_6)) goto __pyx_L17_unpacking_failed;
-      __Pyx_GOTREF(__pyx_t_6);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_14), 3) < 0) __PYX_ERR(0, 89, __pyx_L1_error)
-      __pyx_t_15 = NULL;
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      goto __pyx_L18_unpacking_done;
-      __pyx_L17_unpacking_failed:;
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_15 = NULL;
+      index = 1; __pyx_t_11 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_11)) goto __pyx_L14_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_11);
+      index = 2; __pyx_t_10 = __pyx_t_14(__pyx_t_13); if (unlikely(!__pyx_t_10)) goto __pyx_L14_unpacking_failed;
+      __Pyx_GOTREF(__pyx_t_10);
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_14(__pyx_t_13), 3) < 0) __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_t_14 = NULL;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      goto __pyx_L15_unpacking_done;
+      __pyx_L14_unpacking_failed:;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __pyx_t_14 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 89, __pyx_L1_error)
-      __pyx_L18_unpacking_done:;
+      __PYX_ERR(0, 79, __pyx_L1_error)
+      __pyx_L15_unpacking_done:;
     }
-    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_13);
-    __pyx_t_13 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_12);
+    __Pyx_XDECREF_SET(__pyx_v_start, __pyx_t_12);
     __pyx_t_12 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_6);
-    __pyx_t_6 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_end, __pyx_t_11);
+    __pyx_t_11 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_10);
+    __pyx_t_10 = 0;
 
-    /* "dijkstra.pyx":90
+    /* "dijkstra.pyx":80
  *     nodes[i].num_edges = 0
  *   for start, end, length in edges:
  *     edge = &(nodes[start].edges[nodes[start].num_edges])             # <<<<<<<<<<<<<<
  *     edge.end = &(nodes[end])
  *     edge.length = length
  */
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 90, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 90, __pyx_L1_error)
-    __pyx_v_edge = (&((__pyx_v_nodes[__pyx_t_8]).edges[(__pyx_v_nodes[__pyx_t_7]).num_edges]));
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L1_error)
+    __pyx_v_edge = (&((__pyx_v_nodes[__pyx_t_9]).edges[(__pyx_v_nodes[__pyx_t_7]).num_edges]));
 
-    /* "dijkstra.pyx":91
+    /* "dijkstra.pyx":81
  *   for start, end, length in edges:
  *     edge = &(nodes[start].edges[nodes[start].num_edges])
  *     edge.end = &(nodes[end])             # <<<<<<<<<<<<<<
  *     edge.length = length
  *     nodes[start].num_edges += 1
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_end); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 91, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_end); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 81, __pyx_L1_error)
     __pyx_v_edge->end = (&(__pyx_v_nodes[__pyx_t_7]));
 
-    /* "dijkstra.pyx":92
+    /* "dijkstra.pyx":82
  *     edge = &(nodes[start].edges[nodes[start].num_edges])
  *     edge.end = &(nodes[end])
  *     edge.length = length             # <<<<<<<<<<<<<<
  *     nodes[start].num_edges += 1
  *   print "done preparing"
  */
-    __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_v_length); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 92, __pyx_L1_error)
-    __pyx_v_edge->length = __pyx_t_11;
+    __pyx_t_8 = __pyx_PyFloat_AsFloat(__pyx_v_length); if (unlikely((__pyx_t_8 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 82, __pyx_L1_error)
+    __pyx_v_edge->length = __pyx_t_8;
 
-    /* "dijkstra.pyx":93
+    /* "dijkstra.pyx":83
  *     edge.end = &(nodes[end])
  *     edge.length = length
  *     nodes[start].num_edges += 1             # <<<<<<<<<<<<<<
  *   print "done preparing"
- *   print shortest_distance(initial_nodes, len(initial_node_indices), &heap)
+ *   print shortest_distance(&nodes[initial_node_index], &nodes[terminal_node_index], &heap)
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_start); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
     (__pyx_v_nodes[__pyx_t_7]).num_edges = ((__pyx_v_nodes[__pyx_t_7]).num_edges + 1);
 
-    /* "dijkstra.pyx":89
+    /* "dijkstra.pyx":79
  *     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
  *     nodes[i].num_edges = 0
  *   for start, end, length in edges:             # <<<<<<<<<<<<<<
@@ -2203,68 +2028,69 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":94
+  /* "dijkstra.pyx":84
  *     edge.length = length
  *     nodes[start].num_edges += 1
  *   print "done preparing"             # <<<<<<<<<<<<<<
- *   print shortest_distance(initial_nodes, len(initial_node_indices), &heap)
+ *   print shortest_distance(&nodes[initial_node_index], &nodes[terminal_node_index], &heap)
  * 
  */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_done_preparing) < 0) __PYX_ERR(0, 94, __pyx_L1_error)
+  if (__Pyx_PrintOne(0, __pyx_kp_s_done_preparing) < 0) __PYX_ERR(0, 84, __pyx_L1_error)
 
-  /* "dijkstra.pyx":95
+  /* "dijkstra.pyx":85
  *     nodes[start].num_edges += 1
  *   print "done preparing"
- *   print shortest_distance(initial_nodes, len(initial_node_indices), &heap)             # <<<<<<<<<<<<<<
+ *   print shortest_distance(&nodes[initial_node_index], &nodes[terminal_node_index], &heap)             # <<<<<<<<<<<<<<
  * 
  *   for i in range(num_nodes):
  */
-  __pyx_t_4 = PyObject_Length(__pyx_v_initial_node_indices); if (unlikely(__pyx_t_4 == -1)) __PYX_ERR(0, 95, __pyx_L1_error)
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_f_8dijkstra_shortest_distance(__pyx_v_initial_nodes, __pyx_t_4, (&__pyx_v_heap))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 95, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyIndex_AsSsize_t(__pyx_v_initial_node_index); if (unlikely((__pyx_t_4 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_terminal_node_index); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_f_8dijkstra_shortest_distance((&(__pyx_v_nodes[__pyx_t_4])), (&(__pyx_v_nodes[__pyx_t_7])), (&__pyx_v_heap))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_PrintOne(0, __pyx_t_2) < 0) __PYX_ERR(0, 95, __pyx_L1_error)
+  if (__Pyx_PrintOne(0, __pyx_t_2) < 0) __PYX_ERR(0, 85, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":97
- *   print shortest_distance(initial_nodes, len(initial_node_indices), &heap)
+  /* "dijkstra.pyx":87
+ *   print shortest_distance(&nodes[initial_node_index], &nodes[terminal_node_index], &heap)
  * 
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
  *     free(nodes[i].edges)
  *   free(heap.inv_location)
  */
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_num_nodes);
   __Pyx_GIVEREF(__pyx_v_num_nodes);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_num_nodes);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
-    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_4 = 0;
+    __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_7 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 97, __pyx_L1_error)
+    __pyx_t_7 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 87, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 97, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 87, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
     if (likely(!__pyx_t_5)) {
       if (likely(PyList_CheckExact(__pyx_t_2))) {
-        if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_2)) break;
+        if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 87, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
-        if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
+        if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_7); __Pyx_INCREF(__pyx_t_1); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 87, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 87, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -2274,7 +2100,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 97, __pyx_L1_error)
+          else __PYX_ERR(0, 87, __pyx_L1_error)
         }
         break;
       }
@@ -2283,18 +2109,18 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "dijkstra.pyx":98
+    /* "dijkstra.pyx":88
  * 
  *   for i in range(num_nodes):
  *     free(nodes[i].edges)             # <<<<<<<<<<<<<<
  *   free(heap.inv_location)
  *   free(hems)
  */
-    __pyx_t_7 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_7 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 98, __pyx_L1_error)
-    free((__pyx_v_nodes[__pyx_t_7]).edges);
+    __pyx_t_4 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_4 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
+    free((__pyx_v_nodes[__pyx_t_4]).edges);
 
-    /* "dijkstra.pyx":97
- *   print shortest_distance(initial_nodes, len(initial_node_indices), &heap)
+    /* "dijkstra.pyx":87
+ *   print shortest_distance(&nodes[initial_node_index], &nodes[terminal_node_index], &heap)
  * 
  *   for i in range(num_nodes):             # <<<<<<<<<<<<<<
  *     free(nodes[i].edges)
@@ -2303,45 +2129,36 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":99
+  /* "dijkstra.pyx":89
  *   for i in range(num_nodes):
  *     free(nodes[i].edges)
  *   free(heap.inv_location)             # <<<<<<<<<<<<<<
  *   free(hems)
- *   free(initial_nodes)
+ *   free(nodes)
  */
   free(__pyx_v_heap.inv_location);
 
-  /* "dijkstra.pyx":100
+  /* "dijkstra.pyx":90
  *     free(nodes[i].edges)
  *   free(heap.inv_location)
  *   free(hems)             # <<<<<<<<<<<<<<
- *   free(initial_nodes)
  *   free(nodes)
  */
   free(__pyx_v_hems);
 
-  /* "dijkstra.pyx":101
+  /* "dijkstra.pyx":91
  *   free(heap.inv_location)
  *   free(hems)
- *   free(initial_nodes)             # <<<<<<<<<<<<<<
- *   free(nodes)
- */
-  free(__pyx_v_initial_nodes);
-
-  /* "dijkstra.pyx":102
- *   free(hems)
- *   free(initial_nodes)
  *   free(nodes)             # <<<<<<<<<<<<<<
  */
   free(__pyx_v_nodes);
 
-  /* "dijkstra.pyx":57
+  /* "dijkstra.pyx":55
  *     return -1.0
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):             # <<<<<<<<<<<<<<
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):             # <<<<<<<<<<<<<<
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
  */
 
   /* function exit code */
@@ -2350,15 +2167,14 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra_test(CYTHON_UNUSED PyObject *__pyx_
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("dijkstra.dijkstra_test", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_i);
-  __Pyx_XDECREF(__pyx_v_initial_node_index);
   __Pyx_XDECREF(__pyx_v_start);
   __Pyx_XDECREF(__pyx_v_end);
   __Pyx_XDECREF(__pyx_v_length);
@@ -2396,7 +2212,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_edge, __pyx_k_edge, sizeof(__pyx_k_edge), 0, 0, 1, 1},
   {&__pyx_n_s_edges, __pyx_k_edges, sizeof(__pyx_k_edges), 0, 0, 1, 1},
   {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
-  {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
   {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_heap, __pyx_k_heap, sizeof(__pyx_k_heap), 0, 0, 1, 1},
   {&__pyx_n_s_hems, __pyx_k_hems, sizeof(__pyx_k_hems), 0, 0, 1, 1},
@@ -2404,8 +2219,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_inf, __pyx_k_inf, sizeof(__pyx_k_inf), 0, 0, 1, 1},
   {&__pyx_n_s_initial_node_index, __pyx_k_initial_node_index, sizeof(__pyx_k_initial_node_index), 0, 0, 1, 1},
-  {&__pyx_n_s_initial_node_indices, __pyx_k_initial_node_indices, sizeof(__pyx_k_initial_node_indices), 0, 0, 1, 1},
-  {&__pyx_n_s_initial_nodes, __pyx_k_initial_nodes, sizeof(__pyx_k_initial_nodes), 0, 0, 1, 1},
   {&__pyx_n_s_length, __pyx_k_length, sizeof(__pyx_k_length), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_nodes, __pyx_k_nodes, sizeof(__pyx_k_nodes), 0, 0, 1, 1},
@@ -2413,13 +2226,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
-  {&__pyx_n_s_terminal_node_indices, __pyx_k_terminal_node_indices, sizeof(__pyx_k_terminal_node_indices), 0, 0, 1, 1},
+  {&__pyx_n_s_terminal_node_index, __pyx_k_terminal_node_index, sizeof(__pyx_k_terminal_node_index), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 23, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 22, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2429,17 +2241,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "dijkstra.pyx":57
+  /* "dijkstra.pyx":55
  *     return -1.0
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):             # <<<<<<<<<<<<<<
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):             # <<<<<<<<<<<<<<
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
  */
-  __pyx_tuple_ = PyTuple_Pack(14, __pyx_n_s_num_nodes, __pyx_n_s_initial_node_indices, __pyx_n_s_terminal_node_indices, __pyx_n_s_edges, __pyx_n_s_nodes, __pyx_n_s_initial_nodes, __pyx_n_s_hems, __pyx_n_s_heap, __pyx_n_s_edge, __pyx_n_s_i, __pyx_n_s_initial_node_index, __pyx_n_s_start, __pyx_n_s_end, __pyx_n_s_length); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(12, __pyx_n_s_num_nodes, __pyx_n_s_initial_node_index, __pyx_n_s_terminal_node_index, __pyx_n_s_edges, __pyx_n_s_nodes, __pyx_n_s_hems, __pyx_n_s_heap, __pyx_n_s_edge, __pyx_n_s_i, __pyx_n_s_start, __pyx_n_s_end, __pyx_n_s_length); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(4, 0, 14, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_tom_electric_dijkstra_pyx, __pyx_n_s_dijkstra_test, 57, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(4, 0, 12, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_tom_electric_dijkstra_pyx, __pyx_n_s_dijkstra_test, 55, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2449,8 +2261,6 @@ static int __Pyx_InitCachedConstants(void) {
 
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
-  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2569,16 +2379,16 @@ PyMODINIT_FUNC PyInit_dijkstra(void)
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":57
+  /* "dijkstra.pyx":55
  *     return -1.0
  * 
- * def dijkstra_test(num_nodes, initial_node_indices, terminal_node_indices, edges):             # <<<<<<<<<<<<<<
+ * def dijkstra_test(num_nodes, initial_node_index, terminal_node_index, edges):             # <<<<<<<<<<<<<<
  *   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
- *   cdef Node ** initial_nodes = <Node **> malloc(len(initial_node_indices) * sizeof(Node*))
+ *   cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8dijkstra_1dijkstra_test, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8dijkstra_1dijkstra_test, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_dijkstra_test, __pyx_t_2) < 0) __PYX_ERR(0, 57, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_dijkstra_test, __pyx_t_2) < 0) __PYX_ERR(0, 55, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "dijkstra.pyx":1
@@ -2853,122 +2663,6 @@ invalid_keyword:
 bad:
     return -1;
 }
-
-/* PyIntBinop */
-#if !CYTHON_COMPILING_IN_PYPY
-static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED long intval, CYTHON_UNUSED int inplace) {
-    #if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_CheckExact(op1))) {
-        const long b = intval;
-        long x;
-        long a = PyInt_AS_LONG(op1);
-            x = (long)((unsigned long)a + b);
-            if (likely((x^a) >= 0 || (x^b) >= 0))
-                return PyInt_FromLong(x);
-            return PyLong_Type.tp_as_number->nb_add(op1, op2);
-    }
-    #endif
-    #if CYTHON_USE_PYLONG_INTERNALS
-    if (likely(PyLong_CheckExact(op1))) {
-        const long b = intval;
-        long a, x;
-#ifdef HAVE_LONG_LONG
-        const PY_LONG_LONG llb = intval;
-        PY_LONG_LONG lla, llx;
-#endif
-        const digit* digits = ((PyLongObject*)op1)->ob_digit;
-        const Py_ssize_t size = Py_SIZE(op1);
-        if (likely(__Pyx_sst_abs(size) <= 1)) {
-            a = likely(size) ? digits[0] : 0;
-            if (size == -1) a = -a;
-        } else {
-            switch (size) {
-                case -2:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        a = -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                case 2:
-                    if (8 * sizeof(long) - 1 > 2 * PyLong_SHIFT) {
-                        a = (long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 2 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                case -3:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        a = -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                case 3:
-                    if (8 * sizeof(long) - 1 > 3 * PyLong_SHIFT) {
-                        a = (long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 3 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((((unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                case -4:
-                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                        a = -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
-                        lla = -(PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                case 4:
-                    if (8 * sizeof(long) - 1 > 4 * PyLong_SHIFT) {
-                        a = (long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0]));
-                        break;
-#ifdef HAVE_LONG_LONG
-                    } else if (8 * sizeof(PY_LONG_LONG) - 1 > 4 * PyLong_SHIFT) {
-                        lla = (PY_LONG_LONG) (((((((((unsigned PY_LONG_LONG)digits[3]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[2]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[1]) << PyLong_SHIFT) | (unsigned PY_LONG_LONG)digits[0]));
-                        goto long_long;
-#endif
-                    }
-                default: return PyLong_Type.tp_as_number->nb_add(op1, op2);
-            }
-        }
-                x = a + b;
-            return PyLong_FromLong(x);
-#ifdef HAVE_LONG_LONG
-        long_long:
-                llx = lla + llb;
-            return PyLong_FromLongLong(llx);
-#endif
-        
-        
-    }
-    #endif
-    if (PyFloat_CheckExact(op1)) {
-        const long b = intval;
-        double a = PyFloat_AS_DOUBLE(op1);
-            double result;
-            PyFPE_START_PROTECT("add", return NULL)
-            result = ((double)a) + (double)b;
-            PyFPE_END_PROTECT(result)
-            return PyFloat_FromDouble(result);
-    }
-    return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
-}
-#endif
 
 /* PyObjectCall */
 #if CYTHON_COMPILING_IN_CPYTHON

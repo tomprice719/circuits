@@ -1,12 +1,10 @@
-#from dijkstra import dijkstra_test
-#from numpy.random import permutation, random
+from dijkstra import dijkstra_test
+from numpy.random import permutation, random
 from circuit1 import circuit_test
 
-# threshold_a = 1000
-# threshold_b = 2000
+# threshold_a = 2000
+# threshold_b = 3050
 # connection_prob = 0.003
-# initial_node_indices = [0]
-# terminal_node_indices = [threshold_b - 1]
 #
 # edges = []
 #
@@ -23,9 +21,9 @@ from circuit1 import circuit_test
 # edges.append((0, threshold_a, 1))
 #
 # edges = [edges[x] for x in permutation(range(len(edges)))]
-
-# dijkstra_test(threshold_b, initial_node_indices, terminal_node_indices, edges)
+#
+# dijkstra_test(threshold_b, 0, threshold_b - 1, edges)
 
 edges = ((0, 1, 1.0), (0, 2, 1.0), (1, 2, 1.0))
 
-circuit_test(3, [0], [2], edges, 1000)
+circuit_test(3, 0, 2, edges, 1000)
