@@ -5,7 +5,7 @@ from libc.stdio cimport printf
 #TODO: single initial and terminal node
 
 cdef:
-  INFINITY = float("inf")
+  float INFINITY = float("inf")
 
   struct Node:
     float dist
