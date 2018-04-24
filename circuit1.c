@@ -1445,7 +1445,7 @@ static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node *__py
  *       while(node != initial_node):
  *         edge = node.best_edge             # <<<<<<<<<<<<<<
  *         edge.current += 1
- *         edge.length = (1 + edge.current) * edge.resistance
+ *         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
  */
       __pyx_t_4 = __pyx_v_node->best_edge;
       __pyx_v_edge = __pyx_t_4;
@@ -1454,7 +1454,7 @@ static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node *__py
  *       while(node != initial_node):
  *         edge = node.best_edge
  *         edge.current += 1             # <<<<<<<<<<<<<<
- *         edge.length = (1 + edge.current) * edge.resistance
+ *         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
  *         node = edge.start
  */
       __pyx_v_edge->current = (__pyx_v_edge->current + 1);
@@ -1462,15 +1462,15 @@ static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node *__py
       /* "circuit1.pyx":75
  *         edge = node.best_edge
  *         edge.current += 1
- *         edge.length = (1 + edge.current) * edge.resistance             # <<<<<<<<<<<<<<
+ *         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power             # <<<<<<<<<<<<<<
  *         node = edge.start
  *       heap.size = 0
  */
-      __pyx_v_edge->length = ((1 + __pyx_v_edge->current) * __pyx_v_edge->resistance);
+      __pyx_v_edge->length = (((2 * __pyx_v_edge->current) + 1) * __pyx_v_edge->resistance);
 
       /* "circuit1.pyx":76
  *         edge.current += 1
- *         edge.length = (1 + edge.current) * edge.resistance
+ *         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
  *         node = edge.start             # <<<<<<<<<<<<<<
  *       heap.size = 0
  * 
@@ -1480,7 +1480,7 @@ static void __pyx_f_8circuit1_determine_flow(struct __pyx_t_8circuit1_Node *__py
     }
 
     /* "circuit1.pyx":77
- *         edge.length = (1 + edge.current) * edge.resistance
+ *         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
  *         node = edge.start
  *       heap.size = 0             # <<<<<<<<<<<<<<
  * 

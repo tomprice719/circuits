@@ -72,7 +72,7 @@ cdef:
       while(node != initial_node):
         edge = node.best_edge
         edge.current += 1
-        edge.length = (1 + edge.current) * edge.resistance
+        edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
         node = edge.start
       heap.size = 0
 

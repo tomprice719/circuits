@@ -577,8 +577,8 @@ body.cython { font-family: courier; font-size: 12; }
       __pyx_v_edge = __pyx_t_4;
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">074</span>:         <span class="n">edge</span><span class="o">.</span><span class="n">current</span> <span class="o">+=</span> <span class="mf">1</span></pre>
 <pre class='cython code score-0 '>      __pyx_v_edge-&gt;current = (__pyx_v_edge-&gt;current + 1);
-</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">075</span>:         <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">current</span><span class="p">)</span> <span class="o">*</span> <span class="n">edge</span><span class="o">.</span><span class="n">resistance</span></pre>
-<pre class='cython code score-0 '>      __pyx_v_edge-&gt;length = ((1 + __pyx_v_edge-&gt;current) * __pyx_v_edge-&gt;resistance);
+</pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">075</span>:         <span class="n">edge</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2</span> <span class="o">*</span> <span class="n">edge</span><span class="o">.</span><span class="n">current</span> <span class="o">+</span> <span class="mf">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">edge</span><span class="o">.</span><span class="n">resistance</span> <span class="c"># contribution to change in power</span></pre>
+<pre class='cython code score-0 '>      __pyx_v_edge-&gt;length = (((2 * __pyx_v_edge-&gt;current) + 1) * __pyx_v_edge-&gt;resistance);
 </pre><pre class="cython line score-0" onclick='toggleDiv(this)'>+<span class="">076</span>:         <span class="n">node</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span></pre>
 <pre class='cython code score-0 '>      __pyx_t_5 = __pyx_v_edge-&gt;start;
       __pyx_v_node = __pyx_t_5;
