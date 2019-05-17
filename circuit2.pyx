@@ -13,7 +13,7 @@ cdef:
     float dist
     Edge * edges #TODO: change to edges_out / num_edges_out
     int num_edges
-    Edge * edges_in
+    Edge ** edges_in
     int num_edges_in
     HeapEm * hem
     Edge * best_edge
@@ -126,6 +126,7 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
     else:
       nodes[i].dist = INFINITY
     nodes[i].num_edges = 0
+    nodes[i].num_edges_in = 0
     nodes[i].hem = &hems[i]
     #nodes[i].id = i
     #nodes[i].sp_in = NULL
@@ -134,17 +135,23 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
     nodes[i].last_seen = -1
   for start, end, resistance in edges:
     nodes[start].num_edges += 1
+    nodes[end].num_edges_in += 1
   for i in range(num_nodes):
     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+    # Reset num_edges and num_edges_in
+    # They will temporarily count only the edges that have been initialized
     nodes[i].num_edges = 0
+    nodes[i].num_edges_in = 0
   for start, end, resistance in edges:
     edge = &nodes[start].edges[nodes[start].num_edges]
+    nodes[end].edges_in[nodes[end].num_edges_in] = edge
     edge.start = &nodes[start]
     edge.end = &nodes[end]
     edge.resistance = resistance
     edge.length = resistance
     edge.current = 0
     nodes[start].num_edges += 1
+    nodes[end].num_edges_in += 1
   print "done preparing"
 
   determine_flow(&nodes[initial_node_index], &nodes[terminal_node_index], &heap, num_iterations)
