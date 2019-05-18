@@ -3,8 +3,9 @@ from libc.stdlib cimport malloc, free
 from libc.stdio cimport printf
 
 #TODO: multiple initial / terminal nodes
+#TODO: edges -> edges_out
+#TODO: make edges_out also a double pointer, allocate edges with a single big malloc
 #TODO: are you making unnecessary cdefs
-#TODO: initialize edges_in
 
 cdef:
   float INFINITY = float("inf")
