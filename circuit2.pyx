@@ -29,7 +29,7 @@ cdef:
     cdef Edge * edge
     cdef Node * end_node
     for i in range(node.num_edges):
-      edge = node.edges[i]
+      edge = &node.edges[i]
       end_node = edge.end
       if end_node.best_edge == edge:
         end_node.dist = node.dist + edge.length
@@ -37,8 +37,8 @@ cdef:
         propogate_lengthening_A(end_node)
 
   void propogate_lengthening_B(Node* node, Heap * heap):
-    float new_dist
-    Edge * edge
+    cdef float new_dist
+    cdef Edge * edge
     for i in range(node.num_edges_in):
       edge = node.edges_in[i]
       new_dist = edge.length + edge.start.dist
@@ -51,9 +51,9 @@ cdef:
     else:
       bubble_down(node.hem, heap)
     for i in range(node.num_edges):
-      edge = node.edges[i]
+      edge = &node.edges[i]
       if edge.end.best_edge == edge:
-        propogate_lengthening_B(node, heap)
+        propogate_lengthening_B(edge.end, heap)
 
 
   inline void spot_node(Node *node, Edge *edge, float distance, Heap *heap):
@@ -72,13 +72,15 @@ cdef:
     cdef Edge * edge
     cdef Node * node
     cdef Node * end_node
+    cdef HeapEm * hem
 
     #for i in range(initial_node.num_edges):
     #  edge = &initial_node.edges[i]
     #  spot_node(edge.end, edge, edge.length, current_iteration, heap)
 
     while(heap.size > 0):
-      node = <Node*>heap_pop(heap).data
+      hem = heap_pop(heap)
+      node = <Node*>hem.data
       if node == terminal_node:
         return 0
       for i in range(node.num_edges):
@@ -95,6 +97,7 @@ cdef:
   int determine_flow(Node * initial_node, Node * terminal_node, Heap * heap, int num_iterations):
     cdef int i
     cdef Node * node
+    cdef Edge * edge = NULL
     spot_node(initial_node, NULL, 0, heap)
     for i in range(num_iterations):
       if dijkstra(terminal_node, heap) == 1:
@@ -131,13 +134,14 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
     #nodes[i].id = i
     #nodes[i].sp_in = NULL
     hems[i].data = &(nodes[i])
+    hems[i].location = -1
     nodes[i].best_edge = NULL
-    nodes[i].last_seen = -1
   for start, end, resistance in edges:
     nodes[start].num_edges += 1
     nodes[end].num_edges_in += 1
   for i in range(num_nodes):
     nodes[i].edges = <Edge *>malloc(nodes[i].num_edges * sizeof(Edge))
+    nodes[i].edges_in = <Edge **>malloc(nodes[i].num_edges_in * sizeof(Edge *))
     # Reset num_edges and num_edges_in
     # They will temporarily count only the edges that have been initialized
     nodes[i].num_edges = 0
@@ -154,7 +158,7 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
     nodes[end].num_edges_in += 1
   print "done preparing"
 
-  determine_flow(&nodes[initial_node_index], &nodes[terminal_node_index], &heap, num_iterations)
+  print determine_flow(&nodes[initial_node_index], &nodes[terminal_node_index], &heap, num_iterations)
 
   for i in range(num_nodes):
     for j in range(nodes[i].num_edges):

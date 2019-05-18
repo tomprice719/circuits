@@ -54,12 +54,10 @@ cdef:
     cdef HeapEm* orig_top = heap.inv_location[0]
     heap.size -= 1
     cdef HeapEm* orig_bottom = heap.inv_location[heap.size]
-
     heap.inv_location[0] = orig_bottom
-    orig_top.location = -1
     orig_bottom.location = 0
-
     bubble_down(orig_bottom, heap)
+    orig_top.location = -1
     return orig_top
 
 def heap_test():

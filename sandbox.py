@@ -1,6 +1,6 @@
-from dijkstra import dijkstra_test
+#from dijkstra import dijkstra_test
 from numpy.random import permutation, random
-from circuit1 import circuit_test
+from circuit2 import circuit_test
 
 # threshold_a = 2000
 # threshold_b = 3050
