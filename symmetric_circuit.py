@@ -15,7 +15,7 @@ def get_resistance(num_nodes, in_node, out_node, edges):
             A[j, i] -= 1.0 / resistance
     A[out_node, out_node] = 1.0
 
-    print A
+    #print A
     B[in_node] = 1.0
 
     voltage = solve(A, B)
