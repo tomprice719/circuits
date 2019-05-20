@@ -23,7 +23,6 @@ def get_resistance(num_nodes, in_node, out_node, edges):
     return voltage[in_node]
 
 edges = ((0, 1, 1.0), (0, 2, 3.0), (1, 2, 1.0))
-print get_resistance(3, 0, 2, edges)
 
 # edges = ((0, 1, 1.0), (0, 2, 1.0), (1, 2, 1.0), (1, 3, 1.0), (2, 3, 1.0))
 # print get_resistance(4, 0, 3, edges)

@@ -2,6 +2,7 @@
 from numpy.random import permutation, random
 import circuit1
 import circuit2
+import circuit3
 from random import uniform
 import symmetric_circuit
 
@@ -41,6 +42,7 @@ for i in range(num_nodes):
 
 edges = ((0, 1, 1.0), (0, 2, 1.0), (1, 2, 1.0))
 
-circuit1.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
+#circuit1.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
 circuit2.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
+circuit3.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
 print symmetric_circuit.get_resistance(num_nodes, 0, num_nodes - 1, edges1)
