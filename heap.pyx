@@ -44,11 +44,18 @@ cdef:
       else:
         break
 
-  void heap_push(HeapEm* em, Heap* heap):
+  void heap_halfpush(HeapEm* em, Heap* heap):
     heap.inv_location[heap.size] = em
     em.location = heap.size
     heap.size += 1
+
+  void heap_push(HeapEm* em, Heap* heap):
+    heap_halfpush(em, heap)
     bubble_up(em, heap)
+
+  void heapify(Heap* heap):
+    for i in range(heap.size):
+      bubble_up(heap.inv_location[i], heap)
 
   HeapEm* heap_pop(Heap* heap):
     cdef HeapEm* orig_top = heap.inv_location[0]
