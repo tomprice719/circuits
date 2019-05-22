@@ -110,11 +110,24 @@ cdef:
     node.best_edge_in = edge
     heap_push(node.forward_hem, heap)
 
+  inline void reverse_spot_node(Node *node, Edge *edge, float distance, float default_heuristic, Heap *heap):
+    node.reverse_dist = distance
+    node.reverse_heuristic = min(node.forward_dist, default_heuristic)
+    node.reverse_hem.priority = -(node.reverse_dist + node.reverse_heuristic)
+    node.best_edge_out = edge
+    heap_push(node.reverse_hem, heap)
+
   inline void forward_improve_node(Node *node, Edge *edge, float distance, Heap *heap):
     node.forward_dist = distance
     node.forward_hem.priority = -(node.forward_dist + node.forward_heuristic)
     node.best_edge_in = edge
     bubble_up(node.forward_hem, heap)
+
+  inline void reverse_improve_node(Node *node, Edge *edge, float distance, Heap *heap):
+    node.reverse_dist = distance
+    node.reverse_hem.priority = -(node.reverse_dist + node.reverse_heuristic)
+    node.best_edge_out = edge
+    bubble_up(node.reverse_hem, heap)
 
   #TODO: handle error for when no path is found
 
@@ -125,6 +138,7 @@ cdef:
     cdef Edge * edge = NULL
     cdef Node * end_node
     cdef HeapEm * hem
+    cdef int path_count = 0
 
     for i in range(forward_heap.size):
       hem = forward_heap.inv_location[i]
@@ -135,11 +149,12 @@ cdef:
     heapify(forward_heap)
 
     for i in range(num_iterations):
+      if forward_heap.size == 0:
+        break
       hem = heap_pop(forward_heap)
       node = <Node*>hem.data
-      if node == NULL:
-        return 1
       if node.terminal:
+        path_count += 1
         terminal_node = node
         while(not node.initial):
           edge = node.best_edge_in
@@ -162,7 +177,55 @@ cdef:
             forward_spot_node(end_node, edge, node.forward_dist + edge.length, default_heuristic, forward_heap)
           elif node.forward_dist + edge.length < end_node.forward_dist:
             forward_improve_node(end_node, edge, node.forward_dist + edge.length, forward_heap)
-    return 0
+    return path_count
+
+  int reverse_loop(Heap * forward_heap, Heap * reverse_heap, float default_heuristic, int num_iterations):
+    cdef int i
+    cdef Node * node
+    cdef Node * initial_node
+    cdef Edge * edge = NULL
+    cdef Node * start_node
+    cdef HeapEm * hem
+    cdef int path_count = 0
+
+    for i in range(reverse_heap.size):
+      hem = reverse_heap.inv_location[i]
+      node = <Node *>hem.data
+      node.reverse_heuristic = min(node.forward_dist, default_heuristic)
+      node.reverse_hem.priority = -(node.reverse_dist + node.reverse_heuristic)
+
+    heapify(reverse_heap)
+
+    for i in range(num_iterations):
+      if reverse_heap.size == 0:
+        break
+      hem = heap_pop(reverse_heap)
+      node = <Node*>hem.data
+      if node.initial:
+        path_count += 1
+        initial_node = node
+        while(not node.terminal):
+          edge = node.best_edge_out
+          edge.current += 1
+          edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
+          node = edge.end
+        edge.start.reverse_dist = edge.length
+        reverse_propogate_lengthening_A(edge.start)
+        reverse_propogate_lengthening_B(edge.start, reverse_heap, True, default_heuristic)
+
+        edge = initial_node.best_edge_out
+        edge.end.forward_dist = edge.length
+        forward_propogate_lengthening_A(edge.end)
+        forward_propogate_lengthening_B(edge.end, forward_heap, False, 0.0)
+      else:
+        for i in range(node.num_edges_in):
+          edge = node.edges_in[i]
+          start_node = edge.start
+          if start_node.reverse_dist == INFINITY:
+            reverse_spot_node(start_node, edge, node.reverse_dist + edge.length, default_heuristic, reverse_heap)
+          elif node.reverse_dist + edge.length < start_node.reverse_dist:
+            reverse_improve_node(start_node, edge, node.reverse_dist + edge.length, reverse_heap)
+    return path_count
 
   # void initialize_heap(int num_nodes, Node * nodes, Heap * heap):
   #   for i in range(num_nodes):
