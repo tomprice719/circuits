@@ -8,6 +8,7 @@ cdef:
   float INFINITY = float("inf")
 
   struct Node:
+    int id
     float forward_dist
     float reverse_dist
     float forward_heuristic
@@ -158,6 +159,7 @@ cdef:
         terminal_node = node
         while(not node.initial):
           edge = node.best_edge_in
+          edge.start.best_edge_out = edge
           edge.current += 1
           edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
           node = edge.start
@@ -201,14 +203,17 @@ cdef:
         break
       hem = heap_pop(reverse_heap)
       node = <Node*>hem.data
+
       if node.initial:
         path_count += 1
         initial_node = node
         while(not node.terminal):
           edge = node.best_edge_out
+          edge.end.best_edge_in = edge
           edge.current += 1
           edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
           node = edge.end
+
         edge.start.reverse_dist = edge.length
         reverse_propogate_lengthening_A(edge.start)
         reverse_propogate_lengthening_B(edge.start, reverse_heap, True, default_heuristic)
@@ -227,17 +232,16 @@ cdef:
             reverse_improve_node(start_node, edge, node.reverse_dist + edge.length, reverse_heap)
     return path_count
 
-  void forward_initialize_heap(int num_nodes, Node * nodes, float default_heuristic, Heap * heap):
+  void initialize_heaps(int num_nodes, Node * nodes, Heap * forward_heap, Heap * reverse_heap):
     for i in range(num_nodes):
       if nodes[i].initial:
-        forward_spot_node(&nodes[i], NULL, 0, default_heuristic, heap)
+        forward_spot_node(&nodes[i], NULL, 0, 0.0, forward_heap)
 
-  void reverse_initialize_heap(int num_nodes, Node * nodes, float default_heuristic, Heap * heap):
     for i in range(num_nodes):
       if nodes[i].terminal:
-        reverse_spot_node(&nodes[i], NULL, 0, default_heuristic, heap)
+        reverse_spot_node(&nodes[i], NULL, 0, 0.0, reverse_heap)
 
-def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_iterations):
+def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges):
   cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
   cdef HeapEm* forward_hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
   cdef HeapEm* reverse_hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
@@ -253,6 +257,7 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
   reverse_heap.size = 0
 
   for i in range(num_nodes):
+    nodes[i].id = i
     if i == initial_node_index:
       nodes[i].forward_dist = 0.0
       nodes[i].initial = True
@@ -299,22 +304,39 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
     nodes[start].num_edges_out += 1
     nodes[end].num_edges_in += 1
 
-  # initialize_heap(num_nodes, nodes, &heap)
+  inner_iterations = 10
+  outer_iterations = 100000
+
+  initialize_heaps(num_nodes, nodes, &forward_heap, &reverse_heap)
+  num_paths = 0
+
+  for i in range(outer_iterations):
+    default_heuristic = (<Node*>reverse_heap.inv_location[0].data).reverse_dist
+    num_paths += forward_loop(&forward_heap, &reverse_heap, default_heuristic, inner_iterations)
+
+    default_heuristic = (<Node*>forward_heap.inv_location[0].data).forward_dist
+    num_paths += reverse_loop(&forward_heap, &reverse_heap, default_heuristic, inner_iterations)
+
+  print "Num paths2: ", num_paths
+
   #
   # print "done preparing"
   #
   # print determine_flow(&heap, num_iterations)
   #
-  # for i in range(num_nodes):
-  #   for j in range(nodes[i].num_edges_out):
-  #     edge = nodes[i].edges_out[j]
-  #     #print edge.resistance, edge.current
-  #     power += edge.resistance * edge.current ** 2
-  #
-  # print power / num_iterations ** 2
-  #
-  # for i in range(num_nodes):
-  #   free(nodes[i].edges_out)
-  # free(heap.inv_location)
-  # free(hems)
-  # free(nodes)
+  for i in range(num_nodes):
+    for j in range(nodes[i].num_edges_out):
+      edge = nodes[i].edges_out[j]
+      print edge.resistance, edge.current
+      power += edge.resistance * edge.current ** 2
+
+  print power / num_paths ** 2
+
+  free(c_edges)
+  free(forward_heap.inv_location)
+  free(reverse_heap.inv_location)
+  free(forward_hems)
+  free(reverse_hems)
+  free(nodes)
+
+  return num_paths
