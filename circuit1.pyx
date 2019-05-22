@@ -114,7 +114,7 @@ def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_
   for i in range(num_nodes):
     for j in range(nodes[i].num_edges):
       edge = &nodes[i].edges[j]
-      print edge.resistance, edge.current
+      #print edge.resistance, edge.current
       power += edge.resistance * edge.current ** 2
 
   print power / num_iterations ** 2

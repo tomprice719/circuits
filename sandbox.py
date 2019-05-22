@@ -29,7 +29,7 @@ import symmetric_circuit
 #
 # dijkstra_test(threshold_b, 0, threshold_b - 1, edges)
 
-num_nodes = 20
+num_nodes = 200
 
 edges1 = []
 edges2 = []
@@ -43,10 +43,10 @@ for i in range(num_nodes):
 
 edges = ((0, 1, 1.0), (0, 2, 1.0), (1, 2, 1.0))
 
-#circuit1.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
+circuit1.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 100000)
 #circuit2.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
 #circuit3.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 1000000)
-num_paths = circuit4.circuit_test(num_nodes, 0, num_nodes - 1, edges2)
-circuit3.circuit_test(num_nodes, 0, num_nodes - 1, edges2, num_paths)
+#num_paths = circuit4.circuit_test(num_nodes, 0, num_nodes - 1, edges2)
+circuit3.circuit_test(num_nodes, 0, num_nodes - 1, edges2, 100000)
 print symmetric_circuit.get_resistance(num_nodes, 0, num_nodes - 1, edges1)
 #circuit4.circuit_test(3, 0, 2, edges)
