@@ -227,64 +227,78 @@ cdef:
             reverse_improve_node(start_node, edge, node.reverse_dist + edge.length, reverse_heap)
     return path_count
 
-  # void initialize_heap(int num_nodes, Node * nodes, Heap * heap):
-  #   for i in range(num_nodes):
-  #     if nodes[i].initial:
-  #       spot_node(&nodes[i], NULL, 0, heap)
+  void forward_initialize_heap(int num_nodes, Node * nodes, float default_heuristic, Heap * heap):
+    for i in range(num_nodes):
+      if nodes[i].initial:
+        forward_spot_node(&nodes[i], NULL, 0, default_heuristic, heap)
+
+  void reverse_initialize_heap(int num_nodes, Node * nodes, float default_heuristic, Heap * heap):
+    for i in range(num_nodes):
+      if nodes[i].terminal:
+        reverse_spot_node(&nodes[i], NULL, 0, default_heuristic, heap)
 
 def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_iterations):
-  pass
-  # cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
-  # cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
-  # cdef Edge* c_edges = <Edge*>malloc(len(edges) * sizeof(Edge))
-  # cdef Heap heap
-  # cdef Edge * edge
-  # cdef float power = 0.0
-  #
-  # heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
-  # heap.size = 0
-  #
-  # for i in range(num_nodes):
-  #   if i == initial_node_index:
-  #     nodes[i].dist = 0.0
-  #     nodes[i].initial = True
-  #   else:
-  #     nodes[i].dist = INFINITY
-  #     nodes[i].initial = False
-  #   if i == terminal_node_index:
-  #     nodes[i].terminal = True
-  #   else:
-  #     nodes[i].terminal = False
-  #   nodes[i].num_edges_out = 0
-  #   nodes[i].num_edges_in = 0
-  #   nodes[i].hem = &hems[i]
-  #   #nodes[i].id = i
-  #   #nodes[i].sp_in = NULL
-  #   hems[i].data = &(nodes[i])
-  #   hems[i].location = -1
-  #   nodes[i].best_edge = NULL
-  # for start, end, resistance in edges:
-  #   nodes[start].num_edges_out += 1
-  #   nodes[end].num_edges_in += 1
-  # for i in range(num_nodes):
-  #   nodes[i].edges_out = <Edge **>malloc(nodes[i].num_edges_out * sizeof(Edge *))
-  #   nodes[i].edges_in = <Edge **>malloc(nodes[i].num_edges_in * sizeof(Edge *))
-  #   # Reset num_edges and num_edges_in
-  #   # They will temporarily count only the edges that have been initialized
-  #   nodes[i].num_edges_out = 0
-  #   nodes[i].num_edges_in = 0
-  # for i, (start, end, resistance) in enumerate(edges):
-  #   edge = &c_edges[i]
-  #   nodes[start].edges_out[nodes[start].num_edges_out] = edge
-  #   nodes[end].edges_in[nodes[end].num_edges_in] = edge
-  #   edge.start = &nodes[start]
-  #   edge.end = &nodes[end]
-  #   edge.resistance = resistance
-  #   edge.length = resistance
-  #   edge.current = 0
-  #   nodes[start].num_edges_out += 1
-  #   nodes[end].num_edges_in += 1
-  #
+  cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
+  cdef HeapEm* forward_hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
+  cdef HeapEm* reverse_hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
+  cdef Edge* c_edges = <Edge*>malloc(len(edges) * sizeof(Edge))
+  cdef Heap forward_heap
+  cdef Heap reverse_heap
+  cdef Edge * edge
+  cdef float power = 0.0
+
+  forward_heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
+  reverse_heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
+  forward_heap.size = 0
+  reverse_heap.size = 0
+
+  for i in range(num_nodes):
+    if i == initial_node_index:
+      nodes[i].forward_dist = 0.0
+      nodes[i].initial = True
+    else:
+      nodes[i].forward_dist = INFINITY
+      nodes[i].initial = False
+    if i == terminal_node_index:
+      nodes[i].reverse_dist = 0.0
+      nodes[i].terminal = True
+    else:
+      nodes[i].reverse_dist = INFINITY
+      nodes[i].terminal = False
+    nodes[i].num_edges_out = 0
+    nodes[i].num_edges_in = 0
+    nodes[i].forward_hem = &forward_hems[i]
+    nodes[i].reverse_hem = &reverse_hems[i]
+    #nodes[i].id = i
+    #nodes[i].sp_in = NULL
+    forward_hems[i].data = &(nodes[i])
+    forward_hems[i].location = -1
+    reverse_hems[i].data = &(nodes[i])
+    reverse_hems[i].location = -1
+    nodes[i].best_edge_in = NULL
+    nodes[i].best_edge_out = NULL
+  for start, end, resistance in edges:
+    nodes[start].num_edges_out += 1
+    nodes[end].num_edges_in += 1
+  for i in range(num_nodes):
+    nodes[i].edges_out = <Edge **>malloc(nodes[i].num_edges_out * sizeof(Edge *))
+    nodes[i].edges_in = <Edge **>malloc(nodes[i].num_edges_in * sizeof(Edge *))
+    # Reset num_edges and num_edges_in
+    # They will temporarily count only the edges that have been initialized
+    nodes[i].num_edges_out = 0
+    nodes[i].num_edges_in = 0
+  for i, (start, end, resistance) in enumerate(edges):
+    edge = &c_edges[i]
+    nodes[start].edges_out[nodes[start].num_edges_out] = edge
+    nodes[end].edges_in[nodes[end].num_edges_in] = edge
+    edge.start = &nodes[start]
+    edge.end = &nodes[end]
+    edge.resistance = resistance
+    edge.length = resistance
+    edge.current = 0
+    nodes[start].num_edges_out += 1
+    nodes[end].num_edges_in += 1
+
   # initialize_heap(num_nodes, nodes, &heap)
   #
   # print "done preparing"
