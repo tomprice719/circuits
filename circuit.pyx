@@ -1,8 +1,5 @@
 from heap cimport *
 from libc.stdlib cimport malloc, free
-from libc.stdio cimport printf
-
-#TODO: are you making unnecessary cdefs
 
 cdef:
   float INFINITY = float("inf")
@@ -98,6 +95,7 @@ cdef:
     cdef int i
     cdef Node * node
     cdef Edge * edge = NULL
+    cdef int total_length = 0
 
     for i in range(num_iterations):
       node = dijkstra(heap)
@@ -108,9 +106,11 @@ cdef:
         edge.current += 1
         edge.length = (2 * edge.current + 1) * edge.resistance # contribution to change in power
         node = edge.start
+        total_length += 1
       edge.end.dist = edge.length
       propogate_lengthening_A(edge.end)
       propogate_lengthening_B(edge.end, heap)
+    print "mean length: ", float(total_length) / num_iterations
     return 0
 
   void initialize_heap(int num_nodes, Node * nodes, Heap * heap):
@@ -118,74 +118,78 @@ cdef:
       if nodes[i].initial:
         spot_node(&nodes[i], NULL, 0, heap)
 
-def circuit_test(num_nodes, initial_node_index, terminal_node_index, edges, num_iterations):
-  cdef Node * nodes = <Node *> malloc(num_nodes * sizeof(Node))
-  cdef HeapEm* hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
-  cdef Edge* c_edges = <Edge*>malloc(len(edges) * sizeof(Edge))
+cdef class Circuit:
+  cdef Node * nodes
+  cdef HeapEm* hems
+  cdef Edge* c_edges
   cdef Heap heap
-  cdef Edge * edge
-  cdef double power = 0.0
+  cdef int current
+  cdef int num_nodes
 
-  heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
-  heap.size = 0
+  def run(self, int num_iterations):
+    self.current += num_iterations
+    return determine_flow(&self.heap, num_iterations)
 
-  for i in range(num_nodes):
-    if i == initial_node_index:
-      nodes[i].dist = 0.0
-      nodes[i].initial = True
-    else:
-      nodes[i].dist = INFINITY
-      nodes[i].initial = False
-    if i == terminal_node_index:
-      nodes[i].terminal = True
-    else:
-      nodes[i].terminal = False
-    nodes[i].num_edges_out = 0
-    nodes[i].num_edges_in = 0
-    nodes[i].hem = &hems[i]
-    #nodes[i].id = i
-    #nodes[i].sp_in = NULL
-    hems[i].data = &(nodes[i])
-    hems[i].location = -1
-    nodes[i].best_edge = NULL
-  for start, end, resistance in edges:
-    nodes[start].num_edges_out += 1
-    nodes[end].num_edges_in += 1
-  for i in range(num_nodes):
-    nodes[i].edges_out = <Edge **>malloc(nodes[i].num_edges_out * sizeof(Edge *))
-    nodes[i].edges_in = <Edge **>malloc(nodes[i].num_edges_in * sizeof(Edge *))
-    # Reset num_edges and num_edges_in
-    # They will temporarily count only the edges that have been initialized
-    nodes[i].num_edges_out = 0
-    nodes[i].num_edges_in = 0
-  for i, (start, end, resistance) in enumerate(edges):
-    edge = &c_edges[i]
-    nodes[start].edges_out[nodes[start].num_edges_out] = edge
-    nodes[end].edges_in[nodes[end].num_edges_in] = edge
-    edge.start = &nodes[start]
-    edge.end = &nodes[end]
-    edge.resistance = resistance
-    edge.length = resistance
-    edge.current = 0
-    nodes[start].num_edges_out += 1
-    nodes[end].num_edges_in += 1
+  def get_resistance(self):
+    cdef double power = 0.0
+    for i in range(self.num_nodes):
+      for j in range(self.nodes[i].num_edges_out):
+        edge = self.nodes[i].edges_out[j]
+        #print edge.resistance, edge.current
+        power += edge.resistance * edge.current ** 2
 
-  initialize_heap(num_nodes, nodes, &heap)
+    return power / self.current ** 2
 
-  print "done preparing"
+  def __cinit__(self, num_nodes, initial_node_index, terminal_node_index, edges):
+    cdef Edge * edge
+    self.num_nodes = num_nodes
+    self.current = 0
+    self.nodes = <Node *> malloc(num_nodes * sizeof(Node))
+    self.hems = <HeapEm*> malloc(num_nodes * sizeof(HeapEm))
+    self.c_edges = <Edge*>malloc(len(edges) * sizeof(Edge))
 
-  print determine_flow(&heap, num_iterations)
+    self.heap.inv_location = <HeapEm**> malloc(num_nodes * sizeof(HeapEm*))
+    self.heap.size = 0
 
-  for i in range(num_nodes):
-    for j in range(nodes[i].num_edges_out):
-      edge = nodes[i].edges_out[j]
-      #print edge.resistance, edge.current
-      power += edge.resistance * edge.current ** 2
+    for i in range(num_nodes):
+      if i == initial_node_index:
+        self.nodes[i].dist = 0.0
+        self.nodes[i].initial = True
+      else:
+        self.nodes[i].dist = INFINITY
+        self.nodes[i].initial = False
+      if i == terminal_node_index:
+        self.nodes[i].terminal = True
+      else:
+        self.nodes[i].terminal = False
+      self.nodes[i].num_edges_out = 0
+      self.nodes[i].num_edges_in = 0
+      self.nodes[i].hem = &self.hems[i]
+      #nodes[i].id = i
+      #nodes[i].sp_in = NULL
+      self.hems[i].data = &self.nodes[i]
+      self.hems[i].location = -1
+      self.nodes[i].best_edge = NULL
+    for start, end, resistance in edges:
+      self.nodes[start].num_edges_out += 1
+      self.nodes[end].num_edges_in += 1
+    for i in range(num_nodes):
+      self.nodes[i].edges_out = <Edge **>malloc(self.nodes[i].num_edges_out * sizeof(Edge *))
+      self.nodes[i].edges_in = <Edge **>malloc(self.nodes[i].num_edges_in * sizeof(Edge *))
+      # Reset num_edges and num_edges_in
+      # They will temporarily count only the edges that have been initialized
+      self.nodes[i].num_edges_out = 0
+      self.nodes[i].num_edges_in = 0
+    for i, (start, end, resistance) in enumerate(edges):
+      edge = &(self.c_edges[i])
+      self.nodes[start].edges_out[self.nodes[start].num_edges_out] = edge
+      self.nodes[end].edges_in[self.nodes[end].num_edges_in] = edge
+      edge.start = &self.nodes[start]
+      edge.end = &self.nodes[end]
+      edge.resistance = resistance
+      edge.length = resistance
+      edge.current = 0
+      self.nodes[start].num_edges_out += 1
+      self.nodes[end].num_edges_in += 1
 
-  print power / num_iterations ** 2
-
-  for i in range(num_nodes):
-    free(nodes[i].edges_out)
-  free(heap.inv_location)
-  free(hems)
-  free(nodes)
+    initialize_heap(num_nodes, self.nodes, &self.heap)
