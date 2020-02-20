@@ -1,0 +1,1 @@
+Code for computing how current would flow in a network of resistors, and (much more difficult) how it would flow in a network of one-way resistors, which only let current flow in one direction but otherwise satisfy Ohm's law.
